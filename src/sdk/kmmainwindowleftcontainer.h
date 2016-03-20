@@ -12,32 +12,28 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#ifndef KMMAINWINDOWLEFTCONTAINER_H
+#define KMMAINWINDOWLEFTCONTAINER_H
 
-#ifndef KMMAINWINDOWCONTAINER_H
-#define KMMAINWINDOWCONTAINER_H
+#include <QWidget>
 
-#include <QSplitter>
-
-class KMMainWindowLeftContainer;
+class QBoxLayout;
 /*!
- * \brief The KMMainWindowContainer class provides a widget which could contains
- * all the widgets of the main window. It could manage the animations of all the
- * element widgets.\n
- * The container itself won't provide any content widgets, you have to set the
- * mail list widget and content viewer widget to the container.
+ * \brief The KMMainWindowLeftContainer class provides the container of all the
+ * left part widgets.
  */
-class KMMainWindowContainer : public QSplitter
+class KMMainWindowLeftContainer : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KMMainWindowContainer widget with given parent.
-     * \param parent The parent widget pointer.
+     * \brief Constrcut a KMMainWindowLeftContainer widget.
+     * \param parent The parent widget.
      */
-    explicit KMMainWindowContainer(QWidget *parent = 0);
+    explicit KMMainWindowLeftContainer(QWidget *parent = 0);
 
 signals:
 
@@ -60,15 +56,9 @@ public slots:
      */
     void setUniBar(QWidget *uniBar);
 
-    /*!
-     * \brief Set the mail component widget.
-     * \param mailComponent Mail component widget pointer.
-     */
-    void setMailComponent(QWidget *mailComponent);
-
 private:
-    KMMainWindowLeftContainer *m_leftContainer;
-    QWidget *m_mailComponent;
+    QBoxLayout *m_mainLayout, *m_contentLayout;
+    QWidget *m_titleBar, *m_mailList, *m_uniBar;
 };
 
-#endif // KMMAINWINDOWCONTAINER_H
+#endif // KMMAINWINDOWLEFTCONTAINER_H
