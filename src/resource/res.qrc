@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>configure/default.json</file>
+        <file>configure/language.json</file>
+        <file>image/public/noIcon.png</file>
+        <file>image/public/English.png</file>
+    </qresource>
+</RCC>
