@@ -22,6 +22,7 @@
 #include <QObject>
 
 class KMMainWindow;
+class KMTitleBarBase;
 /*!
  * \brief The KMPluginManager class is the global object which could manage all
  * the plugins. And it will configure the plugins of UI and functions.
@@ -56,23 +57,24 @@ public slots:
     void setMainWindow(KMMainWindow *mainWindow);
 
     /*!
-      * \brief Load all the plugins.
-      */
-     void loadPlugins();
+     * \brief Load all the plugins.
+     */
+    void loadPlugins();
 
-     /*!
-      * \brief Show the main window, start to launch the application.
-      */
-     void launchApplication();
+    /*!
+     * \brief Show the main window, start to launch the application.
+     */
+    void launchApplication();
 
-     /*!
-      * \brief When there's a new arguments valid, this slot will be called. It
-      * will send the arguments to the category plugin.
-      * \param arguments The arguments from system or from other instance.
-      */
-     void onActionArgumentsAvaliable(QStringList arguments);
+    /*!
+     * \brief When there's a new arguments valid, this slot will be called. It
+     * will send the arguments to the category plugin.
+     * \param arguments The arguments from system or from other instance.
+     */
+    void onActionArgumentsAvaliable(QStringList arguments);
 
 private:
+    void loadTitleBar(KMTitleBarBase *titleBar);
     inline void setApplicationInformation();
     KMMainWindow *m_mainWindow;
 };

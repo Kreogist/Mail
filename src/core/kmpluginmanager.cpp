@@ -24,6 +24,12 @@
 #include "kmmainwindow.h"
 #include "knversion.h"
 
+//Ports.
+#include "kmtitlebarbase.h"
+
+//Plugins.
+#include "plugins/kmtitlebar/kmtitlebar.h"
+
 #include "kmpluginmanager.h"
 
 KMPluginManager::KMPluginManager(QObject *parent) :
@@ -62,7 +68,8 @@ void KMPluginManager::setMainWindow(KMMainWindow *mainWindow)
 
 void KMPluginManager::loadPlugins()
 {
-    ;
+    //Load title bar plugins.
+    loadTitleBar(new KMTitleBar);
 }
 
 void KMPluginManager::launchApplication()
@@ -85,6 +92,20 @@ void KMPluginManager::onActionArgumentsAvaliable(QStringList arguments)
     //That's the file path of the application execution.
     arguments.removeFirst();
     //! FIXME: Process the arguments.
+}
+
+void KMPluginManager::loadTitleBar(KMTitleBarBase *titleBar)
+{
+    //Check pointer first.
+    if(!titleBar)
+    {
+        //Ignore the title bar poitner if the pointer is nullptr.
+        return;
+    }
+    //Load the title bar to main window.
+    m_mainWindow->setTitleBar(titleBar);
+    m_mainWindow->setMailList(new QWidget(m_mainWindow));
+    m_mainWindow->setMailComponent(new QWidget(m_mainWindow));
 }
 
 inline void KMPluginManager::setApplicationInformation()

@@ -201,7 +201,7 @@ void KMPop3Client::getMailList()
                 if(firstLine && lineData.startsWith("+OK"))
                 {
                     //Set first line flag.
-                    lineData=false;
+                    firstLine=false;
                     //Read next line.
                     continue;
                 }

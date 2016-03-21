@@ -152,7 +152,8 @@ HEADERS += \
     sdk/mime/kmmimeparser.h \
     sdk/kmmainwindowleftcontainer.h \
     sdk/kmtitlebarbase.h \
-    plugins/kmtitlebar/kmtitlebar.h
+    plugins/kmtitlebar/kmtitlebar.h \
+    plugins/kmtitlebar/kmtitlebarcombo.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -183,8 +184,8 @@ SOURCES += \
     sdk/mime/kmmailbody.cpp \
     sdk/mime/kmmimeparser.cpp \
     sdk/kmmainwindowleftcontainer.cpp \
-    sdk/kmtitlebarbase.cpp \
-    plugins/kmtitlebar/kmtitlebar.cpp
+    plugins/kmtitlebar/kmtitlebar.cpp \
+    plugins/kmtitlebar/kmtitlebarcombo.cpp
 
 RESOURCES += \
     resource/res.qrc

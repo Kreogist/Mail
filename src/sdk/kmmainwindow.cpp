@@ -57,6 +57,26 @@ KMMainWindow::KMMainWindow(QWidget *parent) :
     recoverGeometry();
 }
 
+void KMMainWindow::setTitleBar(QWidget *titleBar)
+{
+    m_container->setTitleBar(titleBar);
+}
+
+void KMMainWindow::setMailList(QWidget *mailList)
+{
+    m_container->setMailList(mailList);
+}
+
+void KMMainWindow::setUniBar(QWidget *uniBar)
+{
+    m_container->setUniBar(uniBar);
+}
+
+void KMMainWindow::setMailComponent(QWidget *mailComponent)
+{
+    m_container->setMailComponent(mailComponent);
+}
+
 void KMMainWindow::closeEvent(QCloseEvent *event)
 {
     //Save the geometry.

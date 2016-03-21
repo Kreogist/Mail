@@ -20,6 +20,7 @@
 
 #include "kmtitlebarbase.h"
 
+class KMTitleBarCombo;
 /*!
  * \brief The KMTitleBar class is the default title bar realized provided
  * official.
@@ -28,11 +29,18 @@ class KMTitleBar : public KMTitleBarBase
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief Construct a KMTitleBar widget.
+     * \param parent The parent widget pointer.
+     */
     explicit KMTitleBar(QWidget *parent = 0);
 
 signals:
 
 public slots:
+
+private:
+    KMTitleBarCombo *m_titleCombo;
 };
 
 #endif // KMTITLEBAR_H

@@ -40,6 +40,29 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Set the title bar widget.
+     * \param titleBar The title bar widget pointer.
+     */
+    void setTitleBar(QWidget *titleBar);
+
+    /*!
+     * \brief Set the mail list widget.
+     * \param mailList The mail list widget pointer.
+     */
+    void setMailList(QWidget *mailList);
+
+    /*!
+     * \brief Set the unibar widget.
+     * \param uniBar The unibar widget pointer.
+     */
+    void setUniBar(QWidget *uniBar);
+
+    /*!
+     * \brief Set the mail component widget.
+     * \param mailComponent Mail component widget pointer.
+     */
+    void setMailComponent(QWidget *mailComponent);
 
 protected:
     /*!

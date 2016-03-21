@@ -16,25 +16,18 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QBoxLayout>
+#include <QSizePolicy>
 
 #include "kmmainwindowleftcontainer.h"
 
 KMMainWindowLeftContainer::KMMainWindowLeftContainer(QWidget *parent) :
     QWidget(parent),
-    m_mainLayout(new QBoxLayout(QBoxLayout::TopToBottom, this)),
-    m_contentLayout(new QBoxLayout(QBoxLayout::LeftToRight,
-                                   m_mainLayout->widget()))
+    m_titleBar(nullptr),
+    m_mailList(nullptr),
+    m_uniBar(nullptr)
 {
-    //Configure the main layout.
-    m_mainLayout->setContentsMargins(0,0,0,0);
-    m_mainLayout->setSpacing(0);
-    //Configure the content layout.
-    m_contentLayout->setContentsMargins(0,0,0,0);
-    m_contentLayout->setSpacing(0);
-    //Set the layout.
-    setLayout(m_mainLayout);
-    //Add content layout to main layout.
-    m_mainLayout->addLayout(m_contentLayout, 1);
+    //Change the size policy.
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 void KMMainWindowLeftContainer::setTitleBar(QWidget *titleBar)
@@ -53,8 +46,8 @@ void KMMainWindowLeftContainer::setTitleBar(QWidget *titleBar)
         //Ignore the nullptr widget.
         return;
     }
-    //Add widget to layout.
-    m_mainLayout->insertWidget(0, m_titleBar);
+    //Change the relationship.
+    m_titleBar->setParent(this);
 }
 
 void KMMainWindowLeftContainer::setMailList(QWidget *mailList)
@@ -73,8 +66,8 @@ void KMMainWindowLeftContainer::setMailList(QWidget *mailList)
         //Ignore the mail list widget.
         return;
     }
-    //Add mail list to content layout.
-    m_contentLayout->addWidget(m_mailList);
+    //Change the relationship.
+    m_mailList->setParent(this);
 }
 
 void KMMainWindowLeftContainer::setUniBar(QWidget *uniBar)
@@ -93,6 +86,28 @@ void KMMainWindowLeftContainer::setUniBar(QWidget *uniBar)
         //Ignore the nullptr widget.
         return;
     }
+    //Change the parent relationship.
+    m_uniBar->setParent(this);
     //Hide the unibar.
     m_uniBar->hide();
+}
+
+void KMMainWindowLeftContainer::resizeEvent(QResizeEvent *event)
+{
+    //Resize the widget.
+    QWidget::resizeEvent(event);
+    //Resize the title bar is it's not null.
+    if(m_titleBar)
+    {
+        //Resize title bar.
+        m_titleBar->setGeometry(0,0,width(), m_titleBar->height());
+    }
+    //Resize the mail list.
+    if(m_mailList)
+    {
+        //Resize the mail list.
+        m_mailList->setGeometry(0, m_titleBar->height(),
+                                width(),
+                                height() - m_titleBar->height());
+    }
 }

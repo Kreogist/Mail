@@ -56,8 +56,13 @@ public slots:
      */
     void setUniBar(QWidget *uniBar);
 
+protected:
+    /*!
+     * \brief Reimplemented from QWidget::resizeEvent().
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
 private:
-    QBoxLayout *m_mainLayout, *m_contentLayout;
     QWidget *m_titleBar, *m_mailList, *m_uniBar;
 };
 

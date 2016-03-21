@@ -4,5 +4,6 @@
         <file>configure/language.json</file>
         <file>image/public/noIcon.png</file>
         <file>image/public/English.png</file>
+        <file>image/public/anonymous.png</file>
     </qresource>
 </RCC>
