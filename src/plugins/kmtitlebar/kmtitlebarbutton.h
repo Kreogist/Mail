@@ -15,55 +15,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMTITLEBARCOMBO_H
-#define KMTITLEBARCOMBO_H
+#ifndef KMTITLEBARBUTTON_H
+#define KMTITLEBARBUTTON_H
 
-#include <QWidget>
+#include <QAbstractButton>
 
 class QTimeLine;
 /*!
- * \brief The KNTitleBarCombo class provides the widget which could diplay the
- * avatar thumbnails and the folder icon and text.
+ * \brief The KMTitleBarButton class is a button which could be used on the
+ * title bar. This button shouldn't be shown too much.\n
+ * It should be fixed size.
  */
-class KMTitleBarCombo : public QWidget
+class KMTitleBarButton : public QAbstractButton
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNTitleBarCombo widget.
+     * \brief Construct a KMTitleBarButton button widget.
      * \param parent The parent widget.
      */
-    explicit KMTitleBarCombo(QWidget *parent = 0);
-
-    /*!
-     * \brief Get the text that current title bar display.
-     * \return The title bar text.
-     */
-    QString text() const;
-
-    /*!
-     * \brief Get the user avatar pixmap. If you never set the avatar, it will
-     * return a null pixmap.
-     * \return The user avatar pixmap.
-     */
-    QPixmap userAvatar() const;
+    explicit KMTitleBarButton(QWidget *parent = 0);
 
 signals:
 
 public slots:
-    /*!
-     * \brief Set the user avatar that current Kreogist Account login.
-     * \param userAvatar The account avatar.
-     */
-    void setUserAvatar(const QPixmap &userAvatar);
-
-    /*!
-     * \brief Set the text of the title bar will be display.
-     * \param text The text.
-     */
-    void setText(const QString &text);
 
 protected:
+    /*!
+     * \brief Reimplemented from QAbstractButton::paintEvent().
+     */
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+
     /*!
      * \brief Reimplemented from QWidget::enterEvent().
      */
@@ -74,11 +56,6 @@ protected:
      */
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
 
-    /*!
-     * \brief Reimplemented from QWidget::paintEvent().
-     */
-    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
-
 private slots:
     void onActionThemeChange();
     void onActionMouseInOut(int frame);
@@ -86,10 +63,8 @@ private slots:
 private:
     inline void startAnime(int targetBrightness);
     QLinearGradient m_highlight;
-    QPixmap m_userAvatar, m_anonymous, m_indicator;
     QColor m_dropShadow;
-    QString m_text;
     QTimeLine *m_mouseInOut;
 };
 
-#endif // KMTITLEBARCOMBO_H
+#endif // KMTITLEBARBUTTON_H

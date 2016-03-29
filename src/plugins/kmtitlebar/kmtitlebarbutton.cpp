@@ -15,113 +15,58 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#include <QApplication>
 #include <QPainter>
 #include <QTimeLine>
-#include <QLinearGradient>
 
 #include "knthememanager.h"
 
-#include "kmtitlebarcombo.h"
+#include "kmtitlebarbutton.h"
 
 #define TitleBarHeight 40
-#define Spacing 16
+#define Spacing 5
 #define MaximumBrightness 110
 #define MinimumBrightness 61
 
-KMTitleBarCombo::KMTitleBarCombo(QWidget *parent) :
-    QWidget(parent),
+KMTitleBarButton::KMTitleBarButton(QWidget *parent) :
+    QAbstractButton(parent),
     m_highlight(QLinearGradient(0, 0, 0, TitleBarHeight)),
-    m_userAvatar(QPixmap()),
-    m_anonymous(QPixmap("://image/public/anonymous.png").scaled(
-                    TitleBarHeight, TitleBarHeight,
-                    Qt::KeepAspectRatio,
-                    Qt::SmoothTransformation)),
-    m_indicator(QPixmap("://image/public/AscendingIndicator.png")),
     m_dropShadow(QColor(255,255,255)),
-    m_text(QString()),
     m_mouseInOut(new QTimeLine(200, this))
 {
-    setObjectName("TitleBarCombo");
+    setObjectName("TitleBarButton");
     //Set the fixed height of the title bar combo.
     setAutoFillBackground(true);
-    setMinimumWidth(TitleBarHeight+(Spacing<<1));
-    setFixedHeight(TitleBarHeight);
-    QFont titleFont=font();
-    titleFont.setPixelSize(Spacing);
-    setFont(titleFont);
-
     //Configure the time line.
     m_mouseInOut->setUpdateInterval(33);
     m_mouseInOut->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_mouseInOut, &QTimeLine::frameChanged,
-            this, &KMTitleBarCombo::onActionMouseInOut);
+            this, &KMTitleBarButton::onActionMouseInOut);
 
     //Link the theme signal.
     connect(knTheme, &KNThemeManager::themeChange,
-            this, &KMTitleBarCombo::onActionThemeChange);
+            this, &KMTitleBarButton::onActionThemeChange);
     //Update the palette.
     onActionThemeChange();
 }
 
-QString KMTitleBarCombo::text() const
+void KMTitleBarButton::paintEvent(QPaintEvent *event)
 {
-    return m_text;
-}
-
-void KMTitleBarCombo::setText(const QString &text)
-{
-    m_text = text;
-}
-
-void KMTitleBarCombo::enterEvent(QEvent *event)
-{
-    //Do original event.
-    QWidget::enterEvent(event);
-    //Start anime.
-    startAnime(MaximumBrightness);
-}
-
-void KMTitleBarCombo::leaveEvent(QEvent *event)
-{
-    //Do original event.
-    QWidget::leaveEvent(event);
-    //Start the anime.
-    startAnime(MinimumBrightness);
-}
-
-void KMTitleBarCombo::paintEvent(QPaintEvent *event)
-{
-    //Draw all the other things.
-    QWidget::paintEvent(event);
-    //Initial the painter.
+    Q_UNUSED(event)
+    //Initial the paint event.
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing |
                            QPainter::TextAntialiasing |
                            QPainter::SmoothPixmapTransform, true);
     //Draw background.
     painter.fillRect(rect(), m_highlight);
-    //Draw the user avatar.
-    painter.drawPixmap(0, 0, m_userAvatar.isNull()?m_anonymous:m_userAvatar);
-    //Configure the pen.
-    QPen borderPen;
-    borderPen.setColor(palette().color(QPalette::Text));
-    borderPen.setWidth(1);
-    painter.setPen(borderPen);
-    //Draw the text.
-    painter.drawText(QRect(TitleBarHeight+Spacing,
-                           0,
-                           width()-TitleBarHeight-(Spacing<<1),
-                           TitleBarHeight),
-                     Qt::AlignVCenter,
-                     m_text.isEmpty()?
-                         QApplication::applicationName():
-                         m_text);
-    //Draw the indicator.
-    painter.drawPixmap(width()-(Spacing>>2)-m_indicator.width(),
-                       (TitleBarHeight-m_indicator.height())>>1,
-                       m_indicator);
-
+    //Draw the user icon.
+    if(!icon().isNull())
+    {
+        //Display the icon.
+        painter.drawPixmap(Spacing, Spacing,
+                           icon().pixmap(width()-(Spacing<<1),
+                                         height()-(Spacing<<1)));
+    }
     //Disable antialiasing.
     painter.setRenderHints(QPainter::Antialiasing |
                            QPainter::TextAntialiasing |
@@ -129,18 +74,34 @@ void KMTitleBarCombo::paintEvent(QPaintEvent *event)
     //Draw the shadow
     painter.setPen(m_dropShadow);
     //Draw the splitter shadow.
-    painter.drawLine(TitleBarHeight+2, 0, TitleBarHeight+2, height());
+    painter.drawLine(1, 0, 1, height());
     //Draw the bottom shadow.
     painter.drawLine(0, TitleBarHeight-1, width(), TitleBarHeight-1);
 
     //Draw the splitter.
     painter.setPen(palette().color(QPalette::WindowText));
-    painter.drawLine(TitleBarHeight+1, 0, TitleBarHeight+1, height()-2);
+    painter.drawLine(0, 0, 0, height()-2);
     //Draw the bottom.
     painter.drawLine(0, TitleBarHeight-2, width(), TitleBarHeight-2);
 }
 
-void KMTitleBarCombo::onActionThemeChange()
+void KMTitleBarButton::enterEvent(QEvent *event)
+{
+    //Do original event.
+    QAbstractButton::enterEvent(event);
+    //Start anime.
+    startAnime(MaximumBrightness);
+}
+
+void KMTitleBarButton::leaveEvent(QEvent *event)
+{
+    //Do original event.
+    QAbstractButton::leaveEvent(event);
+    //Start the anime.
+    startAnime(MinimumBrightness);
+}
+
+void KMTitleBarButton::onActionThemeChange()
 {
     //Update the palette.
     setPalette(knTheme->getPalette(objectName()));
@@ -148,7 +109,7 @@ void KMTitleBarCombo::onActionThemeChange()
     onActionMouseInOut(MinimumBrightness);
 }
 
-void KMTitleBarCombo::onActionMouseInOut(int frame)
+void KMTitleBarButton::onActionMouseInOut(int frame)
 {
     //Change the alpha of the window text.
     QPalette pal=palette();
@@ -176,7 +137,7 @@ void KMTitleBarCombo::onActionMouseInOut(int frame)
     update();
 }
 
-inline void KMTitleBarCombo::startAnime(int targetBrightness)
+inline void KMTitleBarButton::startAnime(int targetBrightness)
 {
     //Stop the previous anime.
     m_mouseInOut->stop();
@@ -185,20 +146,4 @@ inline void KMTitleBarCombo::startAnime(int targetBrightness)
                                 targetBrightness);
     //Launch the mouse in and out.
     m_mouseInOut->start();
-}
-
-QPixmap KMTitleBarCombo::userAvatar() const
-{
-    return m_userAvatar;
-}
-
-void KMTitleBarCombo::setUserAvatar(const QPixmap &userAvatar)
-{
-    //Scaled the user avatar just in fit.
-    m_userAvatar = userAvatar.isNull()?
-                QPixmap():
-                userAvatar.scaled(TitleBarHeight,
-                                  TitleBarHeight,
-                                  Qt::KeepAspectRatio,
-                                  Qt::SmoothTransformation);
 }

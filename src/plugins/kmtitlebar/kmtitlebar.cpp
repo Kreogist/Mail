@@ -17,6 +17,7 @@
  */
 #include <QBoxLayout>
 
+#include "kmtitlebarbutton.h"
 #include "kmtitlebarcombo.h"
 
 #include "kmtitlebar.h"
@@ -27,6 +28,10 @@ KMTitleBar::KMTitleBar(QWidget *parent) :
 {
     //Set properties.
     setFixedHeight(m_titleCombo->height());
+    //Initial the title bar button.
+    KMTitleBarButton *compose=generateButton(":/image/public/anonymous.png");
+    KMTitleBarButton *settings=generateButton(":/image/public/anonymous.png");
+
     //Configure the main layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::LeftToRight,
                                           this);
@@ -37,4 +42,17 @@ KMTitleBar::KMTitleBar(QWidget *parent) :
     setLayout(mainLayout);
     //Add widget to main layout.
     mainLayout->addWidget(m_titleCombo, 1);
+    mainLayout->addWidget(compose);
+    mainLayout->addWidget(settings);
+}
+
+inline KMTitleBarButton *KMTitleBar::generateButton(const char *path)
+{
+    //Generate the button.
+    KMTitleBarButton *button=new KMTitleBarButton(this);
+    //Set the icon.
+    button->setIcon(QIcon(QString(path)));
+    button->setFixedSize(m_titleCombo->height(), m_titleCombo->height());
+    //Give back the button,
+    return button;
 }

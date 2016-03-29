@@ -8,6 +8,10 @@
     },
     "TitleBarCombo" : {
         "Parent" : "MainWindow",
-        "WindowText" : "#9D9D9D"
+        "WindowText" : "#2C2929",
+        "Text" : "#A3A3A3"
+    },
+    "TitleBarButton" : {
+        "Parent" : "TitleBarCombo"
     }
 }

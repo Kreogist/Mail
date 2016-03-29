@@ -21,6 +21,7 @@
 #include "kmtitlebarbase.h"
 
 class KMTitleBarCombo;
+class KMTitleBarButton;
 /*!
  * \brief The KMTitleBar class is the default title bar realized provided
  * official.
@@ -40,6 +41,7 @@ signals:
 public slots:
 
 private:
+    inline KMTitleBarButton *generateButton(const char *path);
     KMTitleBarCombo *m_titleCombo;
 };
 
