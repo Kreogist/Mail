@@ -154,7 +154,13 @@ HEADERS += \
     sdk/kmtitlebarbase.h \
     plugins/kmtitlebar/kmtitlebar.h \
     plugins/kmtitlebar/kmtitlebarcombo.h \
-    plugins/kmtitlebar/kmtitlebarbutton.h
+    plugins/kmtitlebar/kmtitlebarbutton.h \
+    sdk/kmmaillistview.h \
+    sdk/kmmaillistmodel.h \
+    sdk/kmmailutil.h \
+    sdk/kmleftbarbase.h \
+    plugins/kmleftbar/kmleftbar.h \
+    sdk/knsideshadowwidget.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -187,7 +193,11 @@ SOURCES += \
     sdk/kmmainwindowleftcontainer.cpp \
     plugins/kmtitlebar/kmtitlebar.cpp \
     plugins/kmtitlebar/kmtitlebarcombo.cpp \
-    plugins/kmtitlebar/kmtitlebarbutton.cpp
+    plugins/kmtitlebar/kmtitlebarbutton.cpp \
+    sdk/kmmaillistview.cpp \
+    sdk/kmmaillistmodel.cpp \
+    plugins/kmleftbar/kmleftbar.cpp \
+    sdk/knsideshadowwidget.cpp
 
 RESOURCES += \
     resource/res.qrc

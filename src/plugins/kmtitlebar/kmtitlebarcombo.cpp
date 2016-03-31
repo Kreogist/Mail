@@ -34,13 +34,17 @@ KMTitleBarCombo::KMTitleBarCombo(QWidget *parent) :
     m_highlight(QLinearGradient(0, 0, 0, TitleBarHeight)),
     m_userAvatar(QPixmap()),
     m_anonymous(QPixmap("://image/public/anonymous.png").scaled(
-                    TitleBarHeight, TitleBarHeight,
+                    TitleBarHeight,
+                    TitleBarHeight,
                     Qt::KeepAspectRatio,
                     Qt::SmoothTransformation)),
     m_indicator(QPixmap("://image/public/AscendingIndicator.png")),
-    m_dropShadow(QColor(255,255,255)),
+    m_dropShadow(QColor(MinimumBrightness,
+                        MinimumBrightness,
+                        MinimumBrightness)),
     m_text(QString()),
-    m_mouseInOut(new QTimeLine(200, this))
+    m_mouseInOut(new QTimeLine(200, this)),
+    m_brightness(MinimumBrightness)
 {
     setObjectName("TitleBarCombo");
     //Set the fixed height of the title bar combo.
@@ -128,10 +132,12 @@ void KMTitleBarCombo::paintEvent(QPaintEvent *event)
                            QPainter::SmoothPixmapTransform, false);
     //Draw the shadow
     painter.setPen(m_dropShadow);
-    //Draw the splitter shadow.
-    painter.drawLine(TitleBarHeight+2, 0, TitleBarHeight+2, height());
     //Draw the bottom shadow.
     painter.drawLine(0, TitleBarHeight-1, width(), TitleBarHeight-1);
+    painter.drawLine(width()-1, 0, width()-1, height());
+    //Draw the splitter shadow.
+    painter.setPen(QColor(m_brightness, m_brightness, m_brightness));
+    painter.drawLine(TitleBarHeight+2, 0, TitleBarHeight+2, height());
 
     //Draw the splitter.
     painter.setPen(palette().color(QPalette::WindowText));
@@ -170,8 +176,8 @@ void KMTitleBarCombo::onActionMouseInOut(int frame)
     pal.setColor(QPalette::Text, windowColor);
     setPalette(pal);
 
-    //Update drop shadow color.
-    m_dropShadow.setHsv(m_dropShadow.hue(), m_dropShadow.saturation(), frame);
+    //Update the brightness.
+    m_brightness=frame;
     //Update the widget.
     update();
 }
@@ -181,8 +187,7 @@ inline void KMTitleBarCombo::startAnime(int targetBrightness)
     //Stop the previous anime.
     m_mouseInOut->stop();
     //Configure & Launch the anime.
-    m_mouseInOut->setFrameRange(m_dropShadow.value(),
-                                targetBrightness);
+    m_mouseInOut->setFrameRange(m_brightness, targetBrightness);
     //Launch the mouse in and out.
     m_mouseInOut->start();
 }

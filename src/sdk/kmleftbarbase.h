@@ -12,38 +12,37 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMTITLEBAR_H
-#define KMTITLEBAR_H
+#ifndef KMLEFTBARBASE_H
+#define KMLEFTBARBASE_H
 
-#include "kmtitlebarbase.h"
+#include <QWidget>
 
-class KMTitleBarCombo;
-class KMTitleBarButton;
+class KMMailListModel;
 /*!
- * \brief The KMTitleBar class is the default title bar realized provided
- * official.
+ * \brief The KMLeftBarBase class provide the left bar port function of the mail
+ * application left bar.
  */
-class KMTitleBar : public KMTitleBarBase
+class KMLeftBarBase : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KMTitleBar widget.
+     * \brief Construct a KMLeftBarBase widget.
      * \param parent The parent widget pointer.
      */
-    explicit KMTitleBar(QWidget *parent = 0);
+    KMLeftBarBase(QWidget *parent = 0): QWidget(parent){}
 
 signals:
 
 public slots:
-
-private:
-    inline KMTitleBarButton *generateButton(const char *path);
-    KMTitleBarCombo *m_titleCombo;
-    KMTitleBarButton *m_create, *m_settings;
+    /*!
+     * \brief Set the mail list model to the left bar, and display the model.
+     * \param model The current model.
+     */
+    virtual void setMailListModel(KMMailListModel *model)=0;
 };
 
-#endif // KMTITLEBAR_H
+#endif // KMLEFTBARBASE_H

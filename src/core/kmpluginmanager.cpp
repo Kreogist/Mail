@@ -26,9 +26,11 @@
 
 //Ports.
 #include "kmtitlebarbase.h"
+#include "kmleftbarbase.h"
 
 //Plugins.
 #include "plugins/kmtitlebar/kmtitlebar.h"
+#include "plugins/kmleftbar/kmleftbar.h"
 
 #include "kmpluginmanager.h"
 
@@ -70,6 +72,8 @@ void KMPluginManager::loadPlugins()
 {
     //Load title bar plugins.
     loadTitleBar(new KMTitleBar);
+    //Load left bar plugins.
+    loadLeftBar(new KMLeftBar);
 }
 
 void KMPluginManager::launchApplication()
@@ -104,8 +108,19 @@ void KMPluginManager::loadTitleBar(KMTitleBarBase *titleBar)
     }
     //Load the title bar to main window.
     m_mainWindow->setTitleBar(titleBar);
-    m_mainWindow->setMailList(new QWidget(m_mainWindow));
     m_mainWindow->setMailComponent(new QWidget(m_mainWindow));
+}
+
+void KMPluginManager::loadLeftBar(KMLeftBarBase *leftBar)
+{
+    //Check pointer first.
+    if(!leftBar)
+    {
+        //Ignore the pointer if the pointer is null.
+        return;
+    }
+    //Load the left bar to main window, which is the mail list.
+    m_mainWindow->setMailList(leftBar);
 }
 
 inline void KMPluginManager::setApplicationInformation()

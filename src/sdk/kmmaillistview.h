@@ -12,38 +12,41 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMTITLEBAR_H
-#define KMTITLEBAR_H
+#ifndef KMMAILLISTVIEW_H
+#define KMMAILLISTVIEW_H
 
-#include "kmtitlebarbase.h"
+#include <QListView>
 
-class KMTitleBarCombo;
-class KMTitleBarButton;
 /*!
- * \brief The KMTitleBar class is the default title bar realized provided
- * official.
+ * \brief The KMMailListView class provides a list view to display the mail
+ * list.
  */
-class KMTitleBar : public KMTitleBarBase
+class KMMailListView : public QListView
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KMTitleBar widget.
+     * \brief Construct a KMMailListView widget.
      * \param parent The parent widget pointer.
      */
-    explicit KMTitleBar(QWidget *parent = 0);
+    explicit KMMailListView(QWidget *parent = 0);
 
 signals:
 
 public slots:
 
+protected:
+    /*!
+     * \brief enterEvent
+     * \param event
+     */
+    void enterEvent(QEvent *event);
+    void leaveEvent(QEvent *event);
+
 private:
-    inline KMTitleBarButton *generateButton(const char *path);
-    KMTitleBarCombo *m_titleCombo;
-    KMTitleBarButton *m_create, *m_settings;
 };
 
-#endif // KMTITLEBAR_H
+#endif // KMMAILLISTVIEW_H

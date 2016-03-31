@@ -6,5 +6,7 @@
         <file>image/public/English.png</file>
         <file>image/public/anonymous.png</file>
         <file>image/public/AscendingIndicator.png</file>
+        <file>image/public/create.png</file>
+        <file>image/public/settings.png</file>
     </qresource>
 </RCC>

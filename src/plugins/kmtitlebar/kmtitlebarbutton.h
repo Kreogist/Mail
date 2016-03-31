@@ -65,6 +65,7 @@ private:
     QLinearGradient m_highlight;
     QColor m_dropShadow;
     QTimeLine *m_mouseInOut;
+    int m_brightness;
 };
 
 #endif // KMTITLEBARBUTTON_H

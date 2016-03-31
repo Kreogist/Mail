@@ -90,6 +90,7 @@ private:
     QColor m_dropShadow;
     QString m_text;
     QTimeLine *m_mouseInOut;
+    int m_brightness;
 };
 
 #endif // KMTITLEBARCOMBO_H

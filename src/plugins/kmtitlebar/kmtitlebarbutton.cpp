@@ -30,8 +30,11 @@
 KMTitleBarButton::KMTitleBarButton(QWidget *parent) :
     QAbstractButton(parent),
     m_highlight(QLinearGradient(0, 0, 0, TitleBarHeight)),
-    m_dropShadow(QColor(255,255,255)),
-    m_mouseInOut(new QTimeLine(200, this))
+    m_dropShadow(QColor(MinimumBrightness,
+                        MinimumBrightness,
+                        MinimumBrightness)),
+    m_mouseInOut(new QTimeLine(200, this)),
+    m_brightness(MinimumBrightness)
 {
     setObjectName("TitleBarButton");
     //Set the fixed height of the title bar combo.
@@ -75,6 +78,7 @@ void KMTitleBarButton::paintEvent(QPaintEvent *event)
     painter.setPen(m_dropShadow);
     //Draw the splitter shadow.
     painter.drawLine(1, 0, 1, height());
+    painter.drawLine(width()-1, 0, width()-1, height()-2);
     //Draw the bottom shadow.
     painter.drawLine(0, TitleBarHeight-1, width(), TitleBarHeight-1);
 
@@ -132,7 +136,7 @@ void KMTitleBarButton::onActionMouseInOut(int frame)
     setPalette(pal);
 
     //Update drop shadow color.
-    m_dropShadow.setHsv(m_dropShadow.hue(), m_dropShadow.saturation(), frame);
+    m_brightness=frame;
     //Update the widget.
     update();
 }
@@ -142,8 +146,7 @@ inline void KMTitleBarButton::startAnime(int targetBrightness)
     //Stop the previous anime.
     m_mouseInOut->stop();
     //Configure & Launch the anime.
-    m_mouseInOut->setFrameRange(m_dropShadow.value(),
-                                targetBrightness);
+    m_mouseInOut->setFrameRange(m_brightness, targetBrightness);
     //Launch the mouse in and out.
     m_mouseInOut->start();
 }
