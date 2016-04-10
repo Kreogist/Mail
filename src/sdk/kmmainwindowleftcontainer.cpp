@@ -18,16 +18,24 @@
 #include <QBoxLayout>
 #include <QSizePolicy>
 
+#include "knsideshadowwidget.h"
+
 #include "kmmainwindowleftcontainer.h"
+
+#define ShadowWidth 10
 
 KMMainWindowLeftContainer::KMMainWindowLeftContainer(QWidget *parent) :
     QWidget(parent),
+    m_rightShadow(new KNSideShadowWidget(KNSideShadowWidget::RightShadow,
+                                         this)),
     m_titleBar(nullptr),
     m_mailList(nullptr),
     m_uniBar(nullptr)
 {
     //Change the size policy.
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    //Configure the left shadow.
+    m_rightShadow->setFixedWidth(ShadowWidth);
 }
 
 void KMMainWindowLeftContainer::setTitleBar(QWidget *titleBar)
@@ -48,6 +56,8 @@ void KMMainWindowLeftContainer::setTitleBar(QWidget *titleBar)
     }
     //Change the relationship.
     m_titleBar->setParent(this);
+    //Raise the shadow.
+    m_rightShadow->raise();
 }
 
 void KMMainWindowLeftContainer::setMailList(QWidget *mailList)
@@ -68,6 +78,8 @@ void KMMainWindowLeftContainer::setMailList(QWidget *mailList)
     }
     //Change the relationship.
     m_mailList->setParent(this);
+    //Raise the shadow.
+    m_rightShadow->raise();
 }
 
 void KMMainWindowLeftContainer::setUniBar(QWidget *uniBar)
@@ -90,12 +102,19 @@ void KMMainWindowLeftContainer::setUniBar(QWidget *uniBar)
     m_uniBar->setParent(this);
     //Hide the unibar.
     m_uniBar->hide();
+    //Raise the shadow.
+    m_rightShadow->raise();
 }
 
 void KMMainWindowLeftContainer::resizeEvent(QResizeEvent *event)
 {
     //Resize the widget.
     QWidget::resizeEvent(event);
+    //Resize the shadow.
+    m_rightShadow->setGeometry(width()-ShadowWidth,
+                               0,
+                               ShadowWidth,
+                               height());
     //Resize the title bar is it's not null.
     if(m_titleBar)
     {

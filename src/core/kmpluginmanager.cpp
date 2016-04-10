@@ -27,12 +27,14 @@
 //Ports.
 #include "kmtitlebarbase.h"
 #include "kmleftbarbase.h"
+#include "kmmailcomponentbase.h"`
 
 #include "kmmaillistmodel.h"
 
 //Plugins.
 #include "plugins/kmtitlebar/kmtitlebar.h"
 #include "plugins/kmleftbar/kmleftbar.h"
+#include "plugins/kmmailcomponent/kmmailcomponent.h"
 
 #include "kmpluginmanager.h"
 
@@ -72,10 +74,12 @@ void KMPluginManager::setMainWindow(KMMainWindow *mainWindow)
 
 void KMPluginManager::loadPlugins()
 {
-    //Load title bar plugins.
+    //Load title bar plugin.
     loadTitleBar(new KMTitleBar);
-    //Load left bar plugins.
+    //Load left bar plugin.
     loadLeftBar(new KMLeftBar);
+    //Load mail component plugin.
+    loadMailComponent(new KMMailComponent);
 }
 
 void KMPluginManager::launchApplication()
@@ -110,7 +114,6 @@ void KMPluginManager::loadTitleBar(KMTitleBarBase *titleBar)
     }
     //Load the title bar to main window.
     m_mainWindow->setTitleBar(titleBar);
-    m_mainWindow->setMailComponent(new QWidget(m_mainWindow));
 }
 
 void KMPluginManager::loadLeftBar(KMLeftBarBase *leftBar)
@@ -134,6 +137,18 @@ void KMPluginManager::loadLeftBar(KMLeftBarBase *leftBar)
         model->appendRow(item);
     }
     leftBar->setMailListModel(model);
+}
+
+void KMPluginManager::loadMailComponent(KMMailComponentBase *mailComponent)
+{
+    //Check the pointer first.
+    if(!mailComponent)
+    {
+        //Ignore the pointer if the pointer is null.
+        return;
+    }
+    //Load the mail component to main window, which is the mail list.
+    m_mainWindow->setMailComponent(mailComponent);
 }
 
 inline void KMPluginManager::setApplicationInformation()

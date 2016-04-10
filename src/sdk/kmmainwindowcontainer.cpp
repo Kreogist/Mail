@@ -27,6 +27,7 @@ KMMainWindowContainer::KMMainWindowContainer(QWidget *parent) :
     m_mailComponent(nullptr)
 {
     //Set properties.
+    setHandleWidth(0);
     setChildrenCollapsible(false);
     //Add left container.
     addWidget(m_leftContainer);

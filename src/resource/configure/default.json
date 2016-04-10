@@ -6,6 +6,10 @@
         "Window" : "#000000",
         "WindowText" : "#FFFFFF"
     },
+    "MailComponent" : {
+        "Parent" : "MainWindow",
+        "Window" : "#FFFFFF"
+    },
     "TitleBarCombo" : {
         "Parent" : "MainWindow",
         "WindowText" : "#2C2929",
@@ -16,7 +20,7 @@
     },
     "LeftBarMailList" : {
         "Parent" : "MainWindow",
-        "AlternateBase" : "#FFFFFF38",
+        "AlternateBase" : "#FFFFFF",
         "Base" : "#1a1a1a",
         "Window" : "#1a1a1a",
         "Text" : "#FFFFFF",

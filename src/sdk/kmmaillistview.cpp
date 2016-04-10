@@ -23,7 +23,7 @@
 
 #include "kmmaillistview.h"
 
-#define MaxOpacity 0x10
+#define MaxOpacity 0x20
 #define FontBase 0xBF
 
 KMMailListView::KMMailListView(QWidget *parent) :
@@ -34,7 +34,7 @@ KMMailListView::KMMailListView(QWidget *parent) :
     setAutoFillBackground(true);
     setItemDelegate(new KMMailListViewDelegate(this));
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-//    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     //Configure the time line.
     m_mouseAnime->setEasingCurve(QEasingCurve::OutCubic);

@@ -21,6 +21,7 @@
 #include <QWidget>
 
 class QBoxLayout;
+class KNSideShadowWidget;
 /*!
  * \brief The KMMainWindowLeftContainer class provides the container of all the
  * left part widgets.
@@ -63,6 +64,7 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    KNSideShadowWidget *m_rightShadow;
     QWidget *m_titleBar, *m_mailList, *m_uniBar;
 };
 

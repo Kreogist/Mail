@@ -161,7 +161,9 @@ HEADERS += \
     sdk/kmleftbarbase.h \
     plugins/kmleftbar/kmleftbar.h \
     sdk/knsideshadowwidget.h \
-    sdk/kmmaillistviewdelegate.h
+    sdk/kmmaillistviewdelegate.h \
+    sdk/kmmailcomponentbase.h \
+    plugins/kmmailcomponent/kmmailcomponent.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -199,7 +201,8 @@ SOURCES += \
     sdk/kmmaillistmodel.cpp \
     plugins/kmleftbar/kmleftbar.cpp \
     sdk/knsideshadowwidget.cpp \
-    sdk/kmmaillistviewdelegate.cpp
+    sdk/kmmaillistviewdelegate.cpp \
+    plugins/kmmailcomponent/kmmailcomponent.cpp
 
 RESOURCES += \
     resource/res.qrc
