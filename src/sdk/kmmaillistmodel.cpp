@@ -45,12 +45,16 @@ QVariant KMMailListModel::data(const QModelIndex &index,
     //Display role = Mail title.
     case Qt::DisplayRole:
         return m_mailLists.at(index.row()).title;
+    case SenderRole:
+        return m_mailLists.at(index.row()).sender;
+    case BreifContextRole:
+        return m_mailLists.at(index.row()).breifContext;
     default:
         return QVariant();
     }
 }
 
-void KMMailListModel::appendRow(const KMMailUtil::MailListItem &item)
+void KMMailListModel::appendRow(const MailListItem &item)
 {
     //Start append the item.
     beginInsertRows(QModelIndex(), m_mailLists.size(), m_mailLists.size());

@@ -13,5 +13,15 @@
     },
     "TitleBarButton" : {
         "Parent" : "TitleBarCombo"
+    },
+    "LeftBarMailList" : {
+        "Parent" : "MainWindow",
+        "AlternateBase" : "#FFFFFF38",
+        "Base" : "#1a1a1a",
+        "Window" : "#1a1a1a",
+        "Text" : "#FFFFFF",
+        "Button" : "#000000",
+        "Highlight" : "#505050",
+        "HighlightedText" : "#F7CF3D"
     }
 }

@@ -33,8 +33,8 @@ public:
      * Encrypt the data with the specific key. It will generate an initial
      * vector using QUuid.
      * \param data The decrypt raw data.
-     * \param key AES encryption key, the key should be 16/24/32/64 bytes long(
-     * 128/192/256/512 bits)
+     * \param key AES encryption key, the key should be 16/24/32 bytes long(128/
+     * 192/256 bits)
      * \return The encrption data with the key.
      */
     static QByteArray encrypt(QByteArray data,
@@ -43,8 +43,8 @@ public:
     /*!
      * \brief Encrypt the data with the specific key and initial vector.
      * \param data The decrypt raw data.
-     * \param key AES encryption key, the key should be 16/24/32/64 bytes long(
-     * 128/192/256/512 bits)
+     * \param key AES encryption key, the key should be 16/24/32 bytes long(128/
+     * 192/256 bits)
      * \param initialVector The initial vector which will be used in the AES.
      * \return The encrption data with the key. If failed, it will return a null
      * byte array.

@@ -20,6 +20,22 @@
 
 #include <QString>
 
+namespace MailUtil
+{
+    struct MailListItem
+    {
+        QString sender;
+        QString title;
+        QString breifContext;
+    };
+
+    enum MailListRole
+    {
+        SenderRole = Qt::UserRole + 1,
+        BreifContextRole
+    };
+}
+
 /*!
  * \brief The KMMailUtil class provides several structures and enumerates for
  * all mail classes.
@@ -27,12 +43,6 @@
 class KMMailUtil
 {
 public:
-    struct MailListItem
-    {
-        QString sender;
-        QString title;
-        QString breifContext;
-    };
 
 private:
     KMMailUtil();

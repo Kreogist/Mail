@@ -20,6 +20,7 @@
 
 #include <QListView>
 
+class QTimeLine;
 /*!
  * \brief The KMMailListView class provides a list view to display the mail
  * list.
@@ -34,19 +35,40 @@ public:
      */
     explicit KMMailListView(QWidget *parent = 0);
 
+    /*!
+     * \brief Update the object name set up the new palette from theme manager.
+     * \param name The new object name.
+     */
+    void updateObjectName(const QString &name);
+
 signals:
 
 public slots:
 
 protected:
     /*!
-     * \brief enterEvent
-     * \param event
+     * \brief Reimplemented from QListView::enterEvent().
      */
-    void enterEvent(QEvent *event);
-    void leaveEvent(QEvent *event);
+    void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QListView::leaveEvent().
+     */
+    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+
+protected slots:
+    /*!
+     * \brief This slot is provide to update the palette when the tree view is
+     * being constructed. Or else the UI will be very ugly.
+     */
+    void onActionThemeUpdate();
+
+private slots:
+    void onActionMouseInOut(int frame);
 
 private:
+    inline void startAnime(int endFrame);
+    QTimeLine *m_mouseAnime;
 };
 
 #endif // KMMAILLISTVIEW_H

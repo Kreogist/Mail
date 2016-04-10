@@ -24,6 +24,8 @@
 
 #include <QAbstractListModel>
 
+using namespace MailUtil;
+
 /*!
  * \brief The KMMailListModel class provides the E-mail list data. All the
  * E-mail collections could be describe as a mail list.
@@ -52,14 +54,14 @@ public:
      * \brief Append one row to the end of the list.
      * \param item The mail item.
      */
-    void appendRow(const KMMailUtil::MailListItem &item);
+    void appendRow(const MailListItem &item);
 
 signals:
 
 public slots:
 
 private:
-    QList<KMMailUtil::MailListItem> m_mailLists;
+    QList<MailListItem> m_mailLists;
 };
 
 #endif // KMMAILLISTMODEL_H

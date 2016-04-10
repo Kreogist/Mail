@@ -30,6 +30,8 @@ KMLeftBar::KMLeftBar(QWidget *parent) :
 {
     //Set fixed shadow height.
     m_topShadow->setFixedHeight(ShadowHeight);
+    //Configure the mail list view.
+    m_mailList->updateObjectName("LeftBarMailList");
 }
 
 void KMLeftBar::setMailListModel(KMMailListModel *model)
