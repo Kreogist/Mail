@@ -23,7 +23,7 @@
 #include "kmtitlebarbutton.h"
 
 #define TitleBarHeight 40
-#define Spacing 5
+#define Spacing 10
 #define MaximumBrightness 110
 #define MinimumBrightness 61
 
@@ -66,9 +66,11 @@ void KMTitleBarButton::paintEvent(QPaintEvent *event)
     if(!icon().isNull())
     {
         //Display the icon.
+        painter.setOpacity((qreal)m_brightness/MaximumBrightness);
         painter.drawPixmap(Spacing, Spacing,
                            icon().pixmap(width()-(Spacing<<1),
                                          height()-(Spacing<<1)));
+        painter.setOpacity(1.0);
     }
     //Disable antialiasing.
     painter.setRenderHints(QPainter::Antialiasing |
