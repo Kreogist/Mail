@@ -27,7 +27,7 @@
 //Ports.
 #include "kmtitlebarbase.h"
 #include "kmleftbarbase.h"
-#include "kmmailcomponentbase.h"`
+#include "kmmailcomponentbase.h"
 
 #include "kmmaillistmodel.h"
 

@@ -16,7 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QTimeLine>
+#include <QScrollBar>
 
+#include "sao/knsaostyle.h"
 #include "knthememanager.h"
 
 #include "kmmaillistviewdelegate.h"
@@ -25,16 +27,43 @@
 
 #define MaxOpacity 0x20
 #define FontBase 0xBF
+#define ScrollBarWidth 10
+#define ScrollBarSpacing 1
 
 KMMailListView::KMMailListView(QWidget *parent) :
     QListView(parent),
-    m_mouseAnime(new QTimeLine(200, this))
+    m_mouseAnime(new QTimeLine(200, this)),
+    m_scrollBar(new QScrollBar(this))
 {
     //Set properties.
     setAutoFillBackground(true);
     setItemDelegate(new KMMailListViewDelegate(this));
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    //Configure the scroll bar.
+    m_scrollBar->setObjectName("LeftBarMailListScrollBar");
+    m_scrollBar->setStyle(KNSaoStyle::instance());
+    connect(verticalScrollBar(), &QScrollBar::rangeChanged,
+            [=](int min, int max)
+            {
+                //Update the range first.
+                m_scrollBar->setRange(min, max);
+                //Check whether the scroll bar is still valid.
+                m_scrollBar->setVisible(min!=max);
+            });
+    connect(verticalScrollBar(), &QScrollBar::valueChanged,
+            [=](int value)
+            {
+                //Block the signal.
+                m_scrollBar->blockSignals(true);
+                //Reset the value.
+                m_scrollBar->setValue(value);
+                //Release the block
+                m_scrollBar->blockSignals(false);
+            });
+    connect(m_scrollBar, &QScrollBar::valueChanged,
+            verticalScrollBar(), &QScrollBar::setValue);
 
     //Configure the time line.
     m_mouseAnime->setEasingCurve(QEasingCurve::OutCubic);
@@ -72,10 +101,23 @@ void KMMailListView::leaveEvent(QEvent *event)
     startAnime(0);
 }
 
+void KMMailListView::resizeEvent(QResizeEvent *event)
+{
+    //Resize the list view.
+    QListView::resizeEvent(event);
+    //Update the scroll bar position.
+    m_scrollBar->setGeometry(width()-ScrollBarWidth-ScrollBarSpacing,
+                             0,
+                             ScrollBarWidth,
+                             height());
+}
+
 void KMMailListView::onActionThemeUpdate()
 {
     //Get the new palette from theme manager, and set it.
     setPalette(knTheme->getPalette(objectName()));
+    //Get the new palette from theme manager, and set it.
+    m_scrollBar->setPalette(knTheme->getPalette(m_scrollBar->objectName()));
     //Update the palette.
     onActionMouseInOut(0);
 }
@@ -98,6 +140,16 @@ void KMMailListView::onActionMouseInOut(int frame)
     pal.setColor(QPalette::Button, color);
     //Set the palette.
     setPalette(pal);
+    //Update the scroll bar color.
+    pal=m_scrollBar->palette();
+    color=pal.color(QPalette::Base);
+    color.setAlpha(frame<<1);
+    pal.setColor(QPalette::Base, color);
+    color=pal.color(QPalette::Button);
+    color.setAlpha(frame<<2);
+    pal.setColor(QPalette::Button, color);
+    //Set the palette to scroll bar.
+    m_scrollBar->setPalette(pal);
 }
 
 inline void KMMailListView::startAnime(int endFrame)

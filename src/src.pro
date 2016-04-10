@@ -163,7 +163,11 @@ HEADERS += \
     sdk/knsideshadowwidget.h \
     sdk/kmmaillistviewdelegate.h \
     sdk/kmmailcomponentbase.h \
-    plugins/kmmailcomponent/kmmailcomponent.h
+    plugins/kmmailcomponent/kmmailcomponent.h \
+    plugins/kmmailcomponent/kmmailcomponenttitlebar.h \
+    sdk/kmflowlayout.h \
+    plugins/kmmailcomponent/kmmailcomponentcontent.h \
+    sdk/sao/knsaostyle.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -202,7 +206,11 @@ SOURCES += \
     plugins/kmleftbar/kmleftbar.cpp \
     sdk/knsideshadowwidget.cpp \
     sdk/kmmaillistviewdelegate.cpp \
-    plugins/kmmailcomponent/kmmailcomponent.cpp
+    plugins/kmmailcomponent/kmmailcomponent.cpp \
+    plugins/kmmailcomponent/kmmailcomponenttitlebar.cpp \
+    sdk/kmflowlayout.cpp \
+    plugins/kmmailcomponent/kmmailcomponentcontent.cpp \
+    sdk/sao/knsaostyle.cpp
 
 RESOURCES += \
     resource/res.qrc

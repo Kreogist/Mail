@@ -45,6 +45,8 @@ void KMMainWindowContainer::setMailComponent(QWidget *mailComponent)
     }
     //Add widget to splitter.
     addWidget(m_mailComponent);
+    //Reset the stretch factor.
+    setStretchFactor(1, 1);
 }
 
 void KMMainWindowContainer::setUniBar(QWidget *uniBar)

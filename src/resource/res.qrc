@@ -8,5 +8,9 @@
         <file>image/public/AscendingIndicator.png</file>
         <file>image/public/create.png</file>
         <file>image/public/settings.png</file>
+        <file>image/public/down_arrow.png</file>
+        <file>image/public/left_arrow.png</file>
+        <file>image/public/right_arrow.png</file>
+        <file>image/public/top_arrow.png</file>
     </qresource>
 </RCC>

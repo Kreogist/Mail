@@ -21,6 +21,7 @@
 #include <QListView>
 
 class QTimeLine;
+class QScrollBar;
 /*!
  * \brief The KMMailListView class provides a list view to display the mail
  * list.
@@ -56,6 +57,11 @@ protected:
      */
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from QListView::resizeEvent().
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
 protected slots:
     /*!
      * \brief This slot is provide to update the palette when the tree view is
@@ -69,6 +75,7 @@ private slots:
 private:
     inline void startAnime(int endFrame);
     QTimeLine *m_mouseAnime;
+    QScrollBar *m_scrollBar;
 };
 
 #endif // KMMAILLISTVIEW_H

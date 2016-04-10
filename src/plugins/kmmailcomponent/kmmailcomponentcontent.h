@@ -15,34 +15,38 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMMAILCOMPONENT_H
-#define KMMAILCOMPONENT_H
+#ifndef KMMAILCOMPONENTCONTENT_H
+#define KMMAILCOMPONENTCONTENT_H
 
-#include "kmmailcomponentbase.h"
+#include <QWidget>
 
-class KMMailComponentTitleBar;
-class KMMailComponentContent;
+class KNSideShadowWidget;
 /*!
- * \brief The KMMailComponent class is an official provided KMMailComponentBase
- * realize. It uses all the sdk widgets to build.
+ * \brief The KMMailComponentContent class provides a widget to show the content
+ * of the .
  */
-class KMMailComponent : public KMMailComponentBase
+class KMMailComponentContent : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KMMailComponent widget.
+     * \brief Construct a KMMailComponentContent widget.
      * \param parent The parent widget.
      */
-    explicit KMMailComponent(QWidget *parent = 0);
+    explicit KMMailComponentContent(QWidget *parent = 0);
 
 signals:
 
 public slots:
 
+protected:
+    /*!
+     * \brief Reimplemented from QWidget::resizeEvent().
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
 private:
-    KMMailComponentTitleBar *m_titleBar;
-    KMMailComponentContent *m_content;
+    KNSideShadowWidget *m_topShadow;
 };
 
-#endif // KMMAILCOMPONENT_H
+#endif // KMMAILCOMPONENTCONTENT_H

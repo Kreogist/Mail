@@ -15,34 +15,26 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMMAILCOMPONENT_H
-#define KMMAILCOMPONENT_H
 
-#include "kmmailcomponentbase.h"
+#include "knsideshadowwidget.h"
 
-class KMMailComponentTitleBar;
-class KMMailComponentContent;
-/*!
- * \brief The KMMailComponent class is an official provided KMMailComponentBase
- * realize. It uses all the sdk widgets to build.
- */
-class KMMailComponent : public KMMailComponentBase
+#include "kmmailcomponentcontent.h"
+
+#define ShadowHeight 20
+
+KMMailComponentContent::KMMailComponentContent(QWidget *parent) :
+    QWidget(parent),
+    m_topShadow(new KNSideShadowWidget(KNSideShadowWidget::TopShadow,
+                                       this))
 {
-    Q_OBJECT
-public:
-    /*!
-     * \brief Construct a KMMailComponent widget.
-     * \param parent The parent widget.
-     */
-    explicit KMMailComponent(QWidget *parent = 0);
+    //Set the fixed top shadow height.
+    m_topShadow->setFixedHeight(ShadowHeight);
+}
 
-signals:
-
-public slots:
-
-private:
-    KMMailComponentTitleBar *m_titleBar;
-    KMMailComponentContent *m_content;
-};
-
-#endif // KMMAILCOMPONENT_H
+void KMMailComponentContent::resizeEvent(QResizeEvent *event)
+{
+    //Resize the widget.
+    QWidget::resizeEvent(event);
+    //Re-pos the top shadow.
+    m_topShadow->resize(width(), ShadowHeight);
+}
