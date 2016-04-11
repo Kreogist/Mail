@@ -27,6 +27,10 @@
 #define MaximumBrightness 110
 #define MinimumBrightness 61
 
+QLinearGradient KMTitleBarButton::m_shadowGradient=
+        QLinearGradient(0, 0, 0, TitleBarHeight);
+bool KMTitleBarButton::m_initial=false;
+
 KMTitleBarButton::KMTitleBarButton(QWidget *parent) :
     QAbstractButton(parent),
     m_highlight(QLinearGradient(0, 0, 0, TitleBarHeight)),
@@ -34,7 +38,8 @@ KMTitleBarButton::KMTitleBarButton(QWidget *parent) :
                         MinimumBrightness,
                         MinimumBrightness)),
     m_mouseInOut(new QTimeLine(200, this)),
-    m_brightness(MinimumBrightness)
+    m_brightness(MinimumBrightness),
+    m_pressed(false)
 {
     setObjectName("TitleBarButton");
     //Set the fixed height of the title bar combo.
@@ -44,6 +49,16 @@ KMTitleBarButton::KMTitleBarButton(QWidget *parent) :
     m_mouseInOut->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_mouseInOut, &QTimeLine::frameChanged,
             this, &KMTitleBarButton::onActionMouseInOut);
+
+    //Check the initial flag.
+    if(!m_initial)
+    {
+        //Reset initial flag.
+        m_initial=true;
+        //Initial the gradient color.
+        m_shadowGradient.setColorAt(0, QColor(0,0,0,180));
+        m_shadowGradient.setColorAt(1, QColor(0,0,0,0));
+    }
 
     //Link the theme signal.
     connect(knTheme, &KNThemeManager::themeChange,
@@ -62,6 +77,12 @@ void KMTitleBarButton::paintEvent(QPaintEvent *event)
                            QPainter::SmoothPixmapTransform, true);
     //Draw background.
     painter.fillRect(rect(), m_highlight);
+    //Check the pressed.
+    if(m_pressed)
+    {
+        //Draw the shadow.
+        painter.fillRect(rect(), m_shadowGradient);
+    }
     //Draw the user icon.
     if(!icon().isNull())
     {
@@ -105,6 +126,26 @@ void KMTitleBarButton::leaveEvent(QEvent *event)
     QAbstractButton::leaveEvent(event);
     //Start the anime.
     startAnime(MinimumBrightness);
+}
+
+void KMTitleBarButton::mousePressEvent(QMouseEvent *event)
+{
+    //Do original event.
+    QAbstractButton::mousePressEvent(event);
+    //Make shadow visible.
+    m_pressed=true;
+    //Update the button.
+    update();
+}
+
+void KMTitleBarButton::mouseReleaseEvent(QMouseEvent *event)
+{
+    //Do original event.
+    QAbstractButton::mouseReleaseEvent(event);
+    //Make shadow visible.
+    m_pressed=false;
+    //Update the button.
+    update();
 }
 
 void KMTitleBarButton::onActionThemeChange()

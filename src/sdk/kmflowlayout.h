@@ -109,6 +109,11 @@ public:
      */
     QLayoutItem *takeAt(int index) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Clear the item in the layout.
+     */
+    void clearItems();
+
 signals:
 
 public slots:

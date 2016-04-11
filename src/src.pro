@@ -167,7 +167,11 @@ HEADERS += \
     plugins/kmmailcomponent/kmmailcomponenttitlebar.h \
     sdk/kmflowlayout.h \
     plugins/kmmailcomponent/kmmailcomponentcontent.h \
-    sdk/sao/knsaostyle.h
+    sdk/sao/knsaostyle.h \
+    sdk/kmmailcontactbutton.h \
+    sdk/kmmailcontactlabelbutton.h \
+    sdk/kmmailcontactappendbutton.h \
+    sdk/kmmailcontactaddbutton.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -210,7 +214,11 @@ SOURCES += \
     plugins/kmmailcomponent/kmmailcomponenttitlebar.cpp \
     sdk/kmflowlayout.cpp \
     plugins/kmmailcomponent/kmmailcomponentcontent.cpp \
-    sdk/sao/knsaostyle.cpp
+    sdk/sao/knsaostyle.cpp \
+    sdk/kmmailcontactbutton.cpp \
+    sdk/kmmailcontactlabelbutton.cpp \
+    sdk/kmmailcontactappendbutton.cpp \
+    sdk/kmmailcontactaddbutton.cpp
 
 RESOURCES += \
     resource/res.qrc

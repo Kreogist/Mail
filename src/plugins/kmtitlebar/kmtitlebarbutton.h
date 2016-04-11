@@ -47,14 +47,24 @@ protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from QWidget::enterEvent().
+     * \brief Reimplemented from QAbstractButton::enterEvent().
      */
     void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from QWidget::leaveEvent().
+     * \brief Reimplemented from QAbstractButton::leaveEvent().
      */
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QAbstractButton::mousePressEvent().
+     */
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QAbstractButton::mouseReleaseEvent().
+     */
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
     void onActionThemeChange();
@@ -62,10 +72,13 @@ private slots:
 
 private:
     inline void startAnime(int targetBrightness);
+    static QLinearGradient m_shadowGradient;
+    static bool m_initial;
     QLinearGradient m_highlight;
     QColor m_dropShadow;
     QTimeLine *m_mouseInOut;
     int m_brightness;
+    bool m_pressed;
 };
 
 #endif // KMTITLEBARBUTTON_H

@@ -37,6 +37,11 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Set the title bar shown text.
+     * \param titleText The title text.
+     */
+    virtual void setTitleText(const QString &titleText)=0;
 };
 
 #endif // KMTITLEBARBASE_H

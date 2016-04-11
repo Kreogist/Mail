@@ -45,6 +45,12 @@ KMTitleBar::KMTitleBar(QWidget *parent) :
     mainLayout->addWidget(m_settings);
 }
 
+void KMTitleBar::setTitleText(const QString &titleText)
+{
+    //Set the title text to combo widget.
+    m_titleCombo->setText(titleText);
+}
+
 inline KMTitleBarButton *KMTitleBar::generateButton(const char *path)
 {
     //Generate the button.

@@ -18,14 +18,14 @@
 #ifndef KMTITLEBARCOMBO_H
 #define KMTITLEBARCOMBO_H
 
-#include <QWidget>
+#include <QAbstractButton>
 
 class QTimeLine;
 /*!
  * \brief The KNTitleBarCombo class provides the widget which could diplay the
  * avatar thumbnails and the folder icon and text.
  */
-class KMTitleBarCombo : public QWidget
+class KMTitleBarCombo : public QAbstractButton
 {
     Q_OBJECT
 public:
@@ -65,19 +65,29 @@ public slots:
 
 protected:
     /*!
-     * \brief Reimplemented from QWidget::enterEvent().
+     * \brief Reimplemented from QAbstractButton::enterEvent().
      */
     void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from QWidget::leaveEvent().
+     * \brief Reimplemented from QAbstractButton::leaveEvent().
      */
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from QWidget::paintEvent().
+     * \brief Reimplemented from QAbstractButton::paintEvent().
      */
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QAbstractButton::mousePressEvent().
+     */
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QAbstractButton::mouseReleaseEvent().
+     */
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
     void onActionThemeChange();
@@ -85,12 +95,13 @@ private slots:
 
 private:
     inline void startAnime(int targetBrightness);
-    QLinearGradient m_highlight;
+    QLinearGradient m_highlight, m_shadowGradient;
     QPixmap m_userAvatar, m_anonymous, m_indicator;
     QColor m_dropShadow;
     QString m_text;
     QTimeLine *m_mouseInOut;
     int m_brightness;
+    bool m_pressed;
 };
 
 #endif // KMTITLEBARCOMBO_H

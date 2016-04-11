@@ -51,4 +51,13 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     //Debug.
     m_titleBar->setTitle("TechLauncher: First peer assessment is due at 17:00 today");
     m_titleBar->setReceiveDate(QDate(2016,3,1));
+    //Debug
+    QStringList receiverList;
+    receiverList << "ayase.eri@ll-anime.com" << "yazawa.nico@ll-anime.com";
+    m_titleBar->setReceiverList(receiverList);
+    receiverList << "minami.kotori@ll-anime.com";
+    m_titleBar->setReceiverList(receiverList);
+    QStringList senderList;
+    senderList << "tojo.nozomi@ll-anime.com";
+    m_titleBar->setSenderList(senderList);
 }

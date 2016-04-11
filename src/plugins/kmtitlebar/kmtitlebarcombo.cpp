@@ -30,8 +30,9 @@
 #define MinimumBrightness 61
 
 KMTitleBarCombo::KMTitleBarCombo(QWidget *parent) :
-    QWidget(parent),
+    QAbstractButton(parent),
     m_highlight(QLinearGradient(0, 0, 0, TitleBarHeight)),
+    m_shadowGradient(QLinearGradient(0, 0, 0, TitleBarHeight)),
     m_userAvatar(QPixmap()),
     m_anonymous(QPixmap("://image/public/anonymous.png").scaled(
                     TitleBarHeight,
@@ -44,7 +45,8 @@ KMTitleBarCombo::KMTitleBarCombo(QWidget *parent) :
                         MinimumBrightness)),
     m_text(QString()),
     m_mouseInOut(new QTimeLine(200, this)),
-    m_brightness(MinimumBrightness)
+    m_brightness(MinimumBrightness),
+    m_pressed(false)
 {
     setObjectName("TitleBarCombo");
     //Set the fixed height of the title bar combo.
@@ -54,6 +56,9 @@ KMTitleBarCombo::KMTitleBarCombo(QWidget *parent) :
     QFont titleFont=font();
     titleFont.setPixelSize(Spacing);
     setFont(titleFont);
+    //Update the gradient.
+    m_shadowGradient.setColorAt(0, QColor(0,0,0,180));
+    m_shadowGradient.setColorAt(1, QColor(0,0,0,0));
 
     //Configure the time line.
     m_mouseInOut->setUpdateInterval(33);
@@ -81,7 +86,7 @@ void KMTitleBarCombo::setText(const QString &text)
 void KMTitleBarCombo::enterEvent(QEvent *event)
 {
     //Do original event.
-    QWidget::enterEvent(event);
+    QAbstractButton::enterEvent(event);
     //Start anime.
     startAnime(MaximumBrightness);
 }
@@ -89,7 +94,7 @@ void KMTitleBarCombo::enterEvent(QEvent *event)
 void KMTitleBarCombo::leaveEvent(QEvent *event)
 {
     //Do original event.
-    QWidget::leaveEvent(event);
+    QAbstractButton::leaveEvent(event);
     //Start the anime.
     startAnime(MinimumBrightness);
 }
@@ -97,7 +102,7 @@ void KMTitleBarCombo::leaveEvent(QEvent *event)
 void KMTitleBarCombo::paintEvent(QPaintEvent *event)
 {
     //Draw all the other things.
-    QWidget::paintEvent(event);
+    Q_UNUSED(event)
     //Initial the painter.
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing |
@@ -105,6 +110,12 @@ void KMTitleBarCombo::paintEvent(QPaintEvent *event)
                            QPainter::SmoothPixmapTransform, true);
     //Draw background.
     painter.fillRect(rect(), m_highlight);
+    //Check whether is pressed.
+    if(m_pressed)
+    {
+        //Paint the shadow.
+        painter.fillRect(rect(), m_shadowGradient);
+    }
     //Draw the user avatar.
     painter.drawPixmap(0, 0, m_userAvatar.isNull()?m_anonymous:m_userAvatar);
     //Configure the pen.
@@ -144,6 +155,26 @@ void KMTitleBarCombo::paintEvent(QPaintEvent *event)
     painter.drawLine(TitleBarHeight+1, 0, TitleBarHeight+1, height()-2);
     //Draw the bottom.
     painter.drawLine(0, TitleBarHeight-2, width(), TitleBarHeight-2);
+}
+
+void KMTitleBarCombo::mousePressEvent(QMouseEvent *event)
+{
+    //Do the press event.
+    QAbstractButton::mousePressEvent(event);
+    //Update the state.
+    m_pressed=true;
+    //Update the widget.
+    update();
+}
+
+void KMTitleBarCombo::mouseReleaseEvent(QMouseEvent *event)
+{
+    //Do the release event.
+    QAbstractButton::mouseReleaseEvent(event);
+    //Update the state.
+    m_pressed=false;
+    //Update the widget.
+    update();
 }
 
 void KMTitleBarCombo::onActionThemeChange()

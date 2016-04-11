@@ -29,7 +29,9 @@ KMMainWindowContainer::KMMainWindowContainer(QWidget *parent) :
     //Set properties.
     setHandleWidth(0);
     setChildrenCollapsible(false);
-    //Add left container.
+    //Configure the left container.
+    m_leftContainer->setMinimumWidth(309);
+    //Add left container to widget.
     addWidget(m_leftContainer);
 }
 

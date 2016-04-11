@@ -30,14 +30,8 @@ KMFlowLayout::KMFlowLayout(int margin, int hSpacing, int vSpacing,
 
 KMFlowLayout::~KMFlowLayout()
 {
-    //Prepare the item.
-    QLayoutItem *item;
-    //Get all the item until the last item.
-    while((item = takeAt(0)))
-    {
-        //Remove the item.
-        delete item;
-    }
+    //Clear all the items.
+    clearItems();
 }
 
 void KMFlowLayout::addItem(QLayoutItem *item)
@@ -85,6 +79,18 @@ QLayoutItem *KMFlowLayout::takeAt(int index)
                 itemList.takeAt(index) :
                 //Index is invalid, then give back a null pointer.
                 nullptr;
+}
+
+void KMFlowLayout::clearItems()
+{
+    //Prepare the item.
+    QLayoutItem *item;
+    //Get all the item until the last item.
+    while((item = takeAt(0)))
+    {
+        //Remove the item.
+        delete item;
+    }
 }
 
 Qt::Orientations KMFlowLayout::expandingDirections() const
@@ -138,21 +144,25 @@ QSize KMFlowLayout::minimumSize() const
 
 inline int KMFlowLayout::doLayout(const QRect &rect, bool testOnly) const
 {
+    //Get the content margin of the current layout.
     int left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
+    //Get the content rect size.
     QRect effectiveRect = rect.adjusted(+left, +top, -right, -bottom);
-    int x = effectiveRect.x();
-    int y = effectiveRect.y();
-    int lineHeight = 0;
+    int x = effectiveRect.x(),
+        y = effectiveRect.y(),
+        lineHeight = 0;
 
+    //Get all the item in the item list.
     QLayoutItem *item;
     foreach (item, itemList)
     {
-        QWidget *wid = item->widget();
+        //Get the item to the widget.
+        QWidget *currentWidget = item->widget();
         int spaceX = horizontalSpacing();
         if (spaceX == -1)
         {
-            spaceX = wid->style()->layoutSpacing(
+            spaceX = currentWidget->style()->layoutSpacing(
                         QSizePolicy::PushButton,
                         QSizePolicy::PushButton,
                         Qt::Horizontal);
@@ -160,7 +170,7 @@ inline int KMFlowLayout::doLayout(const QRect &rect, bool testOnly) const
         int spaceY = verticalSpacing();
         if (spaceY == -1)
         {
-            spaceY = wid->style()->layoutSpacing(
+            spaceY = currentWidget->style()->layoutSpacing(
                         QSizePolicy::PushButton,
                         QSizePolicy::PushButton,
                         Qt::Vertical);

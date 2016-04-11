@@ -47,6 +47,13 @@ public:
     QSize sizeHint(const QStyleOptionViewItem &option,
                    const QModelIndex &index) const Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Calculate the item height.
+     * \param pixelSize Font pixel size.
+     * \return The item height via given the font pixel size.
+     */
+    static int itemHeight(int pixelSize);
+
 signals:
 
 public slots:

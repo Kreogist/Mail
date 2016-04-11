@@ -23,6 +23,8 @@
 #include <QWidget>
 
 class QLabel;
+class KMFlowLayout;
+class KMMailContactButton;
 /*!
  * \brief The KMMailComponentTitleBar class provides a title bar which could
  * display the basic information about the mail itself.
@@ -41,6 +43,18 @@ signals:
 
 public slots:
     /*!
+     * \brief Set the receiver user list.
+     * \param addressList The address list.
+     */
+    void setReceiverList(const QStringList &addressList);
+
+    /*!
+     * \brief Set the sender list.
+     * \param senderList The address list.
+     */
+    void setSenderList(const QStringList &senderList);
+
+    /*!
      * \brief Set the title of the mail.
      * \param text The mail title text.
      */
@@ -54,10 +68,14 @@ public slots:
 
 private slots:
     void retranslate();
+    void onThemeChanged();
 
 private:
+    inline KMMailContactButton *generateButton(const QString &address);
+    QList<KMMailContactButton *> m_fromList, m_toList;
     QDate m_receiveDate;
     QLabel *m_titleLabel, *m_receiveLabel, *m_fromLabel, *m_toLabel;
+    KMFlowLayout *m_fromLayout, *m_toLayout;
 };
 
 #endif // KMMAILCOMPONENTTITLEBAR_H

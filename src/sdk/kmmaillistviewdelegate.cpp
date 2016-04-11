@@ -107,6 +107,10 @@ QSize KMMailListViewDelegate::sizeHint(const QStyleOptionViewItem &option,
 {
     Q_UNUSED(index)
     //Calculate the size hint.
-    return QSize(0,
-                 option.fontMetrics.height()*4 + (Spacing*3)+TopMargin);
+    return QSize(0, itemHeight(option.fontMetrics.height()));
+}
+
+int KMMailListViewDelegate::itemHeight(int pixelSize)
+{
+    return pixelSize*4 + (Spacing*3)+TopMargin;
 }

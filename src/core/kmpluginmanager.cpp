@@ -132,7 +132,7 @@ void KMPluginManager::loadLeftBar(KMLeftBarBase *leftBar)
     item.title="TechLauncher: First peer assessment is due at 17:00 today";
     item.sender="Shayne Filnt";
     item.breifContext="Hi, a quick reminder that your Week 4 peer assessment is due";
-    for(int i=0; i<30; ++i)
+    for(int i=0; i<36; ++i)
     {
         model->appendRow(item);
     }

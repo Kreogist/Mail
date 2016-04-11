@@ -39,6 +39,10 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Reimplemented from KMTitleBarBase::setTitleText().
+     */
+    void setTitleText(const QString &titleText) Q_DECL_OVERRIDE;
 
 private:
     inline KMTitleBarButton *generateButton(const char *path);

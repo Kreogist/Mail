@@ -15,26 +15,20 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#ifndef KMMAILCONTACTAPPENDBUTTON_H
+#define KMMAILCONTACTAPPENDBUTTON_H
 
-#include "knsideshadowwidget.h"
+#include <QAbstractButton>
 
-#include "kmmailcomponentcontent.h"
-
-#define ShadowHeight 18
-
-KMMailComponentContent::KMMailComponentContent(QWidget *parent) :
-    QWidget(parent),
-    m_topShadow(new KNSideShadowWidget(KNSideShadowWidget::TopShadow,
-                                       this))
+class KMMailContactAppendButton : public QAbstractButton
 {
-    //Set the fixed top shadow height.
-    m_topShadow->setFixedHeight(ShadowHeight);
-}
+    Q_OBJECT
+public:
+    explicit KMMailContactAppendButton(QWidget *parent = 0);
 
-void KMMailComponentContent::resizeEvent(QResizeEvent *event)
-{
-    //Resize the widget.
-    QWidget::resizeEvent(event);
-    //Re-pos the top shadow.
-    m_topShadow->resize(width(), ShadowHeight);
-}
+signals:
+
+public slots:
+};
+
+#endif // KMMAILCONTACTAPPENDBUTTON_H
