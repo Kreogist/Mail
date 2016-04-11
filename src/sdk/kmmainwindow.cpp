@@ -18,20 +18,28 @@
 #include <QAction>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QTimeLine>
 
 #include "knconfigure.h"
 #include "knthememanager.h"
 #include "kmmainwindowcontainer.h"
 #include "kmglobal.h"
+#include "kmcoverlayer.h"
+
+#include "kmtitlebarbase.h"
 
 #include "kmmainwindow.h"
 
 #include <QDebug>
 
+#define MaxOpacity 0xC0
+
 KMMainWindow::KMMainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_originalWindowState(Qt::WindowNoState),
     m_container(new KMMainWindowContainer(this)),
+    m_floatAnime(new QTimeLine(200, this)),
+    m_floatLayer(new KMCoverLayer(this)),
     m_cacheConfigure(kmGlobal->cacheConfigure()->getConfigure("MainWindow"))
 {
     setObjectName("MainWindow");
@@ -47,6 +55,18 @@ KMMainWindow::KMMainWindow(QWidget *parent) :
 #endif
     //Add main window to theme list.
     knTheme->registerWidget(this);
+
+    //Configure the second layer.
+    m_floatLayer->hide();
+    QPalette pal=m_floatLayer->palette();
+    pal.setColor(QPalette::Window, QColor(0,0,0,0));
+    m_floatLayer->setPalette(pal);
+    //Configure the time line.
+    m_floatAnime->setUpdateInterval(10);
+    m_floatAnime->setEasingCurve(QEasingCurve::OutCubic);
+    connect(m_floatAnime, &QTimeLine::frameChanged,
+            this, &KMMainWindow::onActionShowHideFloatLayer);
+
     //Add full screen short cut actions.
     QAction *fullScreen=new QAction(this);
     fullScreen->setShortcut(QKeySequence(QKeySequence::FullScreen));
@@ -57,9 +77,13 @@ KMMainWindow::KMMainWindow(QWidget *parent) :
     recoverGeometry();
 }
 
-void KMMainWindow::setTitleBar(QWidget *titleBar)
+void KMMainWindow::setTitleBar(KMTitleBarBase *titleBar)
 {
+    //Set the title bar widget.
     m_container->setTitleBar(titleBar);
+    //Link the title bar widget.
+    connect(titleBar, &KMTitleBarBase::requireShowUnibar,
+            this, &KMMainWindow::showUnibar);
 }
 
 void KMMainWindow::setMailList(QWidget *mailList)
@@ -85,6 +109,14 @@ void KMMainWindow::closeEvent(QCloseEvent *event)
     QMainWindow::closeEvent(event);
 }
 
+void KMMainWindow::resizeEvent(QResizeEvent *event)
+{
+    //Resize the window first.
+    QMainWindow::resizeEvent(event);
+    //Update the layer size.
+    m_floatLayer->resize(size());
+}
+
 void KMMainWindow::onActionFullScreen()
 {
     //Check out the full screen state.
@@ -106,6 +138,64 @@ void KMMainWindow::onActionFullScreen()
         //Full screen the window.
         setWindowState(Qt::WindowFullScreen);
     }
+}
+
+void KMMainWindow::onActionShowHideFloatLayer(int frame)
+{
+    //Update the cover alpha.
+    QPalette pal=m_floatLayer->palette();
+    //Get and update alpha.
+    QColor windowColor=pal.color(QPalette::Window);
+    //Reset the alpha.
+    windowColor.setAlpha(frame);
+    //Update the window color.
+    pal.setColor(QPalette::Window, windowColor);
+    //Set the palette back.
+    m_floatLayer->setPalette(pal);
+}
+
+void KMMainWindow::showUnibar()
+{
+    //Show the float layer.
+    m_floatLayer->show();
+    //Resize the float layer.
+    m_floatLayer->resize(size());
+    //Show the float layer.
+    startAnime(MaxOpacity);
+    //Link the cover layer to hide unibar.
+    connect(m_floatLayer, &KMCoverLayer::clicked,
+            this, &KMMainWindow::hideUnibar);
+}
+
+void KMMainWindow::hideUnibar()
+{
+    //Disconnect the float layer signal.
+    disconnect(m_floatLayer, &KMCoverLayer::clicked, 0, 0);
+    //Link the anime finished signal.
+    connect(m_floatAnime, &QTimeLine::finished,
+            this, &KMMainWindow::onActionHideFloatLayerFinished);
+    //Hide the float layer.
+    startAnime(0);
+}
+
+void KMMainWindow::onActionHideFloatLayerFinished()
+{
+    //Hide the cover layer.
+    m_floatLayer->hide();
+    //Disconnect the finished signal.
+    disconnect(m_floatAnime, &QTimeLine::finished, 0, 0);
+}
+
+inline void KMMainWindow::startAnime(int endFrame)
+{
+    //Stop anime time line.
+    m_floatAnime->stop();
+    //Set range.
+    m_floatAnime->setFrameRange(
+                m_floatLayer->palette().color(QPalette::Window).alpha(),
+                endFrame);
+    //Start anime.
+    m_floatAnime->start();
 }
 
 inline void KMMainWindow::recoverGeometry()

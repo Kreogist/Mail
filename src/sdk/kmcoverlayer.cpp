@@ -15,37 +15,20 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMTITLEBARBASE_H
-#define KMTITLEBARBASE_H
+#include <QPainter>
 
-#include <QWidget>
+#include "kmcoverlayer.h"
 
-/*!
- * \brief The KMTitleBarBase class provides the basic ports which a title bar
- * widget should be provide.
- */
-class KMTitleBarBase : public QWidget
+KMCoverLayer::KMCoverLayer(QWidget *parent) :
+    QAbstractButton(parent)
 {
-    Q_OBJECT
-public:
-    /*!
-     * \brief Construct a KMTitleBarBase widget.
-     * \param parent The parent widget.
-     */
-    KMTitleBarBase(QWidget *parent = 0):QWidget(parent){}
+}
 
-signals:
-    /*!
-     * \brief Ask to show the unibar widget.
-     */
-    void requireShowUnibar();
-
-public slots:
-    /*!
-     * \brief Set the title bar shown text.
-     * \param titleText The title text.
-     */
-    virtual void setTitleText(const QString &titleText)=0;
-};
-
-#endif // KMTITLEBARBASE_H
+void KMCoverLayer::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event)
+    //Initial the painter.
+    QPainter painter(this);
+    //Fill the background.
+    painter.fillRect(rect(), palette().color(QPalette::Window));
+}

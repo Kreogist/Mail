@@ -30,6 +30,9 @@ KMTitleBar::KMTitleBar(QWidget *parent) :
 {
     //Set properties.
     setFixedHeight(m_titleCombo->height());
+    //Link the title combo.
+    connect(m_titleCombo, &KMTitleBarCombo::clicked,
+            this, &KMTitleBar::requireShowUnibar);
 
     //Configure the main layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::LeftToRight,

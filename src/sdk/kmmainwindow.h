@@ -21,8 +21,11 @@
 
 #include <QMainWindow>
 
+class QTimeLine;
+class KMCoverLayer;
 class KNConfigure;
 class KMMainWindowContainer;
+class KMTitleBarBase;
 /*!
  * \brief The KMMainWindow class provides the main window of the Mail
  * application. All the plugins should be add to main window.
@@ -44,7 +47,7 @@ public slots:
      * \brief Set the title bar widget.
      * \param titleBar The title bar widget pointer.
      */
-    void setTitleBar(QWidget *titleBar);
+    void setTitleBar(KMTitleBarBase *titleBar);
 
     /*!
      * \brief Set the mail list widget.
@@ -70,10 +73,20 @@ protected:
      */
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from QMainWindow::resizeEvent().
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
 private slots:
     void onActionFullScreen();
+    void onActionShowHideFloatLayer(int frame);
+    void showUnibar();
+    void hideUnibar();
+    void onActionHideFloatLayerFinished();
 
 private:
+    inline void startAnime(int endFrame);
     inline void recoverGeometry();
     inline void backupGeometry();
     inline int getCacheValue(const QString &valueName);
@@ -81,6 +94,8 @@ private:
     inline void zoomParameter(int &parameter, const qreal &ratio);
     Qt::WindowStates m_originalWindowState;
     KMMainWindowContainer *m_container;
+    KMCoverLayer *m_floatLayer;
+    QTimeLine *m_floatAnime;
     KNConfigure *m_cacheConfigure;
 };
 

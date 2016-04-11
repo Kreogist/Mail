@@ -171,7 +171,9 @@ HEADERS += \
     sdk/kmmailcontactbutton.h \
     sdk/kmmailcontactlabelbutton.h \
     sdk/kmmailcontactappendbutton.h \
-    sdk/kmmailcontactaddbutton.h
+    sdk/kmmailcontactaddbutton.h \
+    sdk/kmcoverlayer.h \
+    sdk/kmunibarbase.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -218,7 +220,9 @@ SOURCES += \
     sdk/kmmailcontactbutton.cpp \
     sdk/kmmailcontactlabelbutton.cpp \
     sdk/kmmailcontactappendbutton.cpp \
-    sdk/kmmailcontactaddbutton.cpp
+    sdk/kmmailcontactaddbutton.cpp \
+    sdk/kmcoverlayer.cpp \
+    sdk/kmunibarbase.cpp
 
 RESOURCES += \
     resource/res.qrc
