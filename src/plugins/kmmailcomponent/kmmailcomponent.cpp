@@ -54,6 +54,7 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     m_mailContentArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_mailContentArea->setFrameStyle(QFrame::NoFrame);
     //Configure the scroll bar.
+    m_scrollBar->hide();
     m_scrollBar->setStyle(KNSaoStyle::instance());
     m_scrollBar->setObjectName("MailComponentScrollBar");
     connect(knTheme, &KNThemeManager::themeChange,
@@ -70,13 +71,7 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     onActionMouseInOut(0);
 
     connect(m_mailContentArea->verticalScrollBar(), &QScrollBar::rangeChanged,
-            [=](int min, int max)
-            {
-                //Update the range first.
-                m_scrollBar->setRange(min, max);
-                //Check whether the scroll bar is still valid.
-                m_scrollBar->setVisible(min!=max);
-            });
+            this, &KMMailComponent::onActionRangeChange);
     connect(m_mailContentArea->verticalScrollBar(), &QScrollBar::valueChanged,
             [=](int value)
             {
@@ -182,6 +177,14 @@ void KMMailComponent::onActionMouseInOut(int frame)
     pal.setColor(QPalette::Button, color);
     //Set the palette to scroll bar.
     m_scrollBar->setPalette(pal);
+}
+
+void KMMailComponent::onActionRangeChange(int min, int max)
+{
+    //Update the range first.
+    m_scrollBar->setRange(min, max);
+    //Check whether the scroll bar is still valid.
+    m_scrollBar->setVisible(min!=max);
 }
 
 inline void KMMailComponent::startAnime(int endFrame)

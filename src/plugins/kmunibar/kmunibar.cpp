@@ -15,9 +15,20 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#include "kmunibarbase.h"
 
-KMUnibarBase::KMUnibarBase(QWidget *parent) : QWidget(parent)
+#include "kmtitlebarcombo.h"
+#include "kmtitlebarbase.h"
+
+#include "kmunibar.h"
+
+KMUnibar::KMUnibar(QWidget *parent) :
+    KMUnibarBase(parent)
 {
 
+}
+
+void KMUnibar::setTitleBar(KMTitleBarBase *titleBar)
+{
+    //Save the title bar pointer.
+    ;
 }

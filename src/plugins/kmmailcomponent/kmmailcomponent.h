@@ -61,6 +61,7 @@ protected:
 
 private slots:
     void onActionMouseInOut(int frame);
+    void onActionRangeChange(int min, int max);
 
 private:
     inline void startAnime(int endFrame);

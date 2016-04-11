@@ -153,8 +153,6 @@ HEADERS += \
     sdk/kmmainwindowleftcontainer.h \
     sdk/kmtitlebarbase.h \
     plugins/kmtitlebar/kmtitlebar.h \
-    plugins/kmtitlebar/kmtitlebarcombo.h \
-    plugins/kmtitlebar/kmtitlebarbutton.h \
     sdk/kmmaillistview.h \
     sdk/kmmaillistmodel.h \
     sdk/kmmailutil.h \
@@ -173,7 +171,10 @@ HEADERS += \
     sdk/kmmailcontactappendbutton.h \
     sdk/kmmailcontactaddbutton.h \
     sdk/kmcoverlayer.h \
-    sdk/kmunibarbase.h
+    sdk/kmunibarbase.h \
+    plugins/kmunibar/kmunibar.h \
+    sdk/kmtitlebarbutton.h \
+    sdk/kmtitlebarcombo.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -205,8 +206,6 @@ SOURCES += \
     sdk/mime/kmmimeparser.cpp \
     sdk/kmmainwindowleftcontainer.cpp \
     plugins/kmtitlebar/kmtitlebar.cpp \
-    plugins/kmtitlebar/kmtitlebarcombo.cpp \
-    plugins/kmtitlebar/kmtitlebarbutton.cpp \
     sdk/kmmaillistview.cpp \
     sdk/kmmaillistmodel.cpp \
     plugins/kmleftbar/kmleftbar.cpp \
@@ -222,7 +221,9 @@ SOURCES += \
     sdk/kmmailcontactappendbutton.cpp \
     sdk/kmmailcontactaddbutton.cpp \
     sdk/kmcoverlayer.cpp \
-    sdk/kmunibarbase.cpp
+    plugins/kmunibar/kmunibar.cpp \
+    sdk/kmtitlebarbutton.cpp \
+    sdk/kmtitlebarcombo.cpp
 
 RESOURCES += \
     resource/res.qrc

@@ -26,6 +26,7 @@ class KMCoverLayer;
 class KNConfigure;
 class KMMainWindowContainer;
 class KMTitleBarBase;
+class KMUnibarBase;
 /*!
  * \brief The KMMainWindow class provides the main window of the Mail
  * application. All the plugins should be add to main window.
@@ -59,7 +60,7 @@ public slots:
      * \brief Set the unibar widget.
      * \param uniBar The unibar widget pointer.
      */
-    void setUniBar(QWidget *uniBar);
+    void setUniBar(KMUnibarBase *uniBar);
 
     /*!
      * \brief Set the mail component widget.
@@ -83,7 +84,10 @@ private slots:
     void onActionShowHideFloatLayer(int frame);
     void showUnibar();
     void hideUnibar();
+    void showPreference();
+    void hidePreference();
     void onActionHideFloatLayerFinished();
+    void onActionHidePreferenceFinished();
 
 private:
     inline void startAnime(int endFrame);
@@ -96,6 +100,7 @@ private:
     KMMainWindowContainer *m_container;
     KMCoverLayer *m_floatLayer;
     QTimeLine *m_floatAnime;
+    KMTitleBarBase *m_titleBar;
     KNConfigure *m_cacheConfigure;
 };
 

@@ -33,6 +33,8 @@ KMTitleBar::KMTitleBar(QWidget *parent) :
     //Link the title combo.
     connect(m_titleCombo, &KMTitleBarCombo::clicked,
             this, &KMTitleBar::requireShowUnibar);
+    connect(m_settings, &KMTitleBarButton::clicked,
+            this, &KMTitleBar::requireShowPreference);
 
     //Configure the main layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::LeftToRight,

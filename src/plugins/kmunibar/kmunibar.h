@@ -15,42 +15,34 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMTITLEBARBASE_H
-#define KMTITLEBARBASE_H
+#ifndef KMUNIBAR_H
+#define KMUNIBAR_H
 
-#include <QWidget>
+#include "kmunibarbase.h"
 
+class KMTitleBarCombo;
 /*!
- * \brief The KMTitleBarBase class provides the basic ports which a title bar
- * widget should be provide.
+ * \brief The KMUnibar class is a official realize of the title bar widget. All
+ * the widget in this unibar will use SDK classes.
  */
-class KMTitleBarBase : public QWidget
+class KMUnibar : public KMUnibarBase
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KMTitleBarBase widget.
+     * \brief Construct a KMUnibar widget.
      * \param parent The parent widget.
      */
-    KMTitleBarBase(QWidget *parent = 0):QWidget(parent){}
-
-signals:
-    /*!
-     * \brief Ask to show the unibar widget.
-     */
-    void requireShowUnibar();
-
-    /*!
-     * \brief Ask to show the preference widget.
-     */
-    void requireShowPreference();
+    explicit KMUnibar(QWidget *parent = 0);
 
 public slots:
     /*!
-     * \brief Set the title bar shown text.
-     * \param titleText The title text.
+     * \brief Reimplemented from KMUnibarBase::setTitleBar().
      */
-    virtual void setTitleText(const QString &titleText)=0;
+    void setTitleBar(KMTitleBarBase *titleBar) Q_DECL_OVERRIDE;
+
+private:
+    KMTitleBarCombo *m_titleCombo;
 };
 
-#endif // KMTITLEBARBASE_H
+#endif // KMUNIBAR_H

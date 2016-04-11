@@ -25,6 +25,7 @@
 #include "kmmainwindowcontainer.h"
 #include "kmglobal.h"
 #include "kmcoverlayer.h"
+#include "kmunibarbase.h"
 
 #include "kmtitlebarbase.h"
 
@@ -40,6 +41,7 @@ KMMainWindow::KMMainWindow(QWidget *parent) :
     m_container(new KMMainWindowContainer(this)),
     m_floatAnime(new QTimeLine(200, this)),
     m_floatLayer(new KMCoverLayer(this)),
+    m_titleBar(nullptr),
     m_cacheConfigure(kmGlobal->cacheConfigure()->getConfigure("MainWindow"))
 {
     setObjectName("MainWindow");
@@ -79,11 +81,27 @@ KMMainWindow::KMMainWindow(QWidget *parent) :
 
 void KMMainWindow::setTitleBar(KMTitleBarBase *titleBar)
 {
+    //Check pointer is already set or not.
+    if(m_titleBar)
+    {
+        //Already has a title bar, ignore the second widget.
+        return;
+    }
+    //Save the title bar.
+    m_titleBar=titleBar;
+    //Check title bar.
+    if(!m_titleBar)
+    {
+        //Ignore null pointer.
+        return;
+    }
     //Set the title bar widget.
-    m_container->setTitleBar(titleBar);
+    m_container->setTitleBar(m_titleBar);
     //Link the title bar widget.
-    connect(titleBar, &KMTitleBarBase::requireShowUnibar,
+    connect(m_titleBar, &KMTitleBarBase::requireShowUnibar,
             this, &KMMainWindow::showUnibar);
+    connect(m_titleBar, &KMTitleBarBase::requireShowPreference,
+            this, &KMMainWindow::showPreference);
 }
 
 void KMMainWindow::setMailList(QWidget *mailList)
@@ -91,7 +109,7 @@ void KMMainWindow::setMailList(QWidget *mailList)
     m_container->setMailList(mailList);
 }
 
-void KMMainWindow::setUniBar(QWidget *uniBar)
+void KMMainWindow::setUniBar(KMUnibarBase *uniBar)
 {
     m_container->setUniBar(uniBar);
 }
@@ -178,7 +196,39 @@ void KMMainWindow::hideUnibar()
     startAnime(0);
 }
 
+void KMMainWindow::showPreference()
+{
+    //Show the float layer.
+    m_floatLayer->show();
+    //Resize the float layer.
+    m_floatLayer->resize(size());
+    //Show the float layer.
+    startAnime(MaxOpacity);
+    //Link the cover layer to hide unibar.
+    connect(m_floatLayer, &KMCoverLayer::clicked,
+            this, &KMMainWindow::hidePreference);
+}
+
+void KMMainWindow::hidePreference()
+{
+    //Disconnect the float layer signal.
+    disconnect(m_floatLayer, &KMCoverLayer::clicked, 0, 0);
+    //Link the anime finished signal.
+    connect(m_floatAnime, &QTimeLine::finished,
+            this, &KMMainWindow::onActionHidePreferenceFinished);
+    //Hide the float layer.
+    startAnime(0);
+}
+
 void KMMainWindow::onActionHideFloatLayerFinished()
+{
+    //Hide the cover layer.
+    m_floatLayer->hide();
+    //Disconnect the finished signal.
+    disconnect(m_floatAnime, &QTimeLine::finished, 0, 0);
+}
+
+void KMMainWindow::onActionHidePreferenceFinished()
 {
     //Hide the cover layer.
     m_floatLayer->hide();

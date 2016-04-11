@@ -20,22 +20,31 @@
 
 #include <QWidget>
 
+class KMTitleBarBase;
 /*!
- * \brief The KMUnibarBase class
+ * \brief The KMUnibarBase class provides all the ports that a unibar widget
+ * should be provided.\n
+ * The unibar will be used on main window for switching different list and
+ * account.
  */
 class KMUnibarBase : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief KMUnibarBase
-     * \param parent
+     * \brief Construct a KMUnibarBase widget.
+     * \param parent The parent widget.
      */
-    explicit KMUnibarBase(QWidget *parent = 0);
+    KMUnibarBase(QWidget *parent = 0) : QWidget(parent){}
 
 signals:
 
 public slots:
+    /*!
+     * \brief Set the title bar widget to unibar.
+     * \param titleBar The title bar widget pointer.
+     */
+    virtual void setTitleBar(KMTitleBarBase *titleBar)=0;
 };
 
 #endif // KMUNIBARBASE_H
