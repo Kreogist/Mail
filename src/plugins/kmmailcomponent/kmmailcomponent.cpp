@@ -16,8 +16,12 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QBoxLayout>
+#include <QTimeLine>
+#include <QScrollArea>
+#include <QScrollBar>
 
 #include "knthememanager.h"
+#include "sao/knsaostyle.h"
 
 #include "kmmailcomponenttitlebar.h"
 #include "kmmailcomponentcontent.h"
@@ -26,8 +30,15 @@
 
 #include <QDebug>
 
+#define ScrollBarWidth 10
+#define MaxOpacity 0x30
+
 KMMailComponent::KMMailComponent(QWidget *parent) :
     KMMailComponentBase(parent),
+    m_mouseAnime(new QTimeLine(200, this)),
+    m_mailContentArea(new QScrollArea(this)),
+    m_scrollBar(new QScrollBar(m_mailContentArea)),
+    m_container(new QWidget(this)),
     m_titleBar(new KMMailComponentTitleBar(this)),
     m_content(new KMMailComponentContent(this))
 {
@@ -37,12 +48,62 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     //Register the widget.
     knTheme->registerWidget(this);
 
+    //Set the container to the content area.
+    m_mailContentArea->setWidget(m_container);
+    m_mailContentArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_mailContentArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_mailContentArea->setFrameStyle(QFrame::NoFrame);
+    //Configure the scroll bar.
+    m_scrollBar->setStyle(KNSaoStyle::instance());
+    m_scrollBar->setObjectName("MailComponentScrollBar");
+    connect(knTheme, &KNThemeManager::themeChange,
+            [=]
+            {
+                //Get the new palette from theme manager, and set it.
+                m_scrollBar->setPalette(knTheme->getPalette(
+                                            m_scrollBar->objectName()));
+                //Update the palette.
+                onActionMouseInOut(0);
+            });
+    //Update the validation.
+    m_scrollBar->setPalette(knTheme->getPalette(m_scrollBar->objectName()));
+    onActionMouseInOut(0);
+
+    connect(m_mailContentArea->verticalScrollBar(), &QScrollBar::rangeChanged,
+            [=](int min, int max)
+            {
+                //Update the range first.
+                m_scrollBar->setRange(min, max);
+                //Check whether the scroll bar is still valid.
+                m_scrollBar->setVisible(min!=max);
+            });
+    connect(m_mailContentArea->verticalScrollBar(), &QScrollBar::valueChanged,
+            [=](int value)
+            {
+                //Block the signal.
+                m_scrollBar->blockSignals(true);
+                //Reset the value.
+                m_scrollBar->setValue(value);
+                //Release the block
+                m_scrollBar->blockSignals(false);
+            });
+    connect(m_scrollBar, &QScrollBar::valueChanged,
+            m_mailContentArea->verticalScrollBar(), &QScrollBar::setValue);
+
+    //Configure the time line.
+    m_mouseAnime->setEasingCurve(QEasingCurve::OutCubic);
+    m_mouseAnime->setUpdateInterval(10);
+    //Link the time line.
+    connect(m_mouseAnime, &QTimeLine::frameChanged,
+            this, &KMMailComponent::onActionMouseInOut);
+
     //Initial the main layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom,
                                           this);
     mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
-    setLayout(mainLayout);
+    //Set layout to container.
+    m_container->setLayout(mainLayout);
     //Add widget to layout.
     mainLayout->addWidget(m_titleBar);
     //Add component widget to layout.
@@ -53,11 +114,84 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     m_titleBar->setReceiveDate(QDate(2016,3,1));
     //Debug
     QStringList receiverList;
-    receiverList << "ayase.eri@ll-anime.com" << "yazawa.nico@ll-anime.com";
+    receiverList << "ayase.eri@ll-anime.com" << "tojo.nozomi@ll-anime.com";
     m_titleBar->setReceiverList(receiverList);
-    receiverList << "minami.kotori@ll-anime.com";
+    receiverList << "yazawa.nico@ll-anime.com"
+                 << "minami.kotori@ll-anime.com"
+                 << "sonoda.umi@ll-anime.com"
+                 << "nishikino.maki@ll-anime.com"
+                 << "koitsumi.hanayo@ll-anime.com"
+                 << "hoshizora.rin@ll-anime.com"
+                 << "kousaka.honoka@ll-anime.com"
+                 << "nitta.emi@ll-anime.com"
+                 << "mimorin.suzuko@ll-anime.com"
+                 << "utchida.aya@ll-anime.com"
+                 << "kubo.yurika@ll-anime.com"
+                 << "itta.riho@ll-anime.com"
+                 << "pile@ll-anime.com"
+                 << "toukui.sora@ll-anime.com"
+                 << "nanjo.yoshino@ll-anime.com"
+                 << "kusuda.aina@ll-anime.com";
     m_titleBar->setReceiverList(receiverList);
     QStringList senderList;
     senderList << "tojo.nozomi@ll-anime.com";
     m_titleBar->setSenderList(senderList);
+}
+
+void KMMailComponent::resizeEvent(QResizeEvent *event)
+{
+    //Resize the widget.
+    KMMailComponentBase::resizeEvent(event);
+    //Update the scroll bar position.
+    m_scrollBar->setGeometry(width()-ScrollBarWidth,
+                             0,
+                             ScrollBarWidth,
+                             height());
+    //Resize the content area.
+    m_mailContentArea->resize(size());
+    //Recalculate the container size.
+    m_container->resize(width(),
+                        m_container->sizeHint().height());
+}
+
+void KMMailComponent::enterEvent(QEvent *event)
+{
+    //Enter the widget.
+    KMMailComponentBase::enterEvent(event);
+    //Start mouse in anime.
+    startAnime(MaxOpacity);
+}
+
+void KMMailComponent::leaveEvent(QEvent *event)
+{
+    //Enter the widget.
+    KMMailComponentBase::leaveEvent(event);
+    //Start mouse in anime.
+    startAnime(0);
+}
+
+void KMMailComponent::onActionMouseInOut(int frame)
+{
+    //Update the scroll bar color.
+    QPalette pal=m_scrollBar->palette();
+    QColor color=pal.color(QPalette::Base);
+    color.setAlpha(frame);
+    pal.setColor(QPalette::Base, color);
+    color=pal.color(QPalette::Button);
+    color.setAlpha(frame<<1);
+    pal.setColor(QPalette::Button, color);
+    //Set the palette to scroll bar.
+    m_scrollBar->setPalette(pal);
+}
+
+inline void KMMailComponent::startAnime(int endFrame)
+{
+    //Stop the mouse animations.
+    m_mouseAnime->stop();
+    //Set the parameter of the time line.
+    m_mouseAnime->setFrameRange(
+                m_scrollBar->palette().color(QPalette::Base).alpha(),
+                endFrame);
+    //Start the time line.
+    m_mouseAnime->start();
 }

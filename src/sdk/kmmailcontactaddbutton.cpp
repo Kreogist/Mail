@@ -27,6 +27,7 @@ KMMailContactAddButton::KMMailContactAddButton(QWidget *parent) :
     QAbstractButton(parent)
 {
     //Set properties.
+    setCursor(Qt::PointingHandCursor);
     setFixedSize(ContactButtonHeight + OffsetData,
                  ContactButtonHeight);
     //Update the font.

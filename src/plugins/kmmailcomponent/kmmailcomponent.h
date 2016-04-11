@@ -20,6 +20,9 @@
 
 #include "kmmailcomponentbase.h"
 
+class QScrollArea;
+class QScrollBar;
+class QTimeLine;
 class KMMailComponentTitleBar;
 class KMMailComponentContent;
 /*!
@@ -40,7 +43,31 @@ signals:
 
 public slots:
 
+protected:
+    /*!
+     * \brief Reimplemented from KMMailComponentBase::resizeEvent().
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from KMMailComponentBase::enterEvent().
+     */
+    void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from KMMailComponentBase::leaveEvent().
+     */
+    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+
+private slots:
+    void onActionMouseInOut(int frame);
+
 private:
+    inline void startAnime(int endFrame);
+    QTimeLine *m_mouseAnime;
+    QScrollArea *m_mailContentArea;
+    QScrollBar *m_scrollBar;
+    QWidget *m_container;
     KMMailComponentTitleBar *m_titleBar;
     KMMailComponentContent *m_content;
 };

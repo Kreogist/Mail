@@ -10,6 +10,11 @@
         "Parent" : "MainWindow",
         "Window" : "#FFFFFF"
     },
+    "MailComponentScrollBar" :{
+        "Parent" : "MailComponent",
+        "Base" : "#00000000",
+        "Button" : "#00000000"
+    },
     "MailComponentButton" : {
         "Parent" : "MailComponent",
         "Window" : "#9A9A9A",
@@ -44,7 +49,7 @@
         "HighlightedText" : "#F7CF3D"
     },
     "LeftBarMailListScrollBar" : {
-        "parent" : "LeftBarMailList",
+        "Parent" : "LeftBarMailList",
         "Base" : "#FFFFFF00",
         "Button" : "#FFFFFF00"
     }
