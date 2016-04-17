@@ -17,14 +17,22 @@
  */
 #include <QWidget>
 
+#include "kmextendbutton.h"
+
 #include "kmflowlayout.h"
 
 KMFlowLayout::KMFlowLayout(int margin, int hSpacing, int vSpacing,
                            QWidget *parent) :
     QLayout(parent),
+    m_extendButton(new KMExtendButton(parent)),
     m_hSpace(hSpacing),
-    m_vSpace(vSpacing)
+    m_vSpace(vSpacing),
+    m_fold(false),
+    m_isFolded(false)
 {
+    //Hide the extend button as default.
+    m_extendButton->hide();
+    //Update the margin.
     setContentsMargins(margin, margin, margin, margin);
 }
 
@@ -152,13 +160,26 @@ inline int KMFlowLayout::doLayout(const QRect &rect, bool testOnly) const
     int x = effectiveRect.x(),
         y = effectiveRect.y(),
         lineHeight = 0;
+    //Initial the first line state.
+    bool noMoreFirstLine=false;
 
     //Get all the item in the item list.
     QLayoutItem *item;
-    foreach (item, itemList)
+    for(int i=0; i<itemList.size(); ++i)
     {
+        //Get the item.
+        item=itemList.at(i);
         //Get the item to the widget.
         QWidget *currentWidget = item->widget();
+        //Check whether folding is turn on.
+        if(m_fold && noMoreFirstLine)
+        {
+            //Hide the current widget.
+            currentWidget->hide();
+            //Continue to next widget.
+            continue;
+        }
+        //Initial the spacing.
         int spaceX = horizontalSpacing();
         if (spaceX == -1)
         {
@@ -175,7 +196,7 @@ inline int KMFlowLayout::doLayout(const QRect &rect, bool testOnly) const
                         QSizePolicy::PushButton,
                         Qt::Vertical);
         }
-
+        //Calculate the prefer next X position.
         int nextX = x + item->sizeHint().width() + spaceX;
         if (nextX - spaceX > effectiveRect.right() && lineHeight > 0)
         {
@@ -213,4 +234,17 @@ inline int KMFlowLayout::smartSpacing(QStyle::PixelMetric pm) const
     {
         return static_cast<QLayout *>(parent)->spacing();
     }
+}
+
+bool KMFlowLayout::isFoldEnabled() const
+{
+    return m_fold;
+}
+
+void KMFlowLayout::setFold(bool fold)
+{
+    //Update the folded state.
+    m_fold = fold;
+    //Do the layout again.
+//    doLayout();
 }

@@ -68,6 +68,12 @@ public slots:
      */
     void setMailComponent(QWidget *mailComponent);
 
+    /*!
+     * \brief Set the preference widget.
+     * \param preference The preference widget pointer.
+     */
+    void setPreference(QWidget *preference);
+
 protected:
     /*!
      * \brief Reimplemented from QMainWindow::closeEvent().
@@ -101,6 +107,7 @@ private:
     KMCoverLayer *m_floatLayer;
     QTimeLine *m_floatAnime;
     KMTitleBarBase *m_titleBar;
+    KMUnibarBase *m_uniBar;
     KNConfigure *m_cacheConfigure;
 };
 

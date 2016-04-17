@@ -23,6 +23,7 @@
 
 #include <QLayout>
 
+class KMExtendButton;
 /*!
  * \brief The KMFlowLayout implements a layout that handles different window
  * sizes. The widget placement changes depending on the width of the application
@@ -114,17 +115,26 @@ public:
      */
     void clearItems();
 
+    /*!
+     * \brief Whether the flow layout enabled fold.
+     * \return If the layout enabled fold.
+     */
+    bool isFoldEnabled() const;
+
 signals:
 
 public slots:
+    void setFold(bool isFoldEnabled);
 
 private:
     inline int doLayout(const QRect &rect, bool testOnly) const;
     inline int smartSpacing(QStyle::PixelMetric pm) const;
 
     QList<QLayoutItem *> itemList;
+    KMExtendButton *m_extendButton;
     int m_hSpace;
     int m_vSpace;
+    bool m_fold, m_isFolded;
 };
 
 #endif // KMFLOWLAYOUT_H

@@ -50,6 +50,11 @@ KMTitleBar::KMTitleBar(QWidget *parent) :
     mainLayout->addWidget(m_settings);
 }
 
+KMTitleBarCombo *KMTitleBar::titleCombo()
+{
+    return m_titleCombo;
+}
+
 void KMTitleBar::setTitleText(const QString &titleText)
 {
     //Set the title text to combo widget.

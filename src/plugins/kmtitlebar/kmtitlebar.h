@@ -36,6 +36,11 @@ public:
      */
     explicit KMTitleBar(QWidget *parent = 0);
 
+    /*!
+     * \brief Reimplemented from KMTitleBarBase::titleCombo().
+     */
+    KMTitleBarCombo *titleCombo() Q_DECL_OVERRIDE;
+
 signals:
 
 public slots:

@@ -20,6 +20,7 @@
 
 #include <QWidget>
 
+class KMTitleBarCombo;
 /*!
  * \brief The KMTitleBarBase class provides the basic ports which a title bar
  * widget should be provide.
@@ -33,6 +34,12 @@ public:
      * \param parent The parent widget.
      */
     KMTitleBarBase(QWidget *parent = 0):QWidget(parent){}
+
+    /*!
+     * \brief Show the title combo widget from the title bar.
+     * \return The title combo widget.
+     */
+    virtual KMTitleBarCombo *titleCombo()=0;
 
 signals:
     /*!

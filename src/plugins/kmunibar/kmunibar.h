@@ -20,6 +20,7 @@
 
 #include "kmunibarbase.h"
 
+class QPropertyAnimation;
 class KMTitleBarCombo;
 /*!
  * \brief The KMUnibar class is a official realize of the title bar widget. All
@@ -41,8 +42,29 @@ public slots:
      */
     void setTitleBar(KMTitleBarBase *titleBar) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KMUnibarBase::showUnibar().
+     */
+    void showUnibar(QSize mainWindowSize) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from KMUnibarBase::hideUnibar().
+     */
+    void hideUnibar() Q_DECL_OVERRIDE;
+
+protected:
+    /*!
+     * \brief Reimplemented from KMUnibarBase::resizeEvent().
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
+private slots:
+    void onActionHideUnibar();
+
 private:
-    KMTitleBarCombo *m_titleCombo;
+    KMTitleBarBase *m_titleBar;
+    KMTitleBarCombo *m_shadowCombo, *m_titleBarCombo;
+    QPropertyAnimation *m_sizeAnimation;
 };
 
 #endif // KMUNIBAR_H

@@ -174,7 +174,10 @@ HEADERS += \
     sdk/kmunibarbase.h \
     plugins/kmunibar/kmunibar.h \
     sdk/kmtitlebarbutton.h \
-    sdk/kmtitlebarcombo.h
+    sdk/kmtitlebarcombo.h \
+    sdk/kmpreferencebase.h \
+    plugins/kmpreference/kmpreference.h \
+    sdk/kmextendbutton.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -223,7 +226,9 @@ SOURCES += \
     sdk/kmcoverlayer.cpp \
     plugins/kmunibar/kmunibar.cpp \
     sdk/kmtitlebarbutton.cpp \
-    sdk/kmtitlebarcombo.cpp
+    sdk/kmtitlebarcombo.cpp \
+    plugins/kmpreference/kmpreference.cpp \
+    sdk/kmextendbutton.cpp
 
 RESOURCES += \
     resource/res.qrc

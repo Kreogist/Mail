@@ -15,47 +15,31 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMUNIBARBASE_H
-#define KMUNIBARBASE_H
+#ifndef KMPREFERENCEBASE_H
+#define KMPREFERENCEBASE_H
 
 #include <QWidget>
 
-class KMTitleBarBase;
 /*!
- * \brief The KMUnibarBase class provides all the ports that a unibar widget
- * should be provided.\n
- * The unibar will be used on main window for switching different list and
- * account.
+ * \brief The KMPreferenceBase class provides the ports widget of the preference
+ * widget. All the preference widget should achieve all the ports in this port.
+ * \n
+ * The preference widget is used to display all the panel in this widget.
  */
-class KMUnibarBase : public QWidget
+class KMPreferenceBase : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KMUnibarBase widget.
+     * \brief Construct a KMPreferenceBase widget.
      * \param parent The parent widget.
      */
-    KMUnibarBase(QWidget *parent = 0) : QWidget(parent){}
+    KMPreferenceBase(QWidget *parent = 0): QWidget(parent){}
 
 signals:
 
 public slots:
-    /*!
-     * \brief Set the title bar widget to unibar.
-     * \param titleBar The title bar widget pointer.
-     */
-    virtual void setTitleBar(KMTitleBarBase *titleBar)=0;
 
-    /*!
-     * \brief Show unibar by given the main window size.
-     * \param mainWindowSize The main window size.
-     */
-    virtual void showUnibar(QSize mainWindowSize)=0;
-
-    /*!
-     * \brief Hide the unibar widget.
-     */
-    virtual void hideUnibar()=0;
 };
 
-#endif // KMUNIBARBASE_H
+#endif // KMPREFERENCEBASE_H

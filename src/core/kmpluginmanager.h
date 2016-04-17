@@ -25,6 +25,8 @@ class KMMainWindow;
 class KMTitleBarBase;
 class KMLeftBarBase;
 class KMMailComponentBase;
+class KMUnibarBase;
+class KMPreferenceBase;
 /*!
  * \brief The KMPluginManager class is the global object which could manage all
  * the plugins. And it will configure the plugins of UI and functions.
@@ -79,6 +81,8 @@ private:
     void loadTitleBar(KMTitleBarBase *titleBar);
     void loadLeftBar(KMLeftBarBase *leftBar);
     void loadMailComponent(KMMailComponentBase *mailComponent);
+    void loadUnibar(KMUnibarBase *uniBar);
+    void loadPreference(KMPreferenceBase *preference);
     inline void setApplicationInformation();
     KMMainWindow *m_mainWindow;
 };

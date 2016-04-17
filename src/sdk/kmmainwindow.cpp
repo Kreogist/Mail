@@ -25,8 +25,8 @@
 #include "kmmainwindowcontainer.h"
 #include "kmglobal.h"
 #include "kmcoverlayer.h"
-#include "kmunibarbase.h"
 
+#include "kmunibarbase.h"
 #include "kmtitlebarbase.h"
 
 #include "kmmainwindow.h"
@@ -111,12 +111,25 @@ void KMMainWindow::setMailList(QWidget *mailList)
 
 void KMMainWindow::setUniBar(KMUnibarBase *uniBar)
 {
-    m_container->setUniBar(uniBar);
+//    m_container->setUniBar(uniBar);
+    //Save the unibar widget first.
+    m_uniBar=uniBar;
+    //Configure the unibar.
+    m_uniBar->setParent(this);
+    //Set the title bar to unibar.
+    m_uniBar->setTitleBar(m_titleBar);
+    //Configure the unibar.
+    m_uniBar->hide();
 }
 
 void KMMainWindow::setMailComponent(QWidget *mailComponent)
 {
     m_container->setMailComponent(mailComponent);
+}
+
+void KMMainWindow::setPreference(QWidget *preference)
+{
+    ;
 }
 
 void KMMainWindow::closeEvent(QCloseEvent *event)
@@ -133,6 +146,12 @@ void KMMainWindow::resizeEvent(QResizeEvent *event)
     QMainWindow::resizeEvent(event);
     //Update the layer size.
     m_floatLayer->resize(size());
+    //Check unibar visible.
+    if(m_uniBar->isVisible())
+    {
+        //Resize the unibar size.
+        m_uniBar->resize(m_uniBar->width(), height());
+    }
 }
 
 void KMMainWindow::onActionFullScreen()
@@ -183,10 +202,15 @@ void KMMainWindow::showUnibar()
     //Link the cover layer to hide unibar.
     connect(m_floatLayer, &KMCoverLayer::clicked,
             this, &KMMainWindow::hideUnibar);
+    //Show the unibar and launch the unibar animation.
+    m_uniBar->show();
+    m_uniBar->showUnibar(size());
 }
 
 void KMMainWindow::hideUnibar()
 {
+    //Launch hide unibar animation.
+    m_uniBar->hideUnibar();
     //Disconnect the float layer signal.
     disconnect(m_floatLayer, &KMCoverLayer::clicked, 0, 0);
     //Link the anime finished signal.

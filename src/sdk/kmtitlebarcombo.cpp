@@ -87,16 +87,24 @@ void KMTitleBarCombo::enterEvent(QEvent *event)
 {
     //Do original event.
     QAbstractButton::enterEvent(event);
-    //Start anime.
-    startAnime(MaximumBrightness);
+    //Start anime when enabled.
+    if(isEnabled())
+    {
+        //Launch the animation.
+        startAnime(MaximumBrightness);
+    }
 }
 
 void KMTitleBarCombo::leaveEvent(QEvent *event)
 {
     //Do original event.
     QAbstractButton::leaveEvent(event);
-    //Start the anime.
-    startAnime(MinimumBrightness);
+    //Start anime when enabled.
+    if(isEnabled())
+    {
+        //Launch the animation.
+        startAnime(MinimumBrightness);
+    }
 }
 
 void KMTitleBarCombo::paintEvent(QPaintEvent *event)
@@ -161,20 +169,28 @@ void KMTitleBarCombo::mousePressEvent(QMouseEvent *event)
 {
     //Do the press event.
     QAbstractButton::mousePressEvent(event);
-    //Update the state.
-    m_pressed=true;
-    //Update the widget.
-    update();
+    //Check the enabled.
+    if(isEnabled())
+    {
+        //Update the state.
+        m_pressed=true;
+        //Update the widget.
+        update();
+    }
 }
 
 void KMTitleBarCombo::mouseReleaseEvent(QMouseEvent *event)
 {
     //Do the release event.
     QAbstractButton::mouseReleaseEvent(event);
-    //Update the state.
-    m_pressed=false;
-    //Update the widget.
-    update();
+    //Check the enabled.
+    if(isEnabled())
+    {
+        //Update the state.
+        m_pressed=false;
+        //Update the widget.
+        update();
+    }
 }
 
 void KMTitleBarCombo::onActionThemeChange()

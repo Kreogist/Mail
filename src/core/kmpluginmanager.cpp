@@ -28,15 +28,18 @@
 #include "kmtitlebarbase.h"
 #include "kmleftbarbase.h"
 #include "kmmailcomponentbase.h"
-
-#include "kmmaillistmodel.h"
+#include "kmunibarbase.h"
+#include "kmpreferencebase.h"
 
 //Plugins.
 #include "plugins/kmtitlebar/kmtitlebar.h"
 #include "plugins/kmleftbar/kmleftbar.h"
 #include "plugins/kmmailcomponent/kmmailcomponent.h"
+#include "plugins/kmunibar/kmunibar.h"
 
 #include "kmpluginmanager.h"
+
+#include "kmmaillistmodel.h"
 
 KMPluginManager::KMPluginManager(QObject *parent) :
     QObject(parent),
@@ -80,6 +83,8 @@ void KMPluginManager::loadPlugins()
     loadLeftBar(new KMLeftBar);
     //Load mail component plugin.
     loadMailComponent(new KMMailComponent);
+    //Load the uni bar plugin.
+    loadUnibar(new KMUnibar);
 }
 
 void KMPluginManager::launchApplication()
@@ -149,6 +154,30 @@ void KMPluginManager::loadMailComponent(KMMailComponentBase *mailComponent)
     }
     //Load the mail component to main window, which is the mail list.
     m_mainWindow->setMailComponent(mailComponent);
+}
+
+void KMPluginManager::loadUnibar(KMUnibarBase *uniBar)
+{
+    //Check the pointer first.
+    if(!uniBar)
+    {
+        //Ignore the pointer.
+        return;
+    }
+    //Load the unibar widget to the main window.
+    m_mainWindow->setUniBar(uniBar);
+}
+
+void KMPluginManager::loadPreference(KMPreferenceBase *preference)
+{
+    //Check the pointer first.
+    if(!preference)
+    {
+        //Ignore the pointer if the pointer is null.
+        return;
+    }
+    //Set the preference plugin to main window.
+    m_mainWindow;
 }
 
 inline void KMPluginManager::setApplicationInformation()
