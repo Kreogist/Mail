@@ -56,6 +56,8 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     //Configure the scroll bar.
     m_scrollBar->hide();
     m_scrollBar->setStyle(KNSaoStyle::instance());
+    m_scrollBar->setSingleStep(27);
+    m_scrollBar->setPageStep(27);
     m_scrollBar->setObjectName("MailComponentScrollBar");
     connect(knTheme, &KNThemeManager::themeChange,
             [=]
@@ -69,6 +71,9 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     //Update the validation.
     m_scrollBar->setPalette(knTheme->getPalette(m_scrollBar->objectName()));
     onActionMouseInOut(0);
+
+    //Update the single step.
+    m_mailContentArea->verticalScrollBar()->setSingleStep(27);
 
     connect(m_mailContentArea->verticalScrollBar(), &QScrollBar::rangeChanged,
             this, &KMMailComponent::onActionRangeChange);
@@ -84,6 +89,14 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
             });
     connect(m_scrollBar, &QScrollBar::valueChanged,
             m_mailContentArea->verticalScrollBar(), &QScrollBar::setValue);
+    //Configure title bar.
+    connect(m_titleBar, &KMMailComponentTitleBar::titleSizeUpdate,
+            [=]
+            {
+        qDebug()<<m_titleBar->sizeHint();
+                //Update the geometries.
+                updateGeometries();
+            });
 
     //Configure the time line.
     m_mouseAnime->setEasingCurve(QEasingCurve::OutCubic);
@@ -137,16 +150,8 @@ void KMMailComponent::resizeEvent(QResizeEvent *event)
 {
     //Resize the widget.
     KMMailComponentBase::resizeEvent(event);
-    //Update the scroll bar position.
-    m_scrollBar->setGeometry(width()-ScrollBarWidth,
-                             0,
-                             ScrollBarWidth,
-                             height());
-    //Resize the content area.
-    m_mailContentArea->resize(size());
-    //Recalculate the container size.
-    m_container->resize(width(),
-                        m_container->sizeHint().height());
+    //Update geometries.
+    updateGeometries();
 }
 
 void KMMailComponent::enterEvent(QEvent *event)
@@ -185,6 +190,34 @@ void KMMailComponent::onActionRangeChange(int min, int max)
     m_scrollBar->setRange(min, max);
     //Check whether the scroll bar is still valid.
     m_scrollBar->setVisible(min!=max);
+}
+
+void KMMailComponent::updateGeometries()
+{
+    //Update the scroll bar position.
+    m_scrollBar->setGeometry(width()-ScrollBarWidth,
+                             0,
+                             ScrollBarWidth,
+                             height());
+    //Resize the content area.
+    m_mailContentArea->resize(size());
+    //Update title bar.
+    m_titleBar->updateHeight(width());
+    //Update the content size.
+    //Check the title bar states.
+    if(m_titleBar->isExpand())
+    {
+        //If the title bar is expand, then the content will make it to be the
+        //whole size.
+        m_content->setFixedHeight(height());
+    }
+    else
+    {
+        //Resize the content widget.
+        m_content->setFixedHeight(height()-m_titleBar->height());
+    }
+    //Recalculate the container size.
+    m_container->resize(width(), m_container->sizeHint().height());
 }
 
 inline void KMMailComponent::startAnime(int endFrame)

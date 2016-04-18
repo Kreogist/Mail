@@ -17,24 +17,41 @@
  */
 #include <QPropertyAnimation>
 
+#include "knsideshadowwidget.h"
+#include "knthememanager.h"
 #include "kmtitlebarcombo.h"
 #include "kmtitlebarbase.h"
 
 #include "kmunibar.h"
+
+#define ShadowHeight 15
 
 KMUnibar::KMUnibar(QWidget *parent) :
     KMUnibarBase(parent),
     m_titleBar(nullptr),
     m_shadowCombo(new KMTitleBarCombo(this)),
     m_titleBarCombo(nullptr),
-    m_sizeAnimation(new QPropertyAnimation(this, "size", this))
+    m_sizeAnimation(new QPropertyAnimation(this, "size", this)),
+    m_topShadow(new KNSideShadowWidget(KNSideShadowWidget::TopShadow,
+                                       this)),
+    m_rightShadow(new KNSideShadowWidget(KNSideShadowWidget::RightShadow,
+                                         this))
 {
+    setObjectName("UniBar");
     //Set properties.
     setAutoFillBackground(true);
     //Configure the combo button.
     m_shadowCombo->setEnabled(false);
     //Configure the animation.
     m_sizeAnimation->setEasingCurve(QEasingCurve::OutCubic);
+    m_sizeAnimation->setDuration(200);
+    //Configure the side shadow.
+    m_topShadow->move(0, m_shadowCombo->height());
+    m_topShadow->setFixedHeight(ShadowHeight);
+    m_rightShadow->hide();
+
+    //Register the widget.
+    knTheme->registerWidget(this);
 }
 
 void KMUnibar::setTitleBar(KMTitleBarBase *titleBar)
@@ -87,7 +104,9 @@ void KMUnibar::resizeEvent(QResizeEvent *event)
     //Resize the widget.
     KMUnibarBase::resizeEvent(event);
     //Resize the combo.
-    m_shadowCombo->resize(width(), m_shadowCombo->height());
+    m_shadowCombo->resize(width() + 1, m_shadowCombo->height());
+    //Resize the top shadow.
+    m_topShadow->resize(width(), m_topShadow->height());
 }
 
 void KMUnibar::onActionHideUnibar()

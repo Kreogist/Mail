@@ -20,6 +20,7 @@
 
 #include <QWidget>
 
+class QWebEngineView;
 class KNSideShadowWidget;
 /*!
  * \brief The KMMailComponentContent class provides a widget to show the content
@@ -35,6 +36,11 @@ public:
      */
     explicit KMMailComponentContent(QWidget *parent = 0);
 
+    /*!
+     * \brief Reimplemented from QWidget::sizeHint().
+     */
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+
 signals:
 
 public slots:
@@ -46,7 +52,9 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    QWebEngineView *m_browser;
     KNSideShadowWidget *m_topShadow;
+    int m_documentHeight;
 };
 
 #endif // KMMAILCOMPONENTCONTENT_H

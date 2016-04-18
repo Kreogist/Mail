@@ -62,6 +62,7 @@ protected:
 private slots:
     void onActionMouseInOut(int frame);
     void onActionRangeChange(int min, int max);
+    void updateGeometries();
 
 private:
     inline void startAnime(int endFrame);

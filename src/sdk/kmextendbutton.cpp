@@ -17,21 +17,35 @@
  */
 #include <QPainter>
 
+#include "knthememanager.h"
+
 #include "kmextendbutton.h"
 
 KMExtendButton::KMExtendButton(QWidget *parent) :
     QAbstractButton(parent)
 {
+    setObjectName("ExtendButton");
+    //Set the fixed size of this button.
+    setCursor(Qt::PointingHandCursor);
+    setFixedSize(27, 27);
+    knTheme->registerWidget(this);
 
+    setText("...");
 }
 
 void KMExtendButton::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event)
     //Initial the painter.
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing |
                            QPainter::TextAntialiasing |
                            QPainter::SmoothPixmapTransform, true);
     //Draw the border.
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(palette().color(QPalette::Button));
     painter.drawRoundedRect(rect(), 4, 4);
+    //Draw the text.
+    painter.setPen(palette().color(QPalette::ButtonText));
+    painter.drawText(rect(), Qt::AlignCenter, text());
 }

@@ -23,8 +23,9 @@
 #include <QWidget>
 
 class QLabel;
-class KMFlowLayout;
+class QBoxLayout;
 class KMMailContactButton;
+class KMMailComponetContactList;
 /*!
  * \brief The KMMailComponentTitleBar class provides a title bar which could
  * display the basic information about the mail itself.
@@ -39,7 +40,17 @@ public:
      */
     explicit KMMailComponentTitleBar(QWidget *parent = 0);
 
+    /*!
+     * \brief Whether from or to list is expaned.
+     * \return If any of the contact list is expanded, this will return true.
+     */
+    bool isExpand() const;
+
 signals:
+    /*!
+     * \brief When any size is changed, this signal will be emitted.
+     */
+    void titleSizeUpdate();
 
 public slots:
     /*!
@@ -66,16 +77,23 @@ public slots:
      */
     void setReceiveDate(const QDate &receiveDate);
 
+    /*!
+     * \brief updateHeight
+     */
+    void updateHeight(int targetWidth=-1);
+
 private slots:
     void retranslate();
     void onThemeChanged();
+    void onActionExpandChanged();
 
 private:
     inline KMMailContactButton *generateButton(const QString &address);
     QList<KMMailContactButton *> m_fromList, m_toList;
     QDate m_receiveDate;
+    QBoxLayout *m_mainLayout;
     QLabel *m_titleLabel, *m_receiveLabel, *m_fromLabel, *m_toLabel;
-    KMFlowLayout *m_fromLayout, *m_toLayout;
+    KMMailComponetContactList *m_fromListWidget, *m_toListWidget;
 };
 
 #endif // KMMAILCOMPONENTTITLEBAR_H

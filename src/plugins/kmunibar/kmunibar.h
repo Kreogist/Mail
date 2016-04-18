@@ -21,6 +21,7 @@
 #include "kmunibarbase.h"
 
 class QPropertyAnimation;
+class KNSideShadowWidget;
 class KMTitleBarCombo;
 /*!
  * \brief The KMUnibar class is a official realize of the title bar widget. All
@@ -65,6 +66,7 @@ private:
     KMTitleBarBase *m_titleBar;
     KMTitleBarCombo *m_shadowCombo, *m_titleBarCombo;
     QPropertyAnimation *m_sizeAnimation;
+    KNSideShadowWidget *m_topShadow, *m_rightShadow;
 };
 
 #endif // KMUNIBAR_H

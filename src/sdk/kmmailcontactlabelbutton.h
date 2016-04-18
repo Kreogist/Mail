@@ -20,6 +20,11 @@
 
 #include <QAbstractButton>
 
+/*!
+ * \brief The KMMailContactLabelButton class provides a button which will be
+ * showed the contact information of one person's E-mail information and will
+ * emitted signal for asking to show the card of this person.
+ */
 class KMMailContactLabelButton : public QAbstractButton
 {
     Q_OBJECT

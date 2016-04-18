@@ -44,18 +44,18 @@ QPixmap KMMailContactButton::avatarIcon() const
 
 void KMMailContactButton::setAvatarIcon(const QPixmap &avatarIcon)
 {
+    //Set the avatar.
     m_labelButton->setAvatarIcon(avatarIcon);
+    //Update the size.
+    setFixedSize(sizeHint());
 }
 
 void KMMailContactButton::setContactAddress(const QString &mailAddress)
 {
     //Set the text data.
     m_labelButton->setText(mailAddress);
-    //Change the size.
-    QSize currentSize=sizeHint();
     //Update the size.
-    setMinimumSize(currentSize);
-    resize(currentSize);
+    setFixedSize(sizeHint());
 }
 
 void KMMailContactButton::resizeEvent(QResizeEvent *event)
@@ -75,9 +75,6 @@ void KMMailContactButton::setExist(bool exist)
 {
     //Save the exist state.
     m_exist = exist;
-    //Change the size.
-    QSize currentSize=sizeHint();
     //Update the size.
-    setMinimumSize(currentSize);
-    resize(currentSize);
+    setFixedSize(sizeHint());
 }

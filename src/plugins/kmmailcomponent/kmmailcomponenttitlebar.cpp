@@ -24,20 +24,27 @@
 
 #include "knlocalemanager.h"
 #include "knthememanager.h"
-#include "kmflowlayout.h"
+#include "kmmailcomponetcontactlist.h"
 #include "kmmailcontactbutton.h"
 
 #include "kmmailcomponenttitlebar.h"
 
+#include <QDebug>
+
+#define TopBottomMargin 26
+#define LeftRightMargin 31
+#define TopBottomSpacing 5
+
 KMMailComponentTitleBar::KMMailComponentTitleBar(QWidget *parent) :
     QWidget(parent),
     m_receiveDate(QDate()),
+    m_mainLayout(new QBoxLayout(QBoxLayout::TopToBottom, this)),
     m_titleLabel(new QLabel(this)),
     m_receiveLabel(new QLabel(this)),
     m_fromLabel(new QLabel(this)),
     m_toLabel(new QLabel(this)),
-    m_fromLayout(new KMFlowLayout()),
-    m_toLayout(new KMFlowLayout())
+    m_fromListWidget(new KMMailComponetContactList(this)),
+    m_toListWidget(new KMMailComponetContactList(this))
 {
     //Configrue the title label.
     m_titleLabel->setObjectName("MailComponentTitle");
@@ -54,26 +61,32 @@ KMMailComponentTitleBar::KMMailComponentTitleBar(QWidget *parent) :
     knTheme->registerWidget(m_fromLabel);
     m_toLabel->setObjectName("MailComponentLabel");
     knTheme->registerWidget(m_toLabel);
-
-    //Initial the label.
-    QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom,
-                                          this);
-    //Configure the main layout.
-    mainLayout->setContentsMargins(31, 26, 31, 26);
-    mainLayout->setSpacing(3);
-    //Set the layout.
-    setLayout(mainLayout);
-    //Add widget to layout.
-    mainLayout->addWidget(m_titleLabel);
-    mainLayout->addWidget(m_receiveLabel);
-    //Initial the from and receive form.
-    QFormLayout *fromToLayout=new QFormLayout(mainLayout->widget());
-    fromToLayout->setLabelAlignment(Qt::AlignTop | Qt::AlignRight);
     //Configure the layout.
-    fromToLayout->addRow(m_fromLabel, m_fromLayout);
-    fromToLayout->addRow(m_toLabel, m_toLayout);
-    //Add layout to main layout.
-    mainLayout->addLayout(fromToLayout);
+    m_toListWidget->setEnableFold(true);
+    //Update the from and to list.
+    connect(m_fromListWidget, &KMMailComponetContactList::expandStateChange,
+            this, &KMMailComponentTitleBar::onActionExpandChanged);
+    connect(m_toListWidget, &KMMailComponetContactList::expandStateChange,
+            this, &KMMailComponentTitleBar::onActionExpandChanged);
+
+    //Configure the main layout.
+    m_mainLayout->setContentsMargins(LeftRightMargin,
+                                     TopBottomMargin,
+                                     LeftRightMargin,
+                                     TopBottomMargin);
+    m_mainLayout->setSpacing(TopBottomSpacing);
+    //Set the layout.
+    setLayout(m_mainLayout);
+    //Add widget to layout.
+    m_mainLayout->addWidget(m_titleLabel);
+    m_mainLayout->addWidget(m_receiveLabel);
+    //Initial the from and receive form.
+    QFormLayout *fromToLayout=new QFormLayout(m_mainLayout->widget());
+    m_mainLayout->addLayout(fromToLayout);
+    //Configure the from/to layout.
+    fromToLayout->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
+    fromToLayout->addRow(m_fromLabel, m_fromListWidget);
+    fromToLayout->addRow(m_toLabel, m_toListWidget);
 
     //Link the theme manager.
     connect(knTheme, &KNThemeManager::themeChange,
@@ -83,10 +96,15 @@ KMMailComponentTitleBar::KMMailComponentTitleBar(QWidget *parent) :
     retranslate();
 }
 
+bool KMMailComponentTitleBar::isExpand() const
+{
+    return m_toListWidget->isExpaned() || m_fromListWidget->isExpaned();
+}
+
 void KMMailComponentTitleBar::setReceiverList(const QStringList &addressList)
 {
     //Clear the layout.
-    m_fromLayout->clearItems();
+    m_toListWidget->clear();
     //Remove all widget until the last item.
     while(!m_toList.isEmpty())
     {
@@ -101,14 +119,16 @@ void KMMailComponentTitleBar::setReceiverList(const QStringList &addressList)
         //Add button to list.
         m_toList.append(button);
         //Add widget to layout.
-        m_toLayout->addWidget(button);
+        m_toListWidget->addWidget(button);
     }
+    //Update the title height.
+    updateHeight();
 }
 
 void KMMailComponentTitleBar::setSenderList(const QStringList &senderList)
 {
     //Clear the layout.
-    m_fromLayout->clearItems();
+    m_fromListWidget->clear();
     //Remove all widget until the last item.
     while(!m_fromList.isEmpty())
     {
@@ -123,14 +143,18 @@ void KMMailComponentTitleBar::setSenderList(const QStringList &senderList)
         //Add button to list.
         m_fromList.append(button);
         //Add widget to layout.
-        m_fromLayout->addWidget(button);
+        m_fromListWidget->addWidget(button);
     }
+    //Update the title height.
+    updateHeight();
 }
 
 void KMMailComponentTitleBar::setTitle(const QString &text)
 {
     //Save the title label text.
     m_titleLabel->setText(text);
+    //Update the title height.
+    updateHeight();
 }
 
 void KMMailComponentTitleBar::setReceiveDate(const QDate &receiveDate)
@@ -165,6 +189,27 @@ void KMMailComponentTitleBar::onThemeChanged()
         //Update the button item.
         button->setPalette(knTheme->getPalette("MailComponentButton"));
     }
+}
+
+void KMMailComponentTitleBar::onActionExpandChanged()
+{
+    //Update the height.
+    updateHeight();
+    //Emit the update changed signal.
+    emit titleSizeUpdate();
+}
+
+void KMMailComponentTitleBar::updateHeight(int targetWidth)
+{
+    //Update the size.
+    setFixedHeight((TopBottomMargin<<1) +
+                   m_titleLabel->heightForWidth(
+                       (targetWidth==-1?width():targetWidth)-
+                       (LeftRightMargin<<1)) +
+                   m_receiveLabel->height() +
+                   m_fromListWidget->height() +
+                   m_toListWidget->height() +
+                   TopBottomSpacing * 3);
 }
 
 inline KMMailContactButton *KMMailComponentTitleBar::generateButton(

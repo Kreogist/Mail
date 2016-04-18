@@ -39,8 +39,8 @@ KMMainWindow::KMMainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_originalWindowState(Qt::WindowNoState),
     m_container(new KMMainWindowContainer(this)),
-    m_floatAnime(new QTimeLine(200, this)),
     m_floatLayer(new KMCoverLayer(this)),
+    m_floatAnime(new QTimeLine(200, this)),
     m_titleBar(nullptr),
     m_cacheConfigure(kmGlobal->cacheConfigure()->getConfigure("MainWindow"))
 {

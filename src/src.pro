@@ -23,7 +23,8 @@ QT += \
     core \
     gui \
     widgets \
-    network
+    network \
+    webenginewidgets
 
 # Enabled C++ 11 configures.
 CONFIG += c++11
@@ -163,7 +164,6 @@ HEADERS += \
     sdk/kmmailcomponentbase.h \
     plugins/kmmailcomponent/kmmailcomponent.h \
     plugins/kmmailcomponent/kmmailcomponenttitlebar.h \
-    sdk/kmflowlayout.h \
     plugins/kmmailcomponent/kmmailcomponentcontent.h \
     sdk/sao/knsaostyle.h \
     sdk/kmmailcontactbutton.h \
@@ -177,7 +177,8 @@ HEADERS += \
     sdk/kmtitlebarcombo.h \
     sdk/kmpreferencebase.h \
     plugins/kmpreference/kmpreference.h \
-    sdk/kmextendbutton.h
+    sdk/kmextendbutton.h \
+    plugins/kmmailcomponent/kmmailcomponetcontactlist.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -216,7 +217,6 @@ SOURCES += \
     sdk/kmmaillistviewdelegate.cpp \
     plugins/kmmailcomponent/kmmailcomponent.cpp \
     plugins/kmmailcomponent/kmmailcomponenttitlebar.cpp \
-    sdk/kmflowlayout.cpp \
     plugins/kmmailcomponent/kmmailcomponentcontent.cpp \
     sdk/sao/knsaostyle.cpp \
     sdk/kmmailcontactbutton.cpp \
@@ -228,7 +228,8 @@ SOURCES += \
     sdk/kmtitlebarbutton.cpp \
     sdk/kmtitlebarcombo.cpp \
     plugins/kmpreference/kmpreference.cpp \
-    sdk/kmextendbutton.cpp
+    sdk/kmextendbutton.cpp \
+    plugins/kmmailcomponent/kmmailcomponetcontactlist.cpp
 
 RESOURCES += \
     resource/res.qrc

@@ -6,6 +6,15 @@
         "Window" : "#000000",
         "WindowText" : "#FFFFFF"
     },
+    "UniBar" : {
+        "Parent" : "MainWindow",
+        "Window" : "#202020"
+    },
+    "ExtendButton" : {
+        "Parent" : "UniBar",
+        "Button" : "#202020",
+        "ButtonText" : "#FFFFFF"
+    },
     "MailComponent" : {
         "Parent" : "MainWindow",
         "Window" : "#FFFFFF"
