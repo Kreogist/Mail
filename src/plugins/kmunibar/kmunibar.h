@@ -37,6 +37,11 @@ public:
      */
     explicit KMUnibar(QWidget *parent = 0);
 
+    /*!
+     * \brief Reimplemented from KMUnibarBase::setShadowParent().
+     */
+    void setShadowParent(QWidget *container) Q_DECL_OVERRIDE;
+
 public slots:
     /*!
      * \brief Reimplemented from KMUnibarBase::setTitleBar().
@@ -58,6 +63,11 @@ protected:
      * \brief Reimplemented from KMUnibarBase::resizeEvent().
      */
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from KMUnibarBase::hideEvent().
+     */
+    void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
     void onActionHideUnibar();

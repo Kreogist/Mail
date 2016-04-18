@@ -34,7 +34,7 @@ KMUnibar::KMUnibar(QWidget *parent) :
     m_sizeAnimation(new QPropertyAnimation(this, "size", this)),
     m_topShadow(new KNSideShadowWidget(KNSideShadowWidget::TopShadow,
                                        this)),
-    m_rightShadow(new KNSideShadowWidget(KNSideShadowWidget::RightShadow,
+    m_rightShadow(new KNSideShadowWidget(KNSideShadowWidget::LeftShadow,
                                          this))
 {
     setObjectName("UniBar");
@@ -48,10 +48,17 @@ KMUnibar::KMUnibar(QWidget *parent) :
     //Configure the side shadow.
     m_topShadow->move(0, m_shadowCombo->height());
     m_topShadow->setFixedHeight(ShadowHeight);
+    m_rightShadow->setFixedWidth(ShadowHeight);
     m_rightShadow->hide();
 
     //Register the widget.
     knTheme->registerWidget(this);
+}
+
+void KMUnibar::setShadowParent(QWidget *container)
+{
+    //Give the right shadow the container.
+    m_rightShadow->setParent(container);
 }
 
 void KMUnibar::setTitleBar(KMTitleBarBase *titleBar)
@@ -85,6 +92,8 @@ void KMUnibar::showUnibar(QSize mainWindowSize)
                                        mainWindowSize.height()));
     //Start animation.
     m_sizeAnimation->start();
+    //Show the right shadow.
+    m_rightShadow->show();
 }
 
 void KMUnibar::hideUnibar()
@@ -107,6 +116,16 @@ void KMUnibar::resizeEvent(QResizeEvent *event)
     m_shadowCombo->resize(width() + 1, m_shadowCombo->height());
     //Resize the top shadow.
     m_topShadow->resize(width(), m_topShadow->height());
+    //Resize the right shadow.
+    m_rightShadow->setGeometry(width(),0,m_rightShadow->width(),height());
+}
+
+void KMUnibar::hideEvent(QHideEvent *event)
+{
+    //Resize the widget.
+    KMUnibarBase::hideEvent(event);
+    //Hide the right shadow.
+    m_rightShadow->hide();
 }
 
 void KMUnibar::onActionHideUnibar()

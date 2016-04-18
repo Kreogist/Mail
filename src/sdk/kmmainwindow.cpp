@@ -120,6 +120,7 @@ void KMMainWindow::setUniBar(KMUnibarBase *uniBar)
     m_uniBar->setTitleBar(m_titleBar);
     //Configure the unibar.
     m_uniBar->hide();
+    m_uniBar->setShadowParent(m_floatLayer);
 }
 
 void KMMainWindow::setMailComponent(QWidget *mailComponent)

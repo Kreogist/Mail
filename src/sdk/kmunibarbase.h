@@ -37,6 +37,12 @@ public:
      */
     KMUnibarBase(QWidget *parent = 0) : QWidget(parent){}
 
+    /*!
+     * \brief Set shadow parent widget.
+     * \param container The shadow parent widget.
+     */
+    virtual void setShadowParent(QWidget *container)=0;
+
 signals:
 
 public slots:
