@@ -21,6 +21,8 @@
 #include "kmunibarbase.h"
 
 class QPropertyAnimation;
+class QScrollArea;
+class KMUnibarContent;
 class KNSideShadowWidget;
 class KMTitleBarCombo;
 /*!
@@ -76,6 +78,8 @@ private:
     KMTitleBarBase *m_titleBar;
     KMTitleBarCombo *m_shadowCombo, *m_titleBarCombo;
     QPropertyAnimation *m_sizeAnimation;
+    QScrollArea *m_unibarContentArea;
+    KMUnibarContent *m_unibarContent;
     KNSideShadowWidget *m_topShadow, *m_rightShadow;
 };
 

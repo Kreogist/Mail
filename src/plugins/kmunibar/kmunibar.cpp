@@ -16,11 +16,13 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QPropertyAnimation>
+#include <QScrollArea>
 
 #include "knsideshadowwidget.h"
 #include "knthememanager.h"
 #include "kmtitlebarcombo.h"
 #include "kmtitlebarbase.h"
+#include "kmunibarcontent.h"
 
 #include "kmunibar.h"
 
@@ -32,6 +34,8 @@ KMUnibar::KMUnibar(QWidget *parent) :
     m_shadowCombo(new KMTitleBarCombo(this)),
     m_titleBarCombo(nullptr),
     m_sizeAnimation(new QPropertyAnimation(this, "size", this)),
+    m_unibarContentArea(new QScrollArea(this)),
+    m_unibarContent(new KMUnibarContent(this)),
     m_topShadow(new KNSideShadowWidget(KNSideShadowWidget::TopShadow,
                                        this)),
     m_rightShadow(new KNSideShadowWidget(KNSideShadowWidget::LeftShadow,
@@ -50,6 +54,10 @@ KMUnibar::KMUnibar(QWidget *parent) :
     m_topShadow->setFixedHeight(ShadowHeight);
     m_rightShadow->setFixedWidth(ShadowHeight);
     m_rightShadow->hide();
+    //Configure the area.
+    m_unibarContentArea->setWidget(m_unibarContent);
+    m_unibarContentArea->move(0, m_shadowCombo->height());
+    m_unibarContentArea->setFrameStyle(QFrame::NoFrame);
 
     //Register the widget.
     knTheme->registerWidget(this);
@@ -118,6 +126,10 @@ void KMUnibar::resizeEvent(QResizeEvent *event)
     m_topShadow->resize(width(), m_topShadow->height());
     //Resize the right shadow.
     m_rightShadow->setGeometry(width(),0,m_rightShadow->width(),height());
+    //Resize the area.
+    m_unibarContentArea->resize(width(), height()-m_shadowCombo->height());
+    //Resize the content.
+    m_unibarContent->resize(width(), m_unibarContent->sizeHint().height());
 }
 
 void KMUnibar::hideEvent(QHideEvent *event)

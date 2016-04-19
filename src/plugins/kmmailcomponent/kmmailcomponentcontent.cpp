@@ -42,6 +42,10 @@ KMMailComponentContent::KMMailComponentContent(QWidget *parent) :
     QWebEngineSettings *settings=m_browser->settings();
     settings->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled,
                            true);
+    settings->setAttribute(QWebEngineSettings::PluginsEnabled,
+                           true);
+    settings->setAttribute(QWebEngineSettings::FullScreenSupportEnabled,
+                           true);
     //Configure the browser.
     m_browser->load(QUrl("http://www.google.com.au"));
 }
