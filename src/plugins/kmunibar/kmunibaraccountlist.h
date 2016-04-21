@@ -20,6 +20,11 @@
 
 #include <QWidget>
 
+class QBoxLayout;
+class QLabel;
+class QTimeLine;
+class KMUnibarButton;
+class KMUnibarLabelButton;
 class KMUnibarAccountList : public QWidget
 {
     Q_OBJECT
@@ -30,14 +35,52 @@ public:
      */
     explicit KMUnibarAccountList(QWidget *parent = 0);
 
+    QString accountLabel() const;
+
 signals:
+    void sizeChanged(int heightDelta);
 
 public slots:
+    void setAccountLabel(const QString &accountLabel);
+
+protected:
+    /*!
+     * \brief paintEvent
+     * \param event
+     */
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief resizeEvent
+     * \param event
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
+    void retranslate();
+    void onActionExpandWidget(int widgetHeight);
+    void onActionChangeExpand();
+    void onActionShowFinished();
+    void onActionHideFinished();
 
 private:
-    ;
+    enum SystemFolders
+    {
+        FolderInbox,
+        FolderSentItems,
+        FolderDrafts,
+        FolderTrash,
+        SystemFoldersCount
+    };
+
+    inline void addToFolderList(KMUnibarButton *button);
+    inline void startAnime(int endFrame);
+    QString m_accountLabel;
+    QList<KMUnibarButton *> m_folderList;
+    KMUnibarButton *m_systemFolder[SystemFoldersCount];
+    KMUnibarLabelButton *m_foldedButton;
+    QTimeLine *m_animeTimeLine;
+    bool m_expand;
 };
 
 #endif // KMUNIBARACCOUNTLIST_H

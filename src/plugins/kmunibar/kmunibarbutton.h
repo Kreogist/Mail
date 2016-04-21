@@ -20,16 +20,18 @@
 
 #include <QAbstractButton>
 
-class QTimeLine;
 class KMUnibarButton : public QAbstractButton
 {
     Q_OBJECT
 public:
     explicit KMUnibarButton(QWidget *parent = 0);
 
+    qreal opacity() const;
+
 signals:
 
 public slots:
+    void setOpacity(const qreal &opacity);
 
 protected:
     /*!
@@ -38,12 +40,21 @@ protected:
      */
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief enterEvent
+     * \param event
+     */
+    void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief leaveEvent().
+     */
+    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+
 private slots:
-    void onActionChangeOpacity(int frame);
 
 private:
-    QTimeLine *m_anime;
-    qreal m_opacity;
+    qreal m_opacity, m_hoverOpacity;
 };
 
 #endif // KMUNIBARBUTTON_H

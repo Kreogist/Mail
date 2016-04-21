@@ -48,9 +48,21 @@ public:
      */
     QPixmap userAvatar() const;
 
+    /*!
+     * \brief Get the indicator rotate angle.
+     * \return The rotate angle, it's between 0 and 180. It's 0 as default.
+     */
+    int indicatorRotate() const;
+
 signals:
 
 public slots:
+    /*!
+     * \brief Set indicator rotate angle.
+     * \param indicatorRotate Indicator rotate angle.
+     */
+    void setIndicatorRotate(int indicatorRotate);
+
     /*!
      * \brief Set the user avatar that current Kreogist Account login.
      * \param userAvatar The account avatar.
@@ -100,7 +112,7 @@ private:
     QColor m_dropShadow;
     QString m_text;
     QTimeLine *m_mouseInOut;
-    int m_brightness;
+    int m_brightness, m_indicatorRotate;
     bool m_pressed;
 };
 

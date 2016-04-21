@@ -93,7 +93,6 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     connect(m_titleBar, &KMMailComponentTitleBar::titleSizeUpdate,
             [=]
             {
-        qDebug()<<m_titleBar->sizeHint();
                 //Update the geometries.
                 updateGeometries();
             });

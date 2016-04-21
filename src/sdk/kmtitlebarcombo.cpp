@@ -46,6 +46,7 @@ KMTitleBarCombo::KMTitleBarCombo(QWidget *parent) :
     m_text(QString()),
     m_mouseInOut(new QTimeLine(200, this)),
     m_brightness(MinimumBrightness),
+    m_indicatorRotate(0),
     m_pressed(false)
 {
     setObjectName("TitleBarCombo");
@@ -141,9 +142,15 @@ void KMTitleBarCombo::paintEvent(QPaintEvent *event)
                          QApplication::applicationName():
                          m_text);
     //Draw the indicator.
-    painter.drawPixmap(width()-(Spacing>>2)-m_indicator.width(),
-                       (TitleBarHeight-m_indicator.height())>>1,
+    painter.save();
+    //Move to indicator position.
+    painter.translate(width()-(Spacing>>1)-(m_indicator.width()>>1),
+                      TitleBarHeight>>1);
+    painter.rotate(m_indicatorRotate);
+    painter.translate(-m_indicator.width()>>1, -m_indicator.height()>>1);
+    painter.drawPixmap(QRect(QPoint(0, 0), m_indicator.size()),
                        m_indicator);
+    painter.restore();
 
     //Disable antialiasing.
     painter.setRenderHints(QPainter::Antialiasing |
@@ -237,6 +244,19 @@ inline void KMTitleBarCombo::startAnime(int targetBrightness)
     m_mouseInOut->setFrameRange(m_brightness, targetBrightness);
     //Launch the mouse in and out.
     m_mouseInOut->start();
+}
+
+int KMTitleBarCombo::indicatorRotate() const
+{
+    return m_indicatorRotate;
+}
+
+void KMTitleBarCombo::setIndicatorRotate(int indicatorRotate)
+{
+    //Save the angle.
+    m_indicatorRotate = indicatorRotate;
+    //Update the widget.
+    update();
 }
 
 QPixmap KMTitleBarCombo::userAvatar() const

@@ -10,6 +10,11 @@
         "Parent" : "MainWindow",
         "Window" : "#202020"
     },
+    "UnibarButton" : {
+        "Parent" : "UniBar",
+        "Button" : "#404040",
+        "ButtonText" : "#FFFFFF"
+    },
     "ExtendButton" : {
         "Parent" : "UniBar",
         "Button" : "#202020",

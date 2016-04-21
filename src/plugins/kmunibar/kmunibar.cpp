@@ -26,6 +26,8 @@
 
 #include "kmunibar.h"
 
+#include <QDebug>
+
 #define ShadowHeight 15
 
 KMUnibar::KMUnibar(QWidget *parent) :
@@ -48,7 +50,9 @@ KMUnibar::KMUnibar(QWidget *parent) :
     m_shadowCombo->setEnabled(false);
     //Configure the animation.
     m_sizeAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    m_sizeAnimation->setDuration(200);
+    m_sizeAnimation->setDuration(250);
+    connect(m_sizeAnimation, &QPropertyAnimation::valueChanged,
+            this, &KMUnibar::onActionExpandFold);
     //Configure the side shadow.
     m_topShadow->move(0, m_shadowCombo->height());
     m_topShadow->setFixedHeight(ShadowHeight);
@@ -58,6 +62,8 @@ KMUnibar::KMUnibar(QWidget *parent) :
     m_unibarContentArea->setWidget(m_unibarContent);
     m_unibarContentArea->move(0, m_shadowCombo->height());
     m_unibarContentArea->setFrameStyle(QFrame::NoFrame);
+    m_unibarContentArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_unibarContentArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     //Register the widget.
     knTheme->registerWidget(this);
@@ -146,4 +152,11 @@ void KMUnibar::onActionHideUnibar()
     disconnect(m_sizeAnimation, &QPropertyAnimation::finished, 0, 0);
     //Hide current widget.
     hide();
+}
+
+void KMUnibar::onActionExpandFold(const QVariant &value)
+{
+    //Calculate the progress.
+    m_shadowCombo->setIndicatorRotate(
+                (value.toSize().width()-m_titleBarCombo->width())/80.0*180.0);
 }

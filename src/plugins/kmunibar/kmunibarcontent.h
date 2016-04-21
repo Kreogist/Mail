@@ -20,7 +20,7 @@
 
 #include <QWidget>
 
-class QTreeView;
+class QBoxLayout;
 class KMUnibarButton;
 /*!
  * \brief The KMUnibarContent class
@@ -40,8 +40,10 @@ signals:
 public slots:
 
 private slots:
+    void onActionChangeSize(int heightDelta);
 
 private:
+    QBoxLayout *m_mainLayout;
 };
 
 #endif // KMUNIBARCONTENT_H
