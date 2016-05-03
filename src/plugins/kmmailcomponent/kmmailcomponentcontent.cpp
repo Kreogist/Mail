@@ -37,6 +37,8 @@ KMMailComponentContent::KMMailComponentContent(QWidget *parent) :
     setMinimumHeight(ShadowHeight);
     //Set the fixed top shadow height.
     m_topShadow->setFixedHeight(ShadowHeight);
+    //Configure the broswer.
+    m_browser->setContentsMargins(0,0,8,0);
 
     //Configure the settings.
     QWebEngineSettings *settings=m_browser->settings();

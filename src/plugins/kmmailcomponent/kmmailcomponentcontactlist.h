@@ -61,6 +61,12 @@ signals:
      */
     void expandStateChange();
 
+    /*!
+     * \brief When any new widget add to this list or it is reset, this signal
+     * should be emitted.
+     */
+    void lineCountChanged();
+
 public slots:
     /*!
      * \brief Set whether folding the list is enabled.

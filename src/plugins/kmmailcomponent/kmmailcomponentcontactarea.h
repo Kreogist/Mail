@@ -21,15 +21,29 @@
 #include <QScrollArea>
 
 class QTimeLine;
+class KMMailComponentContactList;
 class KMMailComponentContactArea : public QScrollArea
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief KMMailComponentContactArea
+     * \param parent
+     */
     explicit KMMailComponentContactArea(QWidget *parent = 0);
 
 signals:
+    /*!
+     * \brief When contact area size is changed, this signal will be emitted.
+     */
+    void areaHeightChange();
 
 public slots:
+    /*!
+     * \brief setContactList
+     * \param list
+     */
+    void setContactList(KMMailComponentContactList *list);
 
 protected:
     /*!
@@ -50,11 +64,14 @@ protected:
 private slots:
     void onActionMouseInOut(int frame);
     void onActionRangeChange(int min, int max);
+    void onExpandStateChange();
+    void updateGeometries();
 
 private:
     inline void startAnime(int endFrame);
     QTimeLine *m_mouseAnime;
     QScrollBar *m_scrollBar;
+    KMMailComponentContactList *m_contactList;
 };
 
 #endif // KMMAILCOMPONENTCONTACTAREA_H

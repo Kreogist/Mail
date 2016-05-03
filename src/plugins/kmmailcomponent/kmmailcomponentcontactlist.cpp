@@ -65,6 +65,8 @@ void KMMailComponentContactList::addWidget(QWidget *widget)
         //Update the list size.
         updateExpandedSize();
     }
+    //Emit the line count change signal.
+    emit lineCountChanged();
 }
 
 void KMMailComponentContactList::clear()
@@ -77,6 +79,8 @@ void KMMailComponentContactList::clear()
     m_extendButton->hide();
     //Resize the height.
     setFixedHeight(27);
+    //Emit the line count change signal.
+    emit lineCountChanged();
 }
 
 bool KMMailComponentContactList::isExpaned() const

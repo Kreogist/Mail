@@ -66,10 +66,13 @@ KMMailComponentTitleBar::KMMailComponentTitleBar(QWidget *parent) :
     knTheme->registerWidget(m_toLabel);
     //Configure the layout.
     m_toListWidget->setEnableFold(true);
-    //Update the from and to list.
-    connect(m_fromListWidget, &KMMailComponentContactList::expandStateChange,
+    //Configure the area.
+    m_fromArea->setContactList(m_fromListWidget);
+    m_toArea->setContactList(m_toListWidget);
+    //Link the area signal.
+    connect(m_fromArea, &KMMailComponentContactArea::areaHeightChange,
             this, &KMMailComponentTitleBar::onActionExpandChanged);
-    connect(m_toListWidget, &KMMailComponentContactList::expandStateChange,
+    connect(m_toArea, &KMMailComponentContactArea::areaHeightChange,
             this, &KMMailComponentTitleBar::onActionExpandChanged);
 
     //Configure the main layout.
@@ -88,8 +91,8 @@ KMMailComponentTitleBar::KMMailComponentTitleBar(QWidget *parent) :
     m_mainLayout->addLayout(fromToLayout);
     //Configure the from/to layout.
     fromToLayout->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
-    fromToLayout->addRow(m_fromLabel, m_fromListWidget);
-    fromToLayout->addRow(m_toLabel, m_toListWidget);
+    fromToLayout->addRow(m_fromLabel, m_fromArea);
+    fromToLayout->addRow(m_toLabel, m_toArea);
 
     //Link the theme manager.
     connect(knTheme, &KNThemeManager::themeChange,
@@ -210,8 +213,8 @@ void KMMailComponentTitleBar::updateHeight(int targetWidth)
                        (targetWidth==-1?width():targetWidth)-
                        (LeftRightMargin<<1)) +
                    m_receiveLabel->height() +
-                   m_fromListWidget->height() +
-                   m_toListWidget->height() +
+                   m_fromArea->height() +
+                   m_toArea->height() +
                    TopBottomSpacing * 3);
 }
 

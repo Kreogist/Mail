@@ -18,13 +18,28 @@
 #include <QScrollBar>
 #include <QTimeLine>
 
+#include "sao/knsaostyle.h"
+#include "knthememanager.h"
+#include "kmmailcomponentcontactlist.h"
+
 #include "kmmailcomponentcontactarea.h"
+
+#include <QDebug>
+
+#define LineHeight 27
+#define LineSpacing 3
+#define ExpandedLineCount 4
+#define ScrollBarWidth 10
+#define MaxOpacity 0x30
 
 KMMailComponentContactArea::KMMailComponentContactArea(QWidget *parent) :
     QScrollArea(parent),
     m_mouseAnime(new QTimeLine(200, this)),
-    m_scrollBar(new QScrollBar(this))
+    m_scrollBar(new QScrollBar(this)),
+    m_contactList(nullptr)
 {
+    //Set properties.
+    setFrameStyle(QFrame::NoFrame);
     //Configure the scroll bar policies.
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -74,6 +89,32 @@ KMMailComponentContactArea::KMMailComponentContactArea(QWidget *parent) :
             this, &KMMailComponentContactArea::onActionMouseInOut);
 }
 
+void KMMailComponentContactArea::setContactList(
+        KMMailComponentContactList *list)
+{
+    //Check the pointer before.
+    if(m_contactList)
+    {
+        //Disconnect the previous signals.
+        disconnect(m_contactList, 0, 0, 0);
+    }
+    //Save the list.
+    m_contactList=list;
+    //Check the pointer.
+    if(!m_contactList)
+    {
+        //For null pointer, ignore the following operations.
+        return;
+    }
+    //Set the contacat list to be the managed widget.
+    setWidget(m_contactList);
+    //Link the list widget.
+    connect(m_contactList, &KMMailComponentContactList::expandStateChange,
+            this, &KMMailComponentContactArea::onExpandStateChange);
+    connect(m_contactList, &KMMailComponentContactList::lineCountChanged,
+            this, &KMMailComponentContactArea::onExpandStateChange);
+}
+
 void KMMailComponentContactArea::resizeEvent(QResizeEvent *event)
 {
     //Resize the widget.
@@ -118,6 +159,46 @@ void KMMailComponentContactArea::onActionRangeChange(int min, int max)
     m_scrollBar->setRange(min, max);
     //Check whether the scroll bar is still valid.
     m_scrollBar->setVisible(min!=max);
+}
+
+void KMMailComponentContactArea::onExpandStateChange()
+{
+    //Check the contact list pointer.
+    if(!m_contactList)
+    {
+        //Ignore the null pointer.
+        return;
+    }
+    //Check the expanded state.
+    if(m_contactList->isExpaned())
+    {
+        //Change the height of the area to maximum 5 line's height.
+        setFixedHeight(qMin(LineHeight * ExpandedLineCount +
+                            (LineSpacing) * (ExpandedLineCount - 1),
+                            m_contactList->height()));
+    }
+    else
+    {
+        //Chagne the height to be a single line.
+        setFixedHeight(LineHeight);
+    }
+    //Emit the size changed signal.
+    emit areaHeightChange();
+}
+
+void KMMailComponentContactArea::updateGeometries()
+{
+    //Update the scroll bar position.
+    m_scrollBar->setGeometry(width()-ScrollBarWidth,
+                             0,
+                             ScrollBarWidth,
+                             height());
+    //Configure the width of the contact list.
+    if(m_contactList)
+    {
+        //Resize the contact list.
+        m_contactList->resize(width(), m_contactList->height());
+    }
 }
 
 void KMMailComponentContactArea::startAnime(int endFrame)
