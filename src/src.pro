@@ -178,12 +178,13 @@ HEADERS += \
     sdk/kmpreferencebase.h \
     plugins/kmpreference/kmpreference.h \
     sdk/kmextendbutton.h \
-    plugins/kmmailcomponent/kmmailcomponetcontactlist.h \
     plugins/kmunibar/kmunibarcontent.h \
     plugins/kmunibar/kmunibarbutton.h \
     plugins/kmunibar/kmunibaraccountlist.h \
     sdk/knlabelbutton.h \
-    plugins/kmunibar/kmunibarlabelbutton.h
+    plugins/kmunibar/kmunibarlabelbutton.h \
+    plugins/kmmailcomponent/kmmailcomponentcontactarea.h \
+    plugins/kmmailcomponent/kmmailcomponentcontactlist.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -234,12 +235,13 @@ SOURCES += \
     sdk/kmtitlebarcombo.cpp \
     plugins/kmpreference/kmpreference.cpp \
     sdk/kmextendbutton.cpp \
-    plugins/kmmailcomponent/kmmailcomponetcontactlist.cpp \
     plugins/kmunibar/kmunibarcontent.cpp \
     plugins/kmunibar/kmunibarbutton.cpp \
     plugins/kmunibar/kmunibaraccountlist.cpp \
     sdk/knlabelbutton.cpp \
-    plugins/kmunibar/kmunibarlabelbutton.cpp
+    plugins/kmunibar/kmunibarlabelbutton.cpp \
+    plugins/kmmailcomponent/kmmailcomponentcontactarea.cpp \
+    plugins/kmmailcomponent/kmmailcomponentcontactlist.cpp
 
 RESOURCES += \
     resource/res.qrc

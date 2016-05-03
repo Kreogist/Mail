@@ -25,7 +25,8 @@
 class QLabel;
 class QBoxLayout;
 class KMMailContactButton;
-class KMMailComponetContactList;
+class KMMailComponentContactArea;
+class KMMailComponentContactList;
 /*!
  * \brief The KMMailComponentTitleBar class provides a title bar which could
  * display the basic information about the mail itself.
@@ -93,7 +94,8 @@ private:
     QDate m_receiveDate;
     QBoxLayout *m_mainLayout;
     QLabel *m_titleLabel, *m_receiveLabel, *m_fromLabel, *m_toLabel;
-    KMMailComponetContactList *m_fromListWidget, *m_toListWidget;
+    KMMailComponentContactArea *m_fromArea, *m_toArea;
+    KMMailComponentContactList *m_fromListWidget, *m_toListWidget;
 };
 
 #endif // KMMAILCOMPONENTTITLEBAR_H

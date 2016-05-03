@@ -109,7 +109,7 @@ bool KMImapClient::login()
 {
     //In IMAP, we seems need to ignore the auth settings.
     //Send message to server.
-    sendImapMessage("login "+userName()+" \""+password()+"\"");
+    sendImapMessage("LOGIN "+userName()+" \""+password()+"\"");
     //Wait for server response.
     if(!waitAndCheckResponse())
     {

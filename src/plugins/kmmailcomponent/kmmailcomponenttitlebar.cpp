@@ -24,7 +24,8 @@
 
 #include "knlocalemanager.h"
 #include "knthememanager.h"
-#include "kmmailcomponetcontactlist.h"
+#include "kmmailcomponentcontactarea.h"
+#include "kmmailcomponentcontactlist.h"
 #include "kmmailcontactbutton.h"
 
 #include "kmmailcomponenttitlebar.h"
@@ -43,8 +44,10 @@ KMMailComponentTitleBar::KMMailComponentTitleBar(QWidget *parent) :
     m_receiveLabel(new QLabel(this)),
     m_fromLabel(new QLabel(this)),
     m_toLabel(new QLabel(this)),
-    m_fromListWidget(new KMMailComponetContactList(this)),
-    m_toListWidget(new KMMailComponetContactList(this))
+    m_fromArea(new KMMailComponentContactArea(this)),
+    m_toArea(new KMMailComponentContactArea(this)),
+    m_fromListWidget(new KMMailComponentContactList(this)),
+    m_toListWidget(new KMMailComponentContactList(this))
 {
     //Configrue the title label.
     m_titleLabel->setObjectName("MailComponentTitle");
@@ -64,9 +67,9 @@ KMMailComponentTitleBar::KMMailComponentTitleBar(QWidget *parent) :
     //Configure the layout.
     m_toListWidget->setEnableFold(true);
     //Update the from and to list.
-    connect(m_fromListWidget, &KMMailComponetContactList::expandStateChange,
+    connect(m_fromListWidget, &KMMailComponentContactList::expandStateChange,
             this, &KMMailComponentTitleBar::onActionExpandChanged);
-    connect(m_toListWidget, &KMMailComponetContactList::expandStateChange,
+    connect(m_toListWidget, &KMMailComponentContactList::expandStateChange,
             this, &KMMailComponentTitleBar::onActionExpandChanged);
 
     //Configure the main layout.

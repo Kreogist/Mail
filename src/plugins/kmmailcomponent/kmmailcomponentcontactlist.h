@@ -15,14 +15,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMMAILCOMPONETCONTACTLIST_H
-#define KMMAILCOMPONETCONTACTLIST_H
+#ifndef KMMAILCOMPONENTCONTACTLIST_H
+#define KMMAILCOMPONENTCONTACTLIST_H
 
 #include <QWidget>
 
 class QBoxLayout;
 class KMExtendButton;
-class KMMailComponetContactList : public QWidget
+/*!
+ * \brief The KMMailComponetContactList class provides a list for all the
+ * contact items. It will automatically update the size when the list is expand
+ * or fold.
+ */
+class KMMailComponentContactList : public QWidget
 {
     Q_OBJECT
 public:
@@ -31,7 +36,7 @@ public:
      * widget.
      * \param parent The parent widget pointer.
      */
-    explicit KMMailComponetContactList(QWidget *parent = 0);
+    explicit KMMailComponentContactList(QWidget *parent = 0);
 
     /*!
      * \brief Add a widget to the contact list.
@@ -75,4 +80,4 @@ private:
     bool m_fold, m_isFold;
 };
 
-#endif // KMMAILCOMPONETCONTACTLIST_H
+#endif // KMMAILCOMPONENTCONTACTLIST_H

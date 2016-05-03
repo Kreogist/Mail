@@ -19,11 +19,11 @@
 
 #include "kmextendbutton.h"
 
-#include "kmmailcomponetcontactlist.h"
+#include "kmmailcomponentcontactlist.h"
 
 #include <QDebug>
 
-KMMailComponetContactList::KMMailComponetContactList(QWidget *parent) :
+KMMailComponentContactList::KMMailComponentContactList(QWidget *parent) :
     QWidget(parent),
     m_listLayout(new QBoxLayout(QBoxLayout::TopToBottom)),
     m_extendButton(new KMExtendButton(this)),
@@ -33,7 +33,7 @@ KMMailComponetContactList::KMMailComponetContactList(QWidget *parent) :
     //Configure the extended button.
     m_extendButton->hide();
     connect(m_extendButton, &KMExtendButton::clicked,
-            this, &KMMailComponetContactList::onActionChangeExpand);
+            this, &KMMailComponentContactList::onActionChangeExpand);
 
     //Initial the main layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::LeftToRight, this);
@@ -45,7 +45,7 @@ KMMailComponetContactList::KMMailComponetContactList(QWidget *parent) :
     mainLayout->addWidget(m_extendButton, 1, Qt::AlignBottom | Qt::AlignLeft);
 }
 
-void KMMailComponetContactList::addWidget(QWidget *widget)
+void KMMailComponentContactList::addWidget(QWidget *widget)
 {
     //Add widget to list layout.
     m_listLayout->addWidget(widget, 0, Qt::AlignLeft | Qt::AlignTop);
@@ -67,7 +67,7 @@ void KMMailComponetContactList::addWidget(QWidget *widget)
     }
 }
 
-void KMMailComponetContactList::clear()
+void KMMailComponentContactList::clear()
 {
     //Clear the button list.
     m_buttonList.clear();
@@ -79,12 +79,12 @@ void KMMailComponetContactList::clear()
     setFixedHeight(27);
 }
 
-bool KMMailComponetContactList::isExpaned() const
+bool KMMailComponentContactList::isExpaned() const
 {
     return m_fold && (!m_isFold);
 }
 
-void KMMailComponetContactList::setEnableFold(bool enableFold)
+void KMMailComponentContactList::setEnableFold(bool enableFold)
 {
     //Save the value.
     m_fold=enableFold;
@@ -100,7 +100,7 @@ void KMMailComponetContactList::setEnableFold(bool enableFold)
     updateLayout();
 }
 
-void KMMailComponetContactList::onActionChangeExpand()
+void KMMailComponentContactList::onActionChangeExpand()
 {
     //Update the expand state.
     m_isFold=!m_isFold;
@@ -108,7 +108,7 @@ void KMMailComponetContactList::onActionChangeExpand()
     updateLayout();
 }
 
-inline void KMMailComponetContactList::updateLayout()
+inline void KMMailComponentContactList::updateLayout()
 {
     //Check whether the folding is enabled.
     if(m_fold)
@@ -151,7 +151,7 @@ inline void KMMailComponetContactList::updateLayout()
     emit expandStateChange();
 }
 
-inline void KMMailComponetContactList::updateExpandedSize()
+inline void KMMailComponentContactList::updateExpandedSize()
 {
     //Update the size.
     setFixedHeight(m_buttonList.size()*27+(m_buttonList.size()-1)*3);
