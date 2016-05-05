@@ -50,4 +50,3 @@ void KMMailComponentWebEngine::resizeEvent(QResizeEvent *event)
     //Update the browser size.
     m_browser->resize(size());
 }
-
