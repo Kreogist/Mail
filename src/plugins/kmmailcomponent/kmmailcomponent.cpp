@@ -24,7 +24,11 @@
 #include "sao/knsaostyle.h"
 
 #include "kmmailcomponenttitlebar.h"
-#include "kmmailcomponentcontent.h"
+#include "sdk/kmmailcomponentcontentbase.h"
+
+#ifdef BACKEND_WEBENGINE
+#include "plugins/kmmailcomponentwebengine/kmmailcomponentwebengine.h"
+#endif
 
 #include "kmmailcomponent.h"
 
@@ -40,7 +44,7 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     m_scrollBar(new QScrollBar(m_mailContentArea)),
     m_container(new QWidget(this)),
     m_titleBar(new KMMailComponentTitleBar(this)),
-    m_content(new KMMailComponentContent(this))
+    m_content(nullptr)
 {
     setObjectName("MailComponent");
     //Set properties.
@@ -48,6 +52,10 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     //Register the widget.
     knTheme->registerWidget(this);
 
+    //Initial the content widget.
+#ifdef BACKEND_WEBENGINE
+    m_content=new KMMailComponentWebEngine(this);
+#endif
     //Set the container to the content area.
     m_mailContentArea->setWidget(m_container);
     m_mailContentArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

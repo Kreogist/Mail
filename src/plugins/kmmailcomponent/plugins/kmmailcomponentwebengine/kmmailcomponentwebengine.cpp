@@ -18,28 +18,14 @@
 #include <QWebEngineView>
 #include <QWebEngineSettings>
 
-#include "knsideshadowwidget.h"
+#include "kmmailcomponentwebengine.h"
 
-#include "kmmailcomponentcontent.h"
-
-#include <QDebug>
-
-#define ShadowHeight 18
-
-KMMailComponentContent::KMMailComponentContent(QWidget *parent) :
-    QWidget(parent),
-    m_browser(new QWebEngineView(this)),
-    m_topShadow(new KNSideShadowWidget(KNSideShadowWidget::TopShadow,
-                                       this)),
-    m_documentHeight(0)
+KMMailComponentWebEngine::KMMailComponentWebEngine(QWidget *parent) :
+    KMMailComponentContentBase(parent),
+    m_browser(new QWebEngineView(this))
 {
-    //Set properties.
-    setMinimumHeight(ShadowHeight);
-    //Set the fixed top shadow height.
-    m_topShadow->setFixedHeight(ShadowHeight);
-    //Configure the broswer.
-    m_browser->setContentsMargins(0,0,8,0);
-
+    //Configure the browser.
+    m_browser->lower();
     //Configure the settings.
     QWebEngineSettings *settings=m_browser->settings();
     settings->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled,
@@ -52,17 +38,16 @@ KMMailComponentContent::KMMailComponentContent(QWidget *parent) :
     m_browser->load(QUrl("http://www.google.com.au"));
 }
 
-QSize KMMailComponentContent::sizeHint() const
+QSize KMMailComponentWebEngine::sizeHint() const
 {
     return m_browser->sizeHint();
 }
 
-void KMMailComponentContent::resizeEvent(QResizeEvent *event)
+void KMMailComponentWebEngine::resizeEvent(QResizeEvent *event)
 {
     //Resize the widget.
-    QWidget::resizeEvent(event);
-    //Re-pos the top shadow.
-    m_topShadow->resize(width(), ShadowHeight);
+    KMMailComponentContentBase::resizeEvent(event);
     //Update the browser size.
     m_browser->resize(size());
 }
+

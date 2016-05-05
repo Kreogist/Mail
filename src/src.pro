@@ -23,8 +23,7 @@ QT += \
     core \
     gui \
     widgets \
-    network \
-    webenginewidgets
+    network
 
 # Enabled C++ 11 configures.
 CONFIG += c++11
@@ -102,7 +101,7 @@ gcc: {
         # Enabled force-addr.
         QMAKE_CXXFLAGS_RELEASE += -fforce-addr
         # Use sse to calculate the float operation.
-        QMAKE_CXXFLAGS_RELEASE += -mfpmath=sse
+        QMAKE_CXXFLAGS_RELEASE += -mfpmath=sse;
         # Others
         QMAKE_CXXFLAGS_RELEASE += -ftracer
     }
@@ -114,6 +113,58 @@ win32: {
     RC_FILE += resource/platform/windows/resource.rc #\
                #resource/icon/mu.ico
     #ICON = resource/icon/mu.ico
+    msvc: {
+        # When using MSVC, it means it could use Qt WebEngine.
+        CONFIG += webengine-backend
+    }
+    gcc: {
+        # On Windows, we cannot use WebEngine with GCC. We should compile Mail
+        # with GCC using Qt Webkit. The version of Qt not later than Qt 5.5.
+        # Now, Qt has abandon the Qt Webkit, using Qt WebEngine instead. This
+        # module is only used for older OS.
+        CONFIG += webkit-backend
+    }
+}
+
+macx: {
+    # Compiled under Mac OS X, we could use the latest Qt WebEngine.
+    CONFIG += webengine-backend
+}
+
+linux: {
+    # We could check the version of Qt. If the Qt is later than Qt 5.5, then we
+    # could use Qt WebEngine.
+    lessThan(QT_MINOR_VERSION, 6) {
+        # Use Qt Webkit as the backend.
+        CONFIG += webkit-backend
+    }
+    greaterThan(QT_MINOR_VERSION, 5) {
+        # Use Qt WebEngine as the backend.
+        CONFIG += webengine-backend
+    }
+}
+
+# Web Backend Specific Configuration
+webkit-backend: {
+    # Check whether there's a backend enabled already
+    contains(DEFINES, BACKEND_ENABLED){
+        error("You can't enable more than one backend at the same time.")
+    }
+    # Define the Webkit backend macro.
+    DEFINES += BACKEND_WEBKIT BACKEND_ENABLED
+    # Add Qt modules.
+    QT += webkitwidgets
+}
+
+webengine-backend: {
+    # Check whether there's a backend enabled already
+    contains(DEFINES, BACKEND_ENABLED){
+        error("You can't enable more than one backend at the same time.")
+    }
+    # Define the Webkit backend macro.
+    DEFINES += BACKEND_WEBENGINE BACKEND_ENABLED
+    # Add Qt modules
+    QT += webenginewidgets
 }
 
 HEADERS += \
@@ -164,7 +215,6 @@ HEADERS += \
     sdk/kmmailcomponentbase.h \
     plugins/kmmailcomponent/kmmailcomponent.h \
     plugins/kmmailcomponent/kmmailcomponenttitlebar.h \
-    plugins/kmmailcomponent/kmmailcomponentcontent.h \
     sdk/sao/knsaostyle.h \
     sdk/kmmailcontactbutton.h \
     sdk/kmmailcontactlabelbutton.h \
@@ -184,7 +234,9 @@ HEADERS += \
     sdk/knlabelbutton.h \
     plugins/kmunibar/kmunibarlabelbutton.h \
     plugins/kmmailcomponent/kmmailcomponentcontactarea.h \
-    plugins/kmmailcomponent/kmmailcomponentcontactlist.h
+    plugins/kmmailcomponent/kmmailcomponentcontactlist.h \
+    plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.h \
+    plugins/kmmailcomponent/plugins/kmmailcomponentwebengine/kmmailcomponentwebengine.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -223,7 +275,6 @@ SOURCES += \
     sdk/kmmaillistviewdelegate.cpp \
     plugins/kmmailcomponent/kmmailcomponent.cpp \
     plugins/kmmailcomponent/kmmailcomponenttitlebar.cpp \
-    plugins/kmmailcomponent/kmmailcomponentcontent.cpp \
     sdk/sao/knsaostyle.cpp \
     sdk/kmmailcontactbutton.cpp \
     sdk/kmmailcontactlabelbutton.cpp \
@@ -241,7 +292,9 @@ SOURCES += \
     sdk/knlabelbutton.cpp \
     plugins/kmunibar/kmunibarlabelbutton.cpp \
     plugins/kmmailcomponent/kmmailcomponentcontactarea.cpp \
-    plugins/kmmailcomponent/kmmailcomponentcontactlist.cpp
+    plugins/kmmailcomponent/kmmailcomponentcontactlist.cpp \
+    plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.cpp \
+    plugins/kmmailcomponent/plugins/kmmailcomponentwebengine/kmmailcomponentwebengine.cpp
 
 RESOURCES += \
     resource/res.qrc

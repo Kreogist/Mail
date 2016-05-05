@@ -24,7 +24,7 @@ class QScrollArea;
 class QScrollBar;
 class QTimeLine;
 class KMMailComponentTitleBar;
-class KMMailComponentContent;
+class KMMailComponentContentBase;
 /*!
  * \brief The KMMailComponent class is an official provided KMMailComponentBase
  * realize. It uses all the sdk widgets to build.
@@ -71,7 +71,7 @@ private:
     QScrollBar *m_scrollBar;
     QWidget *m_container;
     KMMailComponentTitleBar *m_titleBar;
-    KMMailComponentContent *m_content;
+    KMMailComponentContentBase *m_content;
 };
 
 #endif // KMMAILCOMPONENT_H

@@ -15,29 +15,29 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMMAILCOMPONENTCONTENT_H
-#define KMMAILCOMPONENTCONTENT_H
 
-#include <QWidget>
+#ifndef KMMAILCOMPONENTWEBENGINE_H
+#define KMMAILCOMPONENTWEBENGINE_H
+
+#include "../../sdk/kmmailcomponentcontentbase.h"
 
 class QWebEngineView;
-class KNSideShadowWidget;
 /*!
- * \brief The KMMailComponentContent class provides a widget to show the content
- * of the .
+ * \brief The KMMailComponentWebEngine class provides the mail browser using the
+ * Qt WebEngine module.
  */
-class KMMailComponentContent : public QWidget
+class KMMailComponentWebEngine : public KMMailComponentContentBase
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KMMailComponentContent widget.
-     * \param parent The parent widget.
+     * \brief KMMailComponentWebEngine
+     * \param parent
      */
-    explicit KMMailComponentContent(QWidget *parent = 0);
+    explicit KMMailComponentWebEngine(QWidget *parent = 0);
 
     /*!
-     * \brief Reimplemented from QWidget::sizeHint().
+     * \brief Reimplemented from KMMailComponentContentBase::sizeHint().
      */
     QSize sizeHint() const Q_DECL_OVERRIDE;
 
@@ -47,14 +47,12 @@ public slots:
 
 protected:
     /*!
-     * \brief Reimplemented from QWidget::resizeEvent().
+     * \brief Reimplemented from KMMailComponentContentBase::resizeEvent().
      */
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QWebEngineView *m_browser;
-    KNSideShadowWidget *m_topShadow;
-    int m_documentHeight;
 };
 
-#endif // KMMAILCOMPONENTCONTENT_H
+#endif // KMMAILCOMPONENTWEBENGINE_H
