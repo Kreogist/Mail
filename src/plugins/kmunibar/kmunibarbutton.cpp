@@ -26,8 +26,8 @@
 
 KMUnibarButton::KMUnibarButton(QWidget *parent) :
     QAbstractButton(parent),
-    m_hoverOpacity(0.0),
-    m_opacity(0.0)
+    m_opacity(0.0),
+    m_hoverOpacity(0.0)
 {
     setObjectName("UnibarButton");
     //Set properties.

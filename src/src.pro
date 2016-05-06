@@ -154,6 +154,12 @@ webkit-backend: {
     DEFINES += BACKEND_WEBKIT BACKEND_ENABLED
     # Add Qt modules.
     QT += webkitwidgets
+    # Add header files.
+    HEADERS += \
+        plugins/kmmailcomponent/plugins/kmmailcomponentwebkit/kmmailcomponentwebkit.h
+    # Add source files.
+    SOURCES += \
+        plugins/kmmailcomponent/plugins/kmmailcomponentwebkit/kmmailcomponentwebkit.cpp
 }
 
 webengine-backend: {
@@ -165,6 +171,12 @@ webengine-backend: {
     DEFINES += BACKEND_WEBENGINE BACKEND_ENABLED
     # Add Qt modules
     QT += webenginewidgets
+    # Add header files.
+    HEADERS += \
+        plugins/kmmailcomponent/plugins/kmmailcomponentwebengine/kmmailcomponentwebengine.h
+    # Add source files.
+    SOURCES += \
+        plugins/kmmailcomponent/plugins/kmmailcomponentwebengine/kmmailcomponentwebengine.cpp
 }
 
 HEADERS += \
@@ -235,8 +247,7 @@ HEADERS += \
     plugins/kmunibar/kmunibarlabelbutton.h \
     plugins/kmmailcomponent/kmmailcomponentcontactarea.h \
     plugins/kmmailcomponent/kmmailcomponentcontactlist.h \
-    plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.h \
-    plugins/kmmailcomponent/plugins/kmmailcomponentwebengine/kmmailcomponentwebengine.h
+    plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -293,8 +304,7 @@ SOURCES += \
     plugins/kmunibar/kmunibarlabelbutton.cpp \
     plugins/kmmailcomponent/kmmailcomponentcontactarea.cpp \
     plugins/kmmailcomponent/kmmailcomponentcontactlist.cpp \
-    plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.cpp \
-    plugins/kmmailcomponent/plugins/kmmailcomponentwebengine/kmmailcomponentwebengine.cpp
+    plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.cpp
 
 RESOURCES += \
     resource/res.qrc

@@ -21,7 +21,11 @@
 #include <QScrollArea>
 
 class QTimeLine;
+class KNSideShadowWidget;
 class KMMailComponentContactList;
+/*!
+ * \brief The KMMailComponentContactArea class
+ */
 class KMMailComponentContactArea : public QScrollArea
 {
     Q_OBJECT
@@ -69,9 +73,11 @@ private slots:
 
 private:
     inline void startAnime(int endFrame);
+    inline void updateShadow(int value);
     QTimeLine *m_mouseAnime;
     QScrollBar *m_scrollBar;
     KMMailComponentContactList *m_contactList;
+    KNSideShadowWidget *m_topShadow, *m_bottomShadow;
 };
 
 #endif // KMMAILCOMPONENTCONTACTAREA_H

@@ -177,7 +177,7 @@ void KMPluginManager::loadPreference(KMPreferenceBase *preference)
         return;
     }
     //Set the preference plugin to main window.
-    m_mainWindow;
+//    m_mainWindow;
 }
 
 inline void KMPluginManager::setApplicationInformation()

@@ -29,6 +29,9 @@
 #ifdef BACKEND_WEBENGINE
 #include "plugins/kmmailcomponentwebengine/kmmailcomponentwebengine.h"
 #endif
+#ifdef BACKEND_WEBKIT
+#include "plugins/kmmailcomponentwebkit/kmmailcomponentwebkit.h"
+#endif
 
 #include "kmmailcomponent.h"
 
@@ -50,6 +53,9 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     //Initial the content widget.
 #ifdef BACKEND_WEBENGINE
     m_content=new KMMailComponentWebEngine(this);
+#endif
+#ifdef BACKEND_WEBKIT
+    m_content=new KMMailComponentWebKit(this);
 #endif
     //Configure the title bar.
     connect(m_titleBar, &KMMailComponentTitleBar::titleSizeUpdate,
@@ -108,9 +114,13 @@ void KMMailComponent::updateGeometries()
 {
     //Update the title bar width.
     m_titleBar->resize(width(), m_titleBar->height());
-    //Update the content size.
-    m_content->setGeometry(0,
-                           m_titleBar->height(),
-                           width(),
-                           height()-m_titleBar->height());
+    //Check the content pointer first.
+    if(m_content)
+    {
+        //Update the content size.
+        m_content->setGeometry(0,
+                               m_titleBar->height(),
+                               width(),
+                               height()-m_titleBar->height());
+    }
 }

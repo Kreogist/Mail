@@ -20,6 +20,8 @@
 
 #include "sao/knsaostyle.h"
 #include "knthememanager.h"
+#include "knsideshadowwidget.h"
+
 #include "kmmailcomponentcontactlist.h"
 
 #include "kmmailcomponentcontactarea.h"
@@ -31,12 +33,19 @@
 #define ExpandedLineCount 4
 #define ScrollBarWidth 10
 #define MaxOpacity 0x30
+#define ShadowHeight 13
+#define MaxShadowOpacity 30.0
+#define ShadowDetectionHeight 54
 
 KMMailComponentContactArea::KMMailComponentContactArea(QWidget *parent) :
     QScrollArea(parent),
     m_mouseAnime(new QTimeLine(200, this)),
     m_scrollBar(new QScrollBar(this)),
-    m_contactList(nullptr)
+    m_contactList(nullptr),
+    m_topShadow(new KNSideShadowWidget(KNSideShadowWidget::TopShadow,
+                                       this)),
+    m_bottomShadow(new KNSideShadowWidget(KNSideShadowWidget::BottomShadow,
+                                          this))
 {
     //Set properties.
     setFrameStyle(QFrame::NoFrame);
@@ -62,6 +71,9 @@ KMMailComponentContactArea::KMMailComponentContactArea(QWidget *parent) :
     //Update the validation.
     m_scrollBar->setPalette(knTheme->getPalette(m_scrollBar->objectName()));
     onActionMouseInOut(0);
+    //Configure the shadow widget.
+    m_topShadow->hide();
+    m_bottomShadow->hide();
 
     //Update the single step.
     verticalScrollBar()->setSingleStep(27);
@@ -77,6 +89,8 @@ KMMailComponentContactArea::KMMailComponentContactArea(QWidget *parent) :
                 m_scrollBar->setValue(value);
                 //Release the block
                 m_scrollBar->blockSignals(false);
+                //Update shadow opacity.
+                updateShadow(value);
             });
     connect(m_scrollBar, &QScrollBar::valueChanged,
             verticalScrollBar(), &QScrollBar::setValue);
@@ -157,8 +171,14 @@ void KMMailComponentContactArea::onActionRangeChange(int min, int max)
 {
     //Update the range first.
     m_scrollBar->setRange(min, max);
-    //Check whether the scroll bar is still valid.
-    m_scrollBar->setVisible(min!=max);
+    //Update shadow opacity.
+    updateShadow(min);
+    //Update the scroll bar and shadow visible.
+    bool scrollComponentValid=(min!=max);
+    //Set visiblility components.
+    m_scrollBar->setVisible(scrollComponentValid);
+    m_topShadow->setVisible(scrollComponentValid);
+    m_bottomShadow->setVisible(scrollComponentValid);
 }
 
 void KMMailComponentContactArea::onExpandStateChange()
@@ -188,6 +208,10 @@ void KMMailComponentContactArea::onExpandStateChange()
 
 void KMMailComponentContactArea::updateGeometries()
 {
+    //Update the shadow position.
+    m_topShadow->resize(width(), ShadowHeight);
+    m_bottomShadow->setGeometry(0, height()-ShadowHeight,
+                                width(), ShadowHeight);
     //Update the scroll bar position.
     m_scrollBar->setGeometry(width()-ScrollBarWidth,
                              0,
@@ -211,4 +235,32 @@ void KMMailComponentContactArea::startAnime(int endFrame)
                 endFrame);
     //Start the time line.
     m_mouseAnime->start();
+}
+
+void KMMailComponentContactArea::updateShadow(int value)
+{
+    //Check the value size.
+    if(value < ShadowDetectionHeight)
+    {
+        //Update the shaodw darkness.
+        m_topShadow->setDarkness((qreal)value/(qreal)ShadowDetectionHeight *
+                                 MaxShadowOpacity);
+    }
+    else
+    {
+        //Set the top shadow to be the maximum.
+        m_topShadow->setDarkness(MaxShadowOpacity);
+    }
+    if(value > verticalScrollBar()->maximum()-ShadowDetectionHeight)
+    {
+        //Update the shaodw darkness.
+        m_bottomShadow->setDarkness(
+                    (qreal)(verticalScrollBar()->maximum()-value) /
+                    (qreal)ShadowDetectionHeight * MaxShadowOpacity);
+    }
+    else
+    {
+        //Set the top shadow to be the maximum.
+        m_bottomShadow->setDarkness(MaxShadowOpacity);
+    }
 }
