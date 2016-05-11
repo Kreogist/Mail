@@ -78,7 +78,7 @@ public slots:
 
 private:
     QList<KMMailListModel *> m_customFolder;
-    KMMailListModel *m_systemFolder[MailAccountSystemModelCount];
+    KMMailListModel *m_systemFolder[MailSystemFoldersCount];
     QString m_properties[MailAccountPropertiesCount];
 };
 

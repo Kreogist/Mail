@@ -35,13 +35,14 @@ KMUnibarAccountList::KMUnibarAccountList(QWidget *parent) :
     m_accountLabel(QString()),
     m_foldedButton(new KMUnibarLabelButton(this)),
     m_animeTimeLine(new QTimeLine(200, this)),
+    m_currentFolder(-1),
     m_expand(false)
 {
     //Set properties.
     setContentsMargins(0, 0, 0, 0);
     setFixedHeight(LineHeight);
     //Initial the system folder buttons.
-    for(int i=0; i<SystemFoldersCount; ++i)
+    for(int i=0; i<MailSystemFoldersCount; ++i)
     {
         //Initial the button.
         m_systemFolder[i]=new KMUnibarButton(this);
@@ -127,7 +128,7 @@ void KMUnibarAccountList::onActionExpandWidget(int widgetHeight)
 {
     //Calculate the percentage.
     qreal percentage=(qreal)(widgetHeight - LineHeight) /
-                     (qreal)(SystemFoldersCount * LineHeight);
+                     (qreal)(MailSystemFoldersCount * LineHeight);
     //Update the rotation.
     m_foldedButton->setRotate(percentage * (qreal)90.0);
     //Update folder button.
@@ -182,9 +183,9 @@ void KMUnibarAccountList::onActionChangeExpand()
     connect(m_animeTimeLine, &QTimeLine::finished,
             this, &KMUnibarAccountList::onActionShowFinished);
     //Emit height changed signal.
-    emit sizeChanged(SystemFoldersCount*LineHeight);
+    emit sizeChanged(MailSystemFoldersCount*LineHeight);
     //Start the anime.
-    startAnime(LineHeight*(SystemFoldersCount+1));
+    startAnime(LineHeight*(MailSystemFoldersCount+1));
     //Change the flag.
     m_expand=true;
     //Mission complete.
@@ -214,7 +215,25 @@ void KMUnibarAccountList::onActionHideFinished()
         m_folderList.at(i)->hide();
     }
     //Emit height changed signal.
-    emit sizeChanged(-SystemFoldersCount*LineHeight);
+    emit sizeChanged(-MailSystemFoldersCount*LineHeight);
+}
+
+void KMUnibarAccountList::onActionButtonClicked()
+{
+    //Get the sender button.
+    KMUnibarButton *folderButton=static_cast<KMUnibarButton *>(sender());
+    //Get the button index.
+    int buttonIndex=m_folderList.indexOf(folderButton);
+    //Check the current index.
+    if(m_currentFolder>-1)
+    {
+        //Reset the current folder state.
+        m_folderList.at(m_currentFolder)->setChecked(false);
+    }
+    //Save the current index.
+    m_currentFolder=buttonIndex;
+    //Emit the model changed signal.
+    emit currentModelChanged(m_currentFolder);
 }
 
 inline void KMUnibarAccountList::addToFolderList(KMUnibarButton *button)
@@ -223,6 +242,8 @@ inline void KMUnibarAccountList::addToFolderList(KMUnibarButton *button)
     m_folderList.append(button);
     //Check the current state.
     button->move(0, m_expand?(m_folderList.size()*LineHeight):0);
+    //Link the button to current widget.
+    connect(button, SIGNAL(clicked(bool)), this, SLOT(onActionButtonClicked()));
 }
 
 inline void KMUnibarAccountList::startAnime(int endFrame)

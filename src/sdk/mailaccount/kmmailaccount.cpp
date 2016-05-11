@@ -23,7 +23,7 @@ KMMailAccount::KMMailAccount(QObject *parent) :
     QObject(parent)
 {
     //Build system folder models.
-    for(int i=0; i<MailAccountSystemModelCount; ++i)
+    for(int i=0; i<MailSystemFoldersCount; ++i)
     {
         //Construct the model.
         m_systemFolder[i]=new KMMailListModel(this);
@@ -45,7 +45,7 @@ QString KMMailAccount::accountProperty(int propertyIndex) const
 
 KMMailListModel *KMMailAccount::systemFolder(int folderIndex)
 {
-    Q_ASSERT(folderIndex>-1 && folderIndex<MailAccountSystemModelCount);
+    Q_ASSERT(folderIndex>-1 && folderIndex<MailSystemFoldersCount);
     //Get the folder model.
     return m_systemFolder[folderIndex];
 }

@@ -44,13 +44,13 @@ namespace MailUtil
         MailAccountPropertiesCount
     };
 
-    enum MailAccountSystemModels
+    enum MailSystemFolder
     {
-        Inbox,
-        Draft,
-        Sent,
-        Trash,
-        MailAccountSystemModelCount
+        FolderInbox,
+        FolderSentItems,
+        FolderDrafts,
+        FolderTrash,
+        MailSystemFoldersCount
     };
 }
 

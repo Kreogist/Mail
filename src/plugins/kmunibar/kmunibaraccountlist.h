@@ -20,6 +20,10 @@
 
 #include <QWidget>
 
+#include "kmmailutil.h"
+
+using namespace MailUtil;
+
 class QBoxLayout;
 class QLabel;
 class QTimeLine;
@@ -39,6 +43,8 @@ public:
 
 signals:
     void sizeChanged(int heightDelta);
+
+    void currentModelChanged(int modelIndex);
 
 public slots:
     void setAccountLabel(const QString &accountLabel);
@@ -62,24 +68,17 @@ private slots:
     void onActionChangeExpand();
     void onActionShowFinished();
     void onActionHideFinished();
+    void onActionButtonClicked();
 
 private:
-    enum SystemFolders
-    {
-        FolderInbox,
-        FolderSentItems,
-        FolderDrafts,
-        FolderTrash,
-        SystemFoldersCount
-    };
-
     inline void addToFolderList(KMUnibarButton *button);
     inline void startAnime(int endFrame);
     QString m_accountLabel;
     QList<KMUnibarButton *> m_folderList;
-    KMUnibarButton *m_systemFolder[SystemFoldersCount];
+    KMUnibarButton *m_systemFolder[MailSystemFoldersCount];
     KMUnibarLabelButton *m_foldedButton;
     QTimeLine *m_animeTimeLine;
+    int m_currentFolder;
     bool m_expand;
 };
 
