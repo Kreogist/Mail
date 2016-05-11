@@ -20,7 +20,6 @@
 KMMailListModel::KMMailListModel(QObject *parent) :
     QAbstractListModel(parent)
 {
-
 }
 
 int KMMailListModel::rowCount(const QModelIndex &parent) const

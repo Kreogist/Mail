@@ -34,6 +34,24 @@ namespace MailUtil
         SenderRole = Qt::UserRole + 1,
         BreifContextRole
     };
+
+    enum MailAccountProperties
+    {
+        UserName,
+        Password,
+        SendProtocol,
+        ReceiverProtocol,
+        MailAccountPropertiesCount
+    };
+
+    enum MailAccountSystemModels
+    {
+        Inbox,
+        Draft,
+        Sent,
+        Trash,
+        MailAccountSystemModelCount
+    };
 }
 
 /*!

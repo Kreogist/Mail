@@ -200,7 +200,6 @@ HEADERS += \
     sdk/knlocalemanager.h \
     sdk/knthememanager.h \
     sdk/knfontmanager.h \
-    sdk/kmmailaccount.h \
     sdk/crypto/kmcryptoaes.h \
     sdk/crypto/kmcryptoaesprivate.h \
     sdk/kmmailreceivermanager.h \
@@ -247,7 +246,8 @@ HEADERS += \
     plugins/kmunibar/kmunibarlabelbutton.h \
     plugins/kmmailcomponent/kmmailcomponentcontactarea.h \
     plugins/kmmailcomponent/kmmailcomponentcontactlist.h \
-    plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.h
+    plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.h \
+    sdk/mailaccount/kmmailaccount.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -268,7 +268,6 @@ SOURCES += \
     sdk/knlocalemanager.cpp \
     sdk/knthememanager.cpp \
     sdk/knfontmanager.cpp \
-    sdk/kmmailaccount.cpp \
     sdk/crypto/kmcryptoaes.cpp \
     sdk/kmmailreceivermanager.cpp \
     sdk/mime/kmmimebase.cpp \
@@ -304,7 +303,8 @@ SOURCES += \
     plugins/kmunibar/kmunibarlabelbutton.cpp \
     plugins/kmmailcomponent/kmmailcomponentcontactarea.cpp \
     plugins/kmmailcomponent/kmmailcomponentcontactlist.cpp \
-    plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.cpp
+    plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.cpp \
+    sdk/mailaccount/kmmailaccount.cpp
 
 RESOURCES += \
     resource/res.qrc
