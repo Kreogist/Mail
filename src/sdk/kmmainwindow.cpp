@@ -121,6 +121,9 @@ void KMMainWindow::setUniBar(KMUnibarBase *uniBar)
     //Configure the unibar.
     m_uniBar->hide();
     m_uniBar->setShadowParent(m_floatLayer);
+    //Link the unibar with the hide signal.
+    connect(m_uniBar, &KMUnibarBase::switchModel,
+            this, &KMMainWindow::onActionSwitchModel);
 }
 
 void KMMainWindow::setMailComponent(QWidget *mailComponent)
@@ -259,6 +262,11 @@ void KMMainWindow::onActionHidePreferenceFinished()
     m_floatLayer->hide();
     //Disconnect the finished signal.
     disconnect(m_floatAnime, &QTimeLine::finished, 0, 0);
+}
+
+void KMMainWindow::onActionSwitchModel()
+{
+    hideUnibar();
 }
 
 inline void KMMainWindow::startAnime(int endFrame)

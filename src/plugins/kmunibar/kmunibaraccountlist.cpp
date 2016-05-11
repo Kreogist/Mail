@@ -20,6 +20,7 @@
 #include <QPainter>
 #include <QTimeLine>
 
+#include "mailaccount/kmmailaccount.h"
 #include "kmunibarlabelbutton.h"
 #include "kmunibarbutton.h"
 #include "knlocalemanager.h"
@@ -35,6 +36,7 @@ KMUnibarAccountList::KMUnibarAccountList(QWidget *parent) :
     m_accountLabel(QString()),
     m_foldedButton(new KMUnibarLabelButton(this)),
     m_animeTimeLine(new QTimeLine(200, this)),
+    m_currentAccount(nullptr),
     m_currentFolder(-1),
     m_expand(false)
 {
@@ -254,4 +256,15 @@ inline void KMUnibarAccountList::startAnime(int endFrame)
     m_animeTimeLine->setFrameRange(height(), endFrame);
     //Start animation.
     m_animeTimeLine->start();
+}
+
+KMMailAccount *KMUnibarAccountList::currentAccount() const
+{
+    return m_currentAccount;
+}
+
+void KMUnibarAccountList::setCurrentAccount(KMMailAccount *currentAccount)
+{
+    m_currentAccount = currentAccount;
+    //! FIXME: Add link codes here.
 }

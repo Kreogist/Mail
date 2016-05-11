@@ -18,6 +18,8 @@
 #ifndef KMUNIBARBASE_H
 #define KMUNIBARBASE_H
 
+#include "mailaccount/kmmailaccount.h"
+
 #include <QWidget>
 
 class KMTitleBarBase;
@@ -44,6 +46,13 @@ public:
     virtual void setShadowParent(QWidget *container)=0;
 
 signals:
+    /*!
+     * \brief switchModel
+     * \param account
+     * \param modelIndex
+     */
+    void switchModel(KMMailAccount *account,
+                     int modelIndex);
 
 public slots:
     /*!

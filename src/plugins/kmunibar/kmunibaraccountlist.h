@@ -27,6 +27,7 @@ using namespace MailUtil;
 class QBoxLayout;
 class QLabel;
 class QTimeLine;
+class KMMailAccount;
 class KMUnibarButton;
 class KMUnibarLabelButton;
 class KMUnibarAccountList : public QWidget
@@ -40,6 +41,9 @@ public:
     explicit KMUnibarAccountList(QWidget *parent = 0);
 
     QString accountLabel() const;
+
+    KMMailAccount *currentAccount() const;
+    void setCurrentAccount(KMMailAccount *currentAccount);
 
 signals:
     void sizeChanged(int heightDelta);
@@ -78,6 +82,7 @@ private:
     KMUnibarButton *m_systemFolder[MailSystemFoldersCount];
     KMUnibarLabelButton *m_foldedButton;
     QTimeLine *m_animeTimeLine;
+    KMMailAccount *m_currentAccount;
     int m_currentFolder;
     bool m_expand;
 };

@@ -18,10 +18,13 @@
 #ifndef KMUNIBARCONTENT_H
 #define KMUNIBARCONTENT_H
 
+#include "mailaccount/kmmailaccount.h"
+
 #include <QWidget>
 
 class QBoxLayout;
 class KMUnibarButton;
+class KMUnibarAccountList;
 /*!
  * \brief The KMUnibarContent class
  */
@@ -36,11 +39,23 @@ public:
     explicit KMUnibarContent(QWidget *parent = 0);
 
 signals:
+    /*!
+     * \brief switchModel
+     * \param account
+     * \param modelIndex
+     */
+    void switchModel(KMMailAccount *account, int modelIndex);
 
 public slots:
+    /*!
+     * \brief addAccountList
+     * \param accountList
+     */
+    void addAccountList(KMUnibarAccountList *accountList);
 
 private slots:
     void onActionChangeSize(int heightDelta);
+    void onActionChangeModel(int modelIndex);
 
 private:
     QBoxLayout *m_mainLayout;

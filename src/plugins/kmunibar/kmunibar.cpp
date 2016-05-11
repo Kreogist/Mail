@@ -64,6 +64,9 @@ KMUnibar::KMUnibar(QWidget *parent) :
     m_unibarContentArea->setFrameStyle(QFrame::NoFrame);
     m_unibarContentArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_unibarContentArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //Configure the content.
+    connect(m_unibarContent, &KMUnibarContent::switchModel,
+            this, &KMUnibar::switchModel);
 
     //Register the widget.
     knTheme->registerWidget(this);

@@ -94,6 +94,7 @@ private slots:
     void hidePreference();
     void onActionHideFloatLayerFinished();
     void onActionHidePreferenceFinished();
+    void onActionSwitchModel();
 
 private:
     inline void startAnime(int endFrame);

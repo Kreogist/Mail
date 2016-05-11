@@ -18,6 +18,7 @@
 #include <QBoxLayout>
 
 #include "kmunibaraccountlist.h"
+#include "mailaccount/kmmailaccount.h"
 
 #include "kmunibarcontent.h"
 
@@ -25,22 +26,45 @@
 
 KMUnibarContent::KMUnibarContent(QWidget *parent) :
     QWidget(parent),
-    m_mainLayout(new QBoxLayout(QBoxLayout::TopToBottom, this))
+    m_mainLayout(new QBoxLayout(QBoxLayout::TopToBottom))
 {
+    //Initial the content layout.
+    QBoxLayout *contentLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
+    contentLayout->setContentsMargins(0, 0, 0, 0);
+    setLayout(contentLayout);
+    //Add main layout to content layout.
+    contentLayout->addLayout(m_mainLayout);
+    contentLayout->addStretch();
     //Configure layout.
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
     m_mainLayout->setSpacing(0);
-    setLayout(m_mainLayout);
 
     KMUnibarAccountList *accountList=new KMUnibarAccountList(this);
     accountList->setAccountLabel("ANU <saki.tojo@anu.edu.au>");
+    addAccountList(accountList);
+}
+
+void KMUnibarContent::addAccountList(KMUnibarAccountList *accountList)
+{
+    //Add account list to main layout.
     m_mainLayout->addWidget(accountList);
+    //Link the account list.
     connect(accountList, &KMUnibarAccountList::sizeChanged,
             this, &KMUnibarContent::onActionChangeSize);
-    m_mainLayout->addStretch();
+    connect(accountList, &KMUnibarAccountList::currentModelChanged,
+            this, &KMUnibarContent::onActionChangeModel);
 }
 
 void KMUnibarContent::onActionChangeSize(int heightDelta)
 {
     resize(width(), height()+heightDelta);
+}
+
+void KMUnibarContent::onActionChangeModel(int modelIndex)
+{
+    //Get the sender pointer.
+    KMUnibarAccountList *accountList=
+            static_cast<KMUnibarAccountList *>(sender());
+    //Re-emit signal.
+    emit switchModel(accountList->currentAccount(), modelIndex);
 }
