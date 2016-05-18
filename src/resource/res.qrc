@@ -12,5 +12,10 @@
         <file>image/public/left_arrow.png</file>
         <file>image/public/right_arrow.png</file>
         <file>image/public/top_arrow.png</file>
+        <file>image/editor/bold.png</file>
+        <file>image/editor/indent_decrease.png</file>
+        <file>image/editor/indent_increase.png</file>
+        <file>image/editor/italic.png</file>
+        <file>image/editor/underline.png</file>
     </qresource>
 </RCC>

@@ -22,6 +22,7 @@
 
 class QLabel;
 class QComboBox;
+class KMComposeEditor;
 class KMComposeLineEdit;
 /*!
  * \brief The KMComposePanel class provides the compose panel which user could
@@ -48,6 +49,7 @@ private:
     QComboBox *m_from;
     KMComposeLineEdit *m_title, *m_receiver;
     QLabel *m_fromHint, *m_toHint;
+    KMComposeEditor *m_editor;
 };
 
 #endif // KMCOMPOSEPANEL_H

@@ -20,11 +20,13 @@
 #include <QLabel>
 #include <QComboBox>
 
+//Dependencies.
 #include "knlocalemanager.h"
 #include "knthememanager.h"
 
-//Dependencies.
+//Compose panel widgets.
 #include "kmcomposelineedit.h"
+#include "kmcomposeeditor.h"
 
 #include "kmcomposepanel.h"
 
@@ -34,7 +36,8 @@ KMComposePanel::KMComposePanel(QWidget *parent) :
     m_title(new KMComposeLineEdit(this)),
     m_receiver(new KMComposeLineEdit(this)),
     m_fromHint(new QLabel(this)),
-    m_toHint(new QLabel(this))
+    m_toHint(new QLabel(this)),
+    m_editor(new KMComposeEditor(this))
 {
     setObjectName("ComposePanel");
     //Set properties.
@@ -72,9 +75,10 @@ KMComposePanel::KMComposePanel(QWidget *parent) :
     //Add widget to layout.
     receiverForm->addRow(m_fromHint, m_from);
     receiverForm->addRow(m_toHint, m_receiver);
-
     //Add to main layout.
     mainLayout->addLayout(receiverForm);
+    //Add editor to main layout.
+    mainLayout->addWidget(m_editor, 1);
 
     //Link the locale stuffs.
     knI18n->link(this, &KMComposePanel::retranslate);

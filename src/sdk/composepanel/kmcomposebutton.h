@@ -15,55 +15,69 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KMCOMPOSELINEEDIT_H
-#define KMCOMPOSELINEEDIT_H
+#ifndef KMCOMPOSEBUTTON_H
+#define KMCOMPOSEBUTTON_H
 
-#include <QLineEdit>
+#include <QAbstractButton>
 
 class QTimeLine;
 /*!
- * \brief The KMComposeLineEdit class provides a widget which could be display
- * the content of the current edit data for the compose panel.\n
+ * \brief The KMComposeButton class provides the button which could be used in
+ * the toolbar.
  */
-class KMComposeLineEdit : public QLineEdit
+class KMComposeButton : public QAbstractButton
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KMComposeLineEdit widget.
+     * \brief Construct a KMComposeButton widget.
      * \param parent The parent widget.
      */
-    explicit KMComposeLineEdit(QWidget *parent = 0);
+    explicit KMComposeButton(QWidget *parent = 0);
 
 signals:
 
 public slots:
+    /*!
+     * \brief Reimplemented from QAbstractButton::setChecked().
+     */
+    void setChecked(bool checked);
 
 protected:
     /*!
-     * \brief Reimplemented from QLineEdit::paintEvent().
+     * \brief Reimplemented from QAbstractButton::paintEvent().
      */
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from QLineEdit::enterEvent().
+     * \brief Reimplemented from QAbstractButton::enterEvent().
      */
     void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from QLineEdit::leaveEvent().
+     * \brief Reimplemented from QAbstractButton::leaveEvent().
      */
     void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from QLineEdit::focusInEvent().
+     * \brief Reimplemented from QAbstractButton::focusInEvent().
      */
     void focusInEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from QLineEdit::focusOutEvent().
+     * \brief Reimplemented from QAbstractButton::focusOutEvent().
      */
     void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QAbstractButton::mousePressEvent().
+     */
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QAbstractButton::mouseReleaseEvent().
+     */
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
     void onActionChangeAlpha(int frame);
@@ -72,7 +86,6 @@ private:
     inline void startAnime(int endFrame);
     QTimeLine *m_mouseAnime;
     int m_currentAlpha;
-    bool m_isMouseIn;
 };
 
-#endif // KMCOMPOSELINEEDIT_H
+#endif // KMCOMPOSEBUTTON_H

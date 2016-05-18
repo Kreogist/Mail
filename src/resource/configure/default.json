@@ -16,8 +16,14 @@
         "Window" : "#FFFFFF",
         "Text" : "#FFFFFF"
     },
+    "ComposeButton" : {
+        "Parent" : "ComposePanel",
+        "Button" : "#A0A0A0"
+    },
     "ComposeCombo" : {
         "Parent" : "ComposePanel",
+        "Base" : "#202020",
+        "Text" : "#a0a0a0",
         "Button" : "#202020",
         "ButtonText" : "#a0a0a0",
         "Highlight" : "#707070",
