@@ -247,7 +247,9 @@ HEADERS += \
     plugins/kmmailcomponent/kmmailcomponentcontactarea.h \
     plugins/kmmailcomponent/kmmailcomponentcontactlist.h \
     plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.h \
-    sdk/mailaccount/kmmailaccount.h
+    sdk/mailaccount/kmmailaccount.h \
+    sdk/composepanel/kmcomposepanel.h \
+    sdk/composepanel/kmcomposelineedit.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -304,7 +306,9 @@ SOURCES += \
     plugins/kmmailcomponent/kmmailcomponentcontactarea.cpp \
     plugins/kmmailcomponent/kmmailcomponentcontactlist.cpp \
     plugins/kmmailcomponent/sdk/kmmailcomponentcontentbase.cpp \
-    sdk/mailaccount/kmmailaccount.cpp
+    sdk/mailaccount/kmmailaccount.cpp \
+    sdk/composepanel/kmcomposepanel.cpp \
+    sdk/composepanel/kmcomposelineedit.cpp
 
 RESOURCES += \
     resource/res.qrc

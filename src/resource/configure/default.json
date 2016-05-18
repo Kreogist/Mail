@@ -6,6 +6,27 @@
         "Window" : "#000000",
         "WindowText" : "#FFFFFF"
     },
+    "ComposePanel" : {
+        "Parent" : "MainWindow",
+        "Window" : "#1a1a1a"
+    },
+    "ComposeLineEdit" : {
+        "Parent" : "ComposePanel",
+        "Base" : "#00000000",
+        "Window" : "#FFFFFF",
+        "Text" : "#FFFFFF"
+    },
+    "ComposeCombo" : {
+        "Parent" : "ComposePanel",
+        "Button" : "#202020",
+        "ButtonText" : "#a0a0a0",
+        "Highlight" : "#707070",
+        "HighlightedText" : "#F7CF3D"
+    },
+    "ComposeLabel" : {
+        "Parent" : "ComposePanel",
+        "WindowText" : "#969696"
+    },
     "UniBar" : {
         "Parent" : "MainWindow",
         "Window" : "#202020"
