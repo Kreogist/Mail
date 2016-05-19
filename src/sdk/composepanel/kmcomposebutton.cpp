@@ -22,8 +22,8 @@
 
 #define RoundedRadius 3
 #define MaxAlpha 160
-#define HoverAlpha 100
 #define PressedAlpha 100
+#define HoverAlpha 60
 #define MinAlpha 0
 
 KMComposeButton::KMComposeButton(QWidget *parent) :
@@ -69,7 +69,7 @@ void KMComposeButton::paintEvent(QPaintEvent *event)
     if(text().isEmpty())
     {
         //Get the pixmap.
-        QPixmap &drawnIcon=icon().pixmap(size());
+        QPixmap &&drawnIcon=icon().pixmap(size());
         //Draw the button at the central of the button.
         painter.drawPixmap((width()-drawnIcon.width())>>1,
                            (height()-drawnIcon.height())>>1,
