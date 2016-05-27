@@ -18,8 +18,6 @@
 #include <QPainter>
 #include <QTimeLine>
 
-#include "knthememanager.h"
-
 #include "kmunibarbutton.h"
 
 #define ButtonHeight 38
@@ -29,11 +27,8 @@ KMUnibarButton::KMUnibarButton(QWidget *parent) :
     m_opacity(0.0),
     m_hoverOpacity(0.0)
 {
-    setObjectName("UnibarButton");
     //Set properties.
     setFixedHeight(ButtonHeight);
-    //Register widget.
-    knTheme->registerWidget(this);
 }
 
 void KMUnibarButton::paintEvent(QPaintEvent *event)

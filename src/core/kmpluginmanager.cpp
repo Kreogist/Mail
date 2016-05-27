@@ -40,7 +40,7 @@
 #include "kmpluginmanager.h"
 
 //Debug
-#include "kmmaillistmodel.h"
+#include "mailaccount/kmmailaccount.h"
 #include "composepanel/kmcomposepanel.h"
 
 KMPluginManager::KMPluginManager(QObject *parent) :
@@ -137,17 +137,6 @@ void KMPluginManager::loadLeftBar(KMLeftBarBase *leftBar)
     }
     //Load the left bar to main window, which is the mail list.
     m_mainWindow->setMailList(leftBar);
-
-    KMMailListModel *model=new KMMailListModel(this);
-    MailUtil::MailListItem item;
-    item.title="TechLauncher: First peer assessment is due at 17:00 today";
-    item.sender="Shayne Filnt";
-    item.breifContext="Hi, a quick reminder that your Week 4 peer assessment is due";
-    for(int i=0; i<36; ++i)
-    {
-        model->appendRow(item);
-    }
-    leftBar->setMailListModel(model);
 }
 
 void KMPluginManager::loadMailComponent(KMMailComponentBase *mailComponent)

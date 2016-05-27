@@ -45,6 +45,8 @@ public:
     KMMailAccount *currentAccount() const;
     void setCurrentAccount(KMMailAccount *currentAccount);
 
+    void reset();
+
 signals:
     void sizeChanged(int heightDelta);
 
@@ -68,6 +70,7 @@ protected:
 
 private slots:
     void retranslate();
+    void onThemeChanged();
     void onActionExpandWidget(int widgetHeight);
     void onActionChangeExpand();
     void onActionShowFinished();

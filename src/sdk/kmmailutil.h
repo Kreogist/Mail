@@ -37,6 +37,7 @@ namespace MailUtil
 
     enum MailAccountProperties
     {
+        DisplayName,
         UserName,
         Password,
         SendProtocol,

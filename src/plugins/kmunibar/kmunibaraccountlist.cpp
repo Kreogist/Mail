@@ -21,6 +21,7 @@
 #include <QTimeLine>
 
 #include "mailaccount/kmmailaccount.h"
+#include "knthememanager.h"
 #include "kmunibarlabelbutton.h"
 #include "kmunibarbutton.h"
 #include "knlocalemanager.h"
@@ -124,6 +125,24 @@ void KMUnibarAccountList::retranslate()
     m_systemFolder[FolderSentItems]->setText(tr("Sent Items"));
     m_systemFolder[FolderDrafts]->setText(tr("Drafts"));
     m_systemFolder[FolderTrash]->setText(tr("Trash"));
+}
+
+void KMUnibarAccountList::onThemeChanged()
+{
+    //Get the button palette.
+    QPalette pal=knTheme->getPalette("UnibarButton");
+    //Update the button palette.
+    for(int i=0; i<MailSystemFoldersCount; ++i)
+    {
+        //Set the button palette.
+        m_systemFolder[i]->setPalette(pal);
+    }
+    //Set the button for the folders.
+    for(int i=0; i<m_folderList.size(); ++i)
+    {
+        //Update the custom folder palette.
+        m_folderList.at(i)->setPalette(pal);
+    }
 }
 
 void KMUnibarAccountList::onActionExpandWidget(int widgetHeight)
@@ -265,6 +284,38 @@ KMMailAccount *KMUnibarAccountList::currentAccount() const
 
 void KMUnibarAccountList::setCurrentAccount(KMMailAccount *currentAccount)
 {
+    //Save the account pointer.
     m_currentAccount = currentAccount;
-    //! FIXME: Add link codes here.
+    //Check the current account pointer.
+    if(m_currentAccount==nullptr)
+    {
+        //Reset the widget.
+        reset();
+        //Complete.
+        return;
+    }
+    //Set the properties.
+    setAccountLabel(m_currentAccount->accountProperty(DisplayName) +
+                    " <" + m_currentAccount->accountProperty(UserName) + ">");
+    //! FIXME: Add link codes for custom folder increase and decrease here.
+    //Update the widget.
+    update();
+}
+
+void KMUnibarAccountList::reset()
+{
+    //Clear the account text.
+    m_accountLabel.clear();
+    //Ask to change the size.
+    if(m_expand)
+    {
+        //The size has change to default size.
+        emit sizeChanged(-LineHeight * m_folderList.size());
+    }
+    //Clear the buttons.
+    qDeleteAll(m_folderList);
+    //Clear the folder list.
+    m_folderList.clear();
+    //Update the widget.
+    update();
 }
