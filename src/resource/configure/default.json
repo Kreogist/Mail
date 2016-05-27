@@ -22,12 +22,17 @@
     },
     "ComposeCombo" : {
         "Parent" : "ComposePanel",
-        "Base" : "#202020",
+        "Base" : "#404040",
+        "Window" : "#00000000",
         "Text" : "#a0a0a0",
         "Button" : "#202020",
         "ButtonText" : "#a0a0a0",
         "Highlight" : "#707070",
         "HighlightedText" : "#F7CF3D"
+    },
+    "ComposeScrollBar" : {
+        "Parent" : "ComposePanel",
+        "Button" : "#000000"
     },
     "ComposeLabel" : {
         "Parent" : "ComposePanel",

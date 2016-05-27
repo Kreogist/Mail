@@ -16,12 +16,13 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QBoxLayout>
-#include <QTextEdit>
 #include <QLineEdit>
 #include <QComboBox>
 #include <QFontComboBox>
+#include <QScrollBar>
 
 #include "kmcomposebutton.h"
+#include "kmcomposetextedit.h"
 #include "knthememanager.h"
 
 #include "kmcomposeeditor.h"
@@ -34,7 +35,7 @@ KMComposeEditor::KMComposeEditor(QWidget *parent) :
     QWidget(parent),
     m_fontFamily(new QFontComboBox(this)),
     m_fontSize(new QComboBox(this)),
-    m_editArea(new QTextEdit(this))
+    m_editArea(new KMComposeTextEdit(this))
 {
     //Set properties.
     setContentsMargins(0, 0, 0, 0);
@@ -42,13 +43,16 @@ KMComposeEditor::KMComposeEditor(QWidget *parent) :
     QFont editFont=m_editArea->font();
     editFont.setPointSize(12);
     m_editArea->setFont(editFont);
+    m_editArea->updateObjectName("ComposeTextEdit");
     //Initial buttons.
     initialTools();
     //Configure the font family combo box.
+    m_fontFamily->lineEdit()->setText(editFont.family());
     connect(m_fontFamily->lineEdit(), &QLineEdit::textChanged,
             this, &KMComposeEditor::onActionChangeFont);
     //Configure the font size combo box.
     m_fontSize->setEditable(true);
+    m_fontSize->lineEdit()->setText(QString::number(editFont.pointSize()));
     connect(m_fontSize->lineEdit(), &QLineEdit::textChanged,
             this, &KMComposeEditor::onActionChangeFontSize);
     //Configure the edia area.

@@ -143,7 +143,7 @@ inline void KMGlobal::initialDefaultDirPath()
 #endif
 #ifdef Q_OS_LINUX
     m_dirPath[KreogistDir]=
-            KNUtil::simplifiedPath(QStandardPaths::writableLocation(
+            KMUtil::simplifiedPath(QStandardPaths::writableLocation(
                                        QStandardPaths::HomeLocation))
             + "/.kreogist";
     m_dirPath[ResourceDir]=m_dirPath[KreogistDir]+"/Resources";

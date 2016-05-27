@@ -22,7 +22,7 @@
 
 class QFontComboBox;
 class QComboBox;
-class QTextEdit;
+class KMComposeTextEdit;
 class KMComposeButton;
 /*!
  * \brief The KMComposeEditor class provides a fully rich text editor and it
@@ -68,7 +68,7 @@ private:
     KMComposeButton *m_toolButton[TextEditToolCount];
     QFontComboBox *m_fontFamily;
     QComboBox *m_fontSize;
-    QTextEdit *m_editArea;
+    KMComposeTextEdit *m_editArea;
 };
 
 #endif // KMCOMPOSEEDITOR_H

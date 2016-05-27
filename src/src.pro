@@ -252,7 +252,8 @@ HEADERS += \
     sdk/composepanel/kmcomposelineedit.h \
     sdk/composepanel/kmcomposeeditor.h \
     sdk/composepanel/kmcomposebutton.h \
-    sdk/mailaccount/kmmailaccountmanager.h
+    sdk/mailaccount/kmmailaccountmanager.h \
+    sdk/composepanel/kmcomposetextedit.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -314,7 +315,8 @@ SOURCES += \
     sdk/composepanel/kmcomposelineedit.cpp \
     sdk/composepanel/kmcomposeeditor.cpp \
     sdk/composepanel/kmcomposebutton.cpp \
-    sdk/mailaccount/kmmailaccountmanager.cpp
+    sdk/mailaccount/kmmailaccountmanager.cpp \
+    sdk/composepanel/kmcomposetextedit.cpp
 
 RESOURCES += \
     resource/res.qrc
