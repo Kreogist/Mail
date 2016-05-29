@@ -31,6 +31,7 @@
 
 class QWidget;
 class KNConfigure;
+class KMMailAccountManager;
 /*!
  * \brief The KMGlobal class is a global instance which contains several public
  * function. \n
@@ -140,6 +141,7 @@ private:
     inline void initialInfrastrcture();
 
     QString m_dirPath[DefaultDirCount];
+    KMMailAccountManager *m_accountManager;
     QWidget *m_mainWindow;
     KNConfigure *m_globalConfigure;
     QThread m_receiverThread;

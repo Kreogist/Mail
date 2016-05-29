@@ -54,6 +54,12 @@ signals:
     void switchModel(KMMailAccount *account,
                      int modelIndex);
 
+    /*!
+     * \brief requireUpdateTitle
+     * \param titleText
+     */
+    void requireUpdateTitle(QString titleText);
+
 public slots:
     /*!
      * \brief Set the title bar widget to unibar.

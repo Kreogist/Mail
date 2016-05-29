@@ -19,6 +19,7 @@
 
 #include "kmunibaraccountlist.h"
 #include "mailaccount/kmmailaccount.h"
+#include "mailaccount/kmmailaccountmanager.h"
 
 #include "kmunibarcontent.h"
 
@@ -39,9 +40,9 @@ KMUnibarContent::KMUnibarContent(QWidget *parent) :
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
     m_mainLayout->setSpacing(0);
 
-    KMUnibarAccountList *accountList=new KMUnibarAccountList(this);
-    accountList->setAccountLabel("ANU <saki.tojo@anu.edu.au>");
-    addAccountList(accountList);
+    //Link with the account manager.
+    connect(kmMailAccount, &KMMailAccountManager::accountAppend,
+            this, &KMUnibarContent::onActionAccountAdd);
 }
 
 void KMUnibarContent::addAccountList(KMUnibarAccountList *accountList)
@@ -66,5 +67,17 @@ void KMUnibarContent::onActionChangeModel(int modelIndex)
     KMUnibarAccountList *accountList=
             static_cast<KMUnibarAccountList *>(sender());
     //Re-emit signal.
-    emit switchModel(accountList->currentAccount(), modelIndex);
+    emit switchModel(accountList->account(), modelIndex);
+    //Update the title bar text.
+    emit requireUpdateTitle(accountList->folderText(modelIndex));
+}
+
+void KMUnibarContent::onActionAccountAdd(KMMailAccount *account)
+{
+    //Insert generate the account list.
+    KMUnibarAccountList *accountList=new KMUnibarAccountList(this);
+    //Set the account backend to account list.
+    accountList->setAccount(account);
+    //Add account list to widget.
+    addAccountList(accountList);
 }

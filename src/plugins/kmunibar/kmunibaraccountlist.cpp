@@ -67,20 +67,35 @@ KMUnibarAccountList::KMUnibarAccountList(QWidget *parent) :
     connect(m_animeTimeLine, &QTimeLine::frameChanged,
             this, &KMUnibarAccountList::onActionExpandWidget);
 
+    //Link the theme updater.
+    connect(knTheme, &KNThemeManager::themeChange,
+            this, &KMUnibarAccountList::onThemeChanged);
+    onThemeChanged();
+
     //Initial retranslate.
     knI18n->link(this, &KMUnibarAccountList::retranslate);
     retranslate();
 }
 
-QString KMUnibarAccountList::accountLabel() const
+QString KMUnibarAccountList::text() const
 {
     return m_accountLabel;
 }
 
-void KMUnibarAccountList::setAccountLabel(const QString &accountLabel)
+QString KMUnibarAccountList::folderText(int modelIndex) const
+{
+    //Check the model index.
+    return modelIndex<MailSystemFoldersCount?
+                //System folder.
+                m_systemFolder[modelIndex]->text():
+                //Custom folder.
+                m_folderList.at(modelIndex-MailSystemFoldersCount)->text();
+}
+
+void KMUnibarAccountList::setText(const QString &text)
 {
     //Save the label.
-    m_accountLabel = accountLabel;
+    m_accountLabel = text;
     //Update the widget.
     update();
 }
@@ -257,6 +272,14 @@ void KMUnibarAccountList::onActionButtonClicked()
     emit currentModelChanged(m_currentFolder);
 }
 
+void KMUnibarAccountList::onActionAccountPropertyChange()
+{
+    //Set the properties.
+    setText(m_currentAccount->accountProperty(DisplayName) +
+                    " <" + m_currentAccount->accountProperty(UserName) + ">");
+
+}
+
 inline void KMUnibarAccountList::addToFolderList(KMUnibarButton *button)
 {
     //Add the widget to list.
@@ -277,15 +300,15 @@ inline void KMUnibarAccountList::startAnime(int endFrame)
     m_animeTimeLine->start();
 }
 
-KMMailAccount *KMUnibarAccountList::currentAccount() const
+KMMailAccount *KMUnibarAccountList::account() const
 {
     return m_currentAccount;
 }
 
-void KMUnibarAccountList::setCurrentAccount(KMMailAccount *currentAccount)
+void KMUnibarAccountList::setAccount(KMMailAccount *account)
 {
     //Save the account pointer.
-    m_currentAccount = currentAccount;
+    m_currentAccount = account;
     //Check the current account pointer.
     if(m_currentAccount==nullptr)
     {
@@ -294,9 +317,11 @@ void KMUnibarAccountList::setCurrentAccount(KMMailAccount *currentAccount)
         //Complete.
         return;
     }
-    //Set the properties.
-    setAccountLabel(m_currentAccount->accountProperty(DisplayName) +
-                    " <" + m_currentAccount->accountProperty(UserName) + ">");
+    //Link the account changed signal.
+    connect(m_currentAccount, &KMMailAccount::propertyChanged,
+            this, &KMUnibarAccountList::onActionAccountPropertyChange);
+    //Update the account data.
+    onActionAccountPropertyChange();
     //! FIXME: Add link codes for custom folder increase and decrease here.
     //Update the widget.
     update();

@@ -67,6 +67,8 @@ KMUnibar::KMUnibar(QWidget *parent) :
     //Configure the content.
     connect(m_unibarContent, &KMUnibarContent::switchModel,
             this, &KMUnibar::switchModel);
+    connect(m_unibarContent, &KMUnibarContent::requireUpdateTitle,
+            this, &KMUnibar::onActionUpdateTitle);
 
     //Register the widget.
     knTheme->registerWidget(this);
@@ -162,4 +164,12 @@ void KMUnibar::onActionExpandFold(const QVariant &value)
     //Calculate the progress.
     m_shadowCombo->setIndicatorRotate(
                 (value.toSize().width()-m_titleBarCombo->width())/80.0*180.0);
+}
+
+void KMUnibar::onActionUpdateTitle(const QString &title)
+{
+    //Update shadow combo.
+    m_shadowCombo->setText(title);
+    //Ask for update shadow.
+    emit requireUpdateTitle(title);
 }

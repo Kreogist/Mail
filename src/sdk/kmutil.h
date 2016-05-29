@@ -59,6 +59,14 @@ public:
      */
     static QString simplifiedPath(const QString &path);
 
+    /*!
+     * \brief Get the valid file name according to the original one. It will
+     * replace the invalid char into '_'.
+     * \param fileName The original file name.
+     * \return The valid file name for the target OS.
+     */
+    static QString validFileName(QString fileName);
+
 private:
     KMUtil();
     KMUtil(const KMUtil &);

@@ -25,6 +25,7 @@
 #include "knfontmanager.h"
 #include "kmmailreceivermanager.h"
 #include "kmutil.h"
+#include "mailaccount/kmmailaccountmanager.h"
 
 #include "kmglobal.h"
 
@@ -84,6 +85,7 @@ void KMGlobal::startReceiverManager()
 
 KMGlobal::KMGlobal(QObject *parent) :
     QObject(parent),
+    m_accountManager(nullptr),
     m_mainWindow(nullptr),
     m_globalConfigure(nullptr)
 {
@@ -96,6 +98,8 @@ KMGlobal::KMGlobal(QObject *parent) :
     KNLocaleManager::initial(this);
     //Generate the theme manager.
     KNThemeManager::initial(this);
+    //Generate the account manager.
+    KMMailAccountManager::initial(this);
 
     //Initial the infrastructure.
     initialInfrastrcture();

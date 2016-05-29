@@ -18,23 +18,66 @@
 #ifndef KMMAILACCOUNTMANAGER_H
 #define KMMAILACCOUNTMANAGER_H
 
+#include "kmmailutil.h"
+
 #include <QObject>
 
+#define kmMailAccount (KMMailAccountManager::instance())
+
+using namespace MailUtil;
+
 class KMMailAccount;
+class KNConfigure;
+/*!
+ * \brief The KMMailAccountManager class
+ */
 class KMMailAccountManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit KMMailAccountManager(QObject *parent = 0);
+    /*!
+     * \brief instance
+     * \return
+     */
+    static KMMailAccountManager *instance();
 
+    /*!
+     * \brief initial
+     * \param parent
+     */
+    static void initial(QObject *parent);
+
+    /*!
+     * \brief addMailAccount
+     * \param account
+     */
     void addMailAccount(KMMailAccount *account);
 
 signals:
+    /*!
+     * \brief accountAppend
+     * \param account
+     */
+    void accountAppend(KMMailAccount *account);
 
 public slots:
 
+    /*!
+     * \brief loadConfigure
+     */
+    void loadConfigure();
+
+    /*!
+     * \brief saveConfigure
+     */
+    void saveConfigure();
+
 private:
+    static KMMailAccountManager *m_instance;
+    explicit KMMailAccountManager(QObject *parent = 0);
     QList<KMMailAccount *> m_accountList;
+    QString m_accountProperies[MailAccountPropertiesCount];
+    KNConfigure *m_userConfigure;
 };
 
 #endif // KMMAILACCOUNTMANAGER_H

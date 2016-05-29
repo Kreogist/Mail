@@ -39,6 +39,7 @@ public:
      * \param parent The parent widget.
      */
     explicit KMMailListModel(QObject *parent = 0);
+    ~KMMailListModel();
 
     /*!
      * \brief Reimplemented from QAbstractListModel::rowCount().
@@ -59,9 +60,13 @@ public:
 signals:
 
 public slots:
+    void setFolderName(const QString &folderName);
+
+    void saveFolderData(const QString &folderPath);
 
 private:
     QList<MailListItem> m_mailLists;
+    QString m_folderName;
 };
 
 #endif // KMMAILLISTMODEL_H

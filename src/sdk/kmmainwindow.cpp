@@ -124,6 +124,8 @@ void KMMainWindow::setUniBar(KMUnibarBase *uniBar)
     //Link the unibar with the hide signal.
     connect(m_uniBar, &KMUnibarBase::switchModel,
             this, &KMMainWindow::onActionSwitchModel);
+    connect(m_uniBar, &KMUnibarBase::requireUpdateTitle,
+            m_titleBar, &KMTitleBarBase::setTitleText);
 }
 
 void KMMainWindow::setMailComponent(QWidget *mailComponent)

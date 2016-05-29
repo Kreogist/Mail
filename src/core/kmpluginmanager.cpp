@@ -20,6 +20,7 @@
 
 //Dependences.
 #include "kmglobal.h"
+#include "mailaccount/kmmailaccountmanager.h"
 #include "knconfiguremanager.h"
 #include "kmmainwindow.h"
 #include "knversion.h"
@@ -57,6 +58,8 @@ KMPluginManager::KMPluginManager(QObject *parent) :
 
 KMPluginManager::~KMPluginManager()
 {
+    //Save the account information.
+    kmMailAccount->saveConfigure();
     //Save the configure.
     knConf->saveConfigure();
 }
@@ -95,6 +98,8 @@ void KMPluginManager::loadPlugins()
 
 void KMPluginManager::launchApplication()
 {
+    //Load accounts.
+    kmMailAccount->loadConfigure();
     //Start working.
     kmGlobal->startReceiverManager();
     //Show the main window.

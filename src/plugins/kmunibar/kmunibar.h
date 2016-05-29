@@ -74,6 +74,7 @@ protected:
 private slots:
     void onActionHideUnibar();
     void onActionExpandFold(const QVariant &value);
+    void onActionUpdateTitle(const QString &title);
 
 private:
     KMTitleBarBase *m_titleBar;

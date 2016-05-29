@@ -44,6 +44,7 @@ KMMailListView::KMMailListView(QWidget *parent) :
     //Configure the scroll bar.
     m_scrollBar->setObjectName("LeftBarMailListScrollBar");
     m_scrollBar->setStyle(KNSaoStyle::instance());
+    m_scrollBar->hide();
     m_scrollBar->setSingleStep(
                 KMMailListViewDelegate::itemHeight(fontMetrics().height()));
     connect(verticalScrollBar(), &QScrollBar::rangeChanged,

@@ -34,8 +34,8 @@ class KMMailAccount : public QObject
     Q_OBJECT
 public:
     /*!
-     * \brief KMMailAccount
-     * \param parent
+     * \brief Construct a KMMailAccount object with given parent.
+     * \param parent The parent object.
      */
     explicit KMMailAccount(QObject *parent = 0);
     ~KMMailAccount();
@@ -61,7 +61,12 @@ public:
      */
     KMMailListModel *customFolder(int customerIndex);
 
+    QString dirName() const;
+
+    void setDirName(const QString &dirName);
+
 signals:
+    void propertyChanged();
 
 public slots:
     /*!
@@ -80,6 +85,7 @@ private:
     QList<KMMailListModel *> m_customFolder;
     KMMailListModel *m_systemFolder[MailSystemFoldersCount];
     QString m_properties[MailAccountPropertiesCount];
+    QString m_dirName;
 };
 
 #endif // KMMAILACCOUNT_H

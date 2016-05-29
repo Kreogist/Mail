@@ -46,6 +46,8 @@ signals:
      */
     void switchModel(KMMailAccount *account, int modelIndex);
 
+    void requireUpdateTitle(QString titleText);
+
 public slots:
     /*!
      * \brief addAccountList
@@ -56,6 +58,7 @@ public slots:
 private slots:
     void onActionChangeSize(int heightDelta);
     void onActionChangeModel(int modelIndex);
+    void onActionAccountAdd(KMMailAccount *account);
 
 private:
     QBoxLayout *m_mainLayout;

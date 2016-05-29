@@ -40,10 +40,12 @@ public:
      */
     explicit KMUnibarAccountList(QWidget *parent = 0);
 
-    QString accountLabel() const;
+    QString text() const;
 
-    KMMailAccount *currentAccount() const;
-    void setCurrentAccount(KMMailAccount *currentAccount);
+    QString folderText(int modelIndex) const;
+
+    KMMailAccount *account() const;
+    void setAccount(KMMailAccount *account);
 
     void reset();
 
@@ -53,7 +55,7 @@ signals:
     void currentModelChanged(int modelIndex);
 
 public slots:
-    void setAccountLabel(const QString &accountLabel);
+    void setText(const QString &text);
 
 protected:
     /*!
@@ -76,6 +78,7 @@ private slots:
     void onActionShowFinished();
     void onActionHideFinished();
     void onActionButtonClicked();
+    void onActionAccountPropertyChange();
 
 private:
     inline void addToFolderList(KMUnibarButton *button);

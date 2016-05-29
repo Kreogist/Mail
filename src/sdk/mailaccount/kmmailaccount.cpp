@@ -16,11 +16,15 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include "kmmaillistmodel.h"
-
 #include "kmmailaccount.h"
+#include "kmutil.h"
+#include "kmglobal.h"
+
+#include <QDebug>
 
 KMMailAccount::KMMailAccount(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_dirName(QString())
 {
     //Build system folder models.
     for(int i=0; i<MailSystemFoldersCount; ++i)
@@ -28,10 +32,29 @@ KMMailAccount::KMMailAccount(QObject *parent) :
         //Construct the model.
         m_systemFolder[i]=new KMMailListModel(this);
     }
+    //Set the system folder name.
+    m_systemFolder[FolderInbox]->setFolderName("Inbox");
+    m_systemFolder[FolderDrafts]->setFolderName("Drafts");
+    m_systemFolder[FolderSentItems]->setFolderName("SentItems");
+    m_systemFolder[FolderTrash]->setFolderName("Trash");
 }
 
 KMMailAccount::~KMMailAccount()
 {
+    //Get the account folder root dir.
+    QString accountDir=kmGlobal->dirPath(KMGlobal::UserDataDir)+"/"+m_dirName;
+    //Save the folder settings.
+    for(int i=0; i<MailSystemFoldersCount; ++i)
+    {
+        //Save the system folder.
+        m_systemFolder[i]->saveFolderData(accountDir);
+    }
+    //Save the customer folder data.
+    for(int i=0; i<m_customFolder.size(); ++i)
+    {
+        //Save the folder info.
+        m_customFolder.at(i)->saveFolderData(accountDir);
+    }
     //Recover the memory from the list.
     clearCustomerFolder();
 }
@@ -62,6 +85,8 @@ void KMMailAccount::setAccountProperty(int propertyIndex, const QString &value)
     Q_ASSERT(propertyIndex>-1 && propertyIndex<MailAccountPropertiesCount);
     //Save the property value.
     m_properties[propertyIndex]=value;
+    //Emit the changed signal.
+    emit propertyChanged();
 }
 
 void KMMailAccount::clearCustomerFolder()
@@ -70,4 +95,15 @@ void KMMailAccount::clearCustomerFolder()
     qDeleteAll(m_customFolder);
     //Clear the folder list.
     m_customFolder.clear();
+}
+
+void KMMailAccount::setDirName(const QString &folderName)
+{
+    //Save folder name.
+    m_dirName = KMUtil::validFileName(folderName);
+}
+
+QString KMMailAccount::dirName() const
+{
+    return m_dirName;
 }

@@ -93,3 +93,11 @@ QString KMUtil::simplifiedPath(const QString &path)
     //Use QFileInfo to simplified the file path.
     return QFileInfo(path).absoluteFilePath();
 }
+
+QString KMUtil::validFileName(QString fileName)
+{
+    //Remove the special chars.
+    fileName.replace(QRegExp("[\\*\\\\/:\?\"\\<\\>|]"), "_");
+    //Give back the file name.
+    return fileName;
+}
