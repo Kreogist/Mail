@@ -25,7 +25,9 @@
 #include "kmmaillistmodel.h"
 
 KMMailListModel::KMMailListModel(QObject *parent) :
-    QAbstractListModel(parent)
+    QAbstractListModel(parent),
+    m_folderName(QString()),
+    m_dirName(QString())
 {
 }
 
@@ -74,21 +76,21 @@ void KMMailListModel::appendRow(const MailListItem &item)
     endInsertRows();
 }
 
-void KMMailListModel::setFolderName(const QString &folderName)
+void KMMailListModel::setDirectory(const QString &dirName)
 {
     //Check the previous folder name.
-    if(!m_folderName.isEmpty())
+    if(!m_dirName.isEmpty())
     {
         //! FIXME: Add rename codes here.
     }
     //Save the folder name.
-    m_folderName=folderName;
+    m_dirName=dirName;
 }
 
 void KMMailListModel::saveFolderData(const QString &folderPath)
 {
     //Combine the folder path together.
-    QString targetPath=folderPath + "/" + m_folderName;
+    QString targetPath=folderPath + "/" + m_dirName;
     //Get target folder information.
     QFileInfo targetInfo(targetPath);
     //Check whether target path is existed or not.
@@ -119,4 +121,17 @@ void KMMailListModel::saveFolderData(const QString &folderPath)
     infoFile.write(QJsonDocument(folderInfo).toJson(QJsonDocument::Compact));
     //Close the file.
     infoFile.close();
+}
+
+QString KMMailListModel::folderName() const
+{
+    return m_folderName;
+}
+
+void KMMailListModel::setFolderName(const QString &folderName)
+{
+    //Save the folder name.
+    m_folderName = folderName;
+    //Emit the signal.
+    emit folderNameChanged(m_folderName);
 }

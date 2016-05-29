@@ -71,7 +71,6 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
-    void retranslate();
     void onThemeChanged();
     void onActionExpandWidget(int widgetHeight);
     void onActionChangeExpand();
@@ -81,7 +80,7 @@ private slots:
     void onActionAccountPropertyChange();
 
 private:
-    inline void addToFolderList(KMUnibarButton *button);
+    inline void addFolder(KMUnibarButton *button);
     inline void startAnime(int endFrame);
     QString m_accountLabel;
     QList<KMUnibarButton *> m_folderList;

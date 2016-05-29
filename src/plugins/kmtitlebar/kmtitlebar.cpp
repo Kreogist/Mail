@@ -17,6 +17,8 @@
  */
 #include <QBoxLayout>
 
+#include "kmglobal.h"
+#include "composepanel/kmcomposepanel.h"
 #include "kmtitlebarbutton.h"
 #include "kmtitlebarcombo.h"
 
@@ -35,6 +37,9 @@ KMTitleBar::KMTitleBar(QWidget *parent) :
             this, &KMTitleBar::requireShowUnibar);
     connect(m_settings, &KMTitleBarButton::clicked,
             this, &KMTitleBar::requireShowPreference);
+    //Link the create button.
+    connect(m_create, &KMTitleBarButton::clicked,
+            this, &KMTitleBar::onActionCompose);
 
     //Configure the main layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::LeftToRight,
@@ -59,6 +64,14 @@ void KMTitleBar::setTitleText(const QString &titleText)
 {
     //Set the title text to combo widget.
     m_titleCombo->setText(titleText);
+}
+
+void KMTitleBar::onActionCompose()
+{
+    //Generate the compose panel of main window.
+    KMComposePanel *composeNew=new KMComposePanel(kmGlobal->mainWindow());
+    //Show the compose new dialog.
+    composeNew->show();
 }
 
 inline KMTitleBarButton *KMTitleBar::generateButton(const char *path)

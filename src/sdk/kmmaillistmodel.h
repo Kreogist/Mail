@@ -57,16 +57,20 @@ public:
      */
     void appendRow(const MailListItem &item);
 
+    QString folderName() const;
+
 signals:
+    void folderNameChanged(QString folderName);
 
 public slots:
     void setFolderName(const QString &folderName);
+    void setDirectory(const QString &dirName);
 
     void saveFolderData(const QString &folderPath);
 
 private:
     QList<MailListItem> m_mailLists;
-    QString m_folderName;
+    QString m_folderName, m_dirName;
 };
 
 #endif // KMMAILLISTMODEL_H

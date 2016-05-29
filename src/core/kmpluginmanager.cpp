@@ -41,8 +41,7 @@
 #include "kmpluginmanager.h"
 
 //Debug
-#include "mailaccount/kmmailaccount.h"
-#include "composepanel/kmcomposepanel.h"
+#include <QDebug>
 
 KMPluginManager::KMPluginManager(QObject *parent) :
     QObject(parent),
@@ -90,10 +89,6 @@ void KMPluginManager::loadPlugins()
     loadMailComponent(new KMMailComponent);
     //Load the uni bar plugin.
     loadUnibar(new KMUnibar);
-
-    //Initial the compose panel for testing.
-    KMComposePanel *composePanel=new KMComposePanel(m_mainWindow);
-    composePanel->show();
 }
 
 void KMPluginManager::launchApplication()

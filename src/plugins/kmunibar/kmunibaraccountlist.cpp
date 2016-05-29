@@ -24,7 +24,6 @@
 #include "knthememanager.h"
 #include "kmunibarlabelbutton.h"
 #include "kmunibarbutton.h"
-#include "knlocalemanager.h"
 
 #include "kmunibaraccountlist.h"
 
@@ -54,7 +53,7 @@ KMUnibarAccountList::KMUnibarAccountList(QWidget *parent) :
         m_systemFolder[i]->setEnabled(false);
         m_systemFolder[i]->setCheckable(true);
         //Add system folder to folder list.
-        addToFolderList(m_systemFolder[i]);
+        addFolder(m_systemFolder[i]);
     }
     //Configure fold button.
     m_foldedButton->setFixedSize(LineHeight, LineHeight);
@@ -71,10 +70,6 @@ KMUnibarAccountList::KMUnibarAccountList(QWidget *parent) :
     connect(knTheme, &KNThemeManager::themeChange,
             this, &KMUnibarAccountList::onThemeChanged);
     onThemeChanged();
-
-    //Initial retranslate.
-    knI18n->link(this, &KMUnibarAccountList::retranslate);
-    retranslate();
 }
 
 QString KMUnibarAccountList::text() const
@@ -84,12 +79,8 @@ QString KMUnibarAccountList::text() const
 
 QString KMUnibarAccountList::folderText(int modelIndex) const
 {
-    //Check the model index.
-    return modelIndex<MailSystemFoldersCount?
-                //System folder.
-                m_systemFolder[modelIndex]->text():
-                //Custom folder.
-                m_folderList.at(modelIndex-MailSystemFoldersCount)->text();
+    //Get the text directly.
+    return m_folderList.at(modelIndex)->text();
 }
 
 void KMUnibarAccountList::setText(const QString &text)
@@ -131,15 +122,6 @@ void KMUnibarAccountList::resizeEvent(QResizeEvent *event)
         //Resize the widget.
         m_folderList.at(i)->resize(width(), LineHeight);
     }
-}
-
-void KMUnibarAccountList::retranslate()
-{
-    //Update system folder label.
-    m_systemFolder[FolderInbox]->setText(tr("Inbox"));
-    m_systemFolder[FolderSentItems]->setText(tr("Sent Items"));
-    m_systemFolder[FolderDrafts]->setText(tr("Drafts"));
-    m_systemFolder[FolderTrash]->setText(tr("Trash"));
 }
 
 void KMUnibarAccountList::onThemeChanged()
@@ -280,7 +262,7 @@ void KMUnibarAccountList::onActionAccountPropertyChange()
 
 }
 
-inline void KMUnibarAccountList::addToFolderList(KMUnibarButton *button)
+inline void KMUnibarAccountList::addFolder(KMUnibarButton *button)
 {
     //Add the widget to list.
     m_folderList.append(button);
@@ -288,6 +270,12 @@ inline void KMUnibarAccountList::addToFolderList(KMUnibarButton *button)
     button->move(0, m_expand?(m_folderList.size()*LineHeight):0);
     //Link the button to current widget.
     connect(button, SIGNAL(clicked(bool)), this, SLOT(onActionButtonClicked()));
+    //Ask to change the size.
+    if(m_expand)
+    {
+        //The size has change to default size.
+        emit sizeChanged(LineHeight);
+    }
 }
 
 inline void KMUnibarAccountList::startAnime(int endFrame)
@@ -322,6 +310,26 @@ void KMUnibarAccountList::setAccount(KMMailAccount *account)
             this, &KMUnibarAccountList::onActionAccountPropertyChange);
     //Update the account data.
     onActionAccountPropertyChange();
+    //Link the update.
+    for(int i=0; i<MailSystemFoldersCount; ++i)
+    {
+        //Connect the folder name change to button.
+        m_systemFolder[i]->setMailListModel(m_currentAccount->systemFolder(i));
+    }
+    //Initial buttons for exisiting custom folders.
+    for(int i=0, customCount=m_currentAccount->customerFolderSize();
+        i<customCount;
+        ++i)
+    {
+        //Initial the button.
+        KMUnibarButton *customFolderButton=new KMUnibarButton(this);
+        //Configure the button.
+        customFolderButton->hide();
+        customFolderButton->setEnabled(false);
+        customFolderButton->setCheckable(true);
+        //Add button to list
+        addFolder(customFolderButton);
+    }
     //! FIXME: Add link codes for custom folder increase and decrease here.
     //Update the widget.
     update();

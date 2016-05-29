@@ -114,9 +114,13 @@ void KMMailAccountManager::saveConfigure()
         }
         //Add account info to the list.
         accountList.append(accountInfo);
+        //Remove the account list.
+        (*i)->saveAccountData();
     }
     //Translate the account list into json string.
     m_userConfigure->setData("Accounts",
                              QString(QJsonDocument(accountList).toJson(
                                          QJsonDocument::Compact)));
+    //Clear the account list.
+    m_accountList.clear();
 }

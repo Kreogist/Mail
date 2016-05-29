@@ -61,6 +61,8 @@ public:
      */
     KMMailListModel *customFolder(int customerIndex);
 
+    int customerFolderSize() const;
+
     QString dirName() const;
 
     void setDirName(const QString &dirName);
@@ -80,6 +82,11 @@ public slots:
      * \brief clearCustomerFolder
      */
     void clearCustomerFolder();
+
+    void saveAccountData();
+
+private slots:
+    void retranslate();
 
 private:
     QList<KMMailListModel *> m_customFolder;

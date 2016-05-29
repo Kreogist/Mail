@@ -18,6 +18,8 @@
 #include <QPainter>
 #include <QTimeLine>
 
+#include "kmmaillistmodel.h"
+
 #include "kmunibarbutton.h"
 
 #define ButtonHeight 38
@@ -102,4 +104,13 @@ void KMUnibarButton::setOpacity(const qreal &opacity)
     m_opacity = opacity;
     //Update widget.
     update();
+}
+
+void KMUnibarButton::setMailListModel(KMMailListModel *model)
+{
+    //Link the list model.
+    connect(model, &KMMailListModel::folderNameChanged,
+            this, &KMUnibarButton::setText);
+    //Update the text.
+    setText(model->folderName());
 }

@@ -20,6 +20,7 @@
 
 #include <QAbstractButton>
 
+class KMMailListModel;
 class KMUnibarButton : public QAbstractButton
 {
     Q_OBJECT
@@ -32,6 +33,7 @@ signals:
 
 public slots:
     void setOpacity(const qreal &opacity);
+    void setMailListModel(KMMailListModel *model);
 
 protected:
     /*!

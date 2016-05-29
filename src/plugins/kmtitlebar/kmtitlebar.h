@@ -49,6 +49,9 @@ public slots:
      */
     void setTitleText(const QString &titleText) Q_DECL_OVERRIDE;
 
+private slots:
+    void onActionCompose();
+
 private:
     inline KMTitleBarButton *generateButton(const char *path);
     KMTitleBarCombo *m_titleCombo;

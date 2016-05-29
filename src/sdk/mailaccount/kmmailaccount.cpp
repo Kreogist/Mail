@@ -15,6 +15,7 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#include "knlocalemanager.h"
 #include "kmmaillistmodel.h"
 #include "kmmailaccount.h"
 #include "kmutil.h"
@@ -32,29 +33,18 @@ KMMailAccount::KMMailAccount(QObject *parent) :
         //Construct the model.
         m_systemFolder[i]=new KMMailListModel(this);
     }
-    //Set the system folder name.
-    m_systemFolder[FolderInbox]->setFolderName("Inbox");
-    m_systemFolder[FolderDrafts]->setFolderName("Drafts");
-    m_systemFolder[FolderSentItems]->setFolderName("SentItems");
-    m_systemFolder[FolderTrash]->setFolderName("Trash");
+    //Set the system directory.
+    m_systemFolder[FolderInbox]->setDirectory("Inbox");
+    m_systemFolder[FolderDrafts]->setDirectory("Drafts");
+    m_systemFolder[FolderSentItems]->setDirectory("SentItems");
+    m_systemFolder[FolderTrash]->setDirectory("Trash");
+    //Link retranslator.
+    knI18n->link(this, &KMMailAccount::retranslate);
+    retranslate();
 }
 
 KMMailAccount::~KMMailAccount()
 {
-    //Get the account folder root dir.
-    QString accountDir=kmGlobal->dirPath(KMGlobal::UserDataDir)+"/"+m_dirName;
-    //Save the folder settings.
-    for(int i=0; i<MailSystemFoldersCount; ++i)
-    {
-        //Save the system folder.
-        m_systemFolder[i]->saveFolderData(accountDir);
-    }
-    //Save the customer folder data.
-    for(int i=0; i<m_customFolder.size(); ++i)
-    {
-        //Save the folder info.
-        m_customFolder.at(i)->saveFolderData(accountDir);
-    }
     //Recover the memory from the list.
     clearCustomerFolder();
 }
@@ -80,6 +70,11 @@ KMMailListModel *KMMailAccount::customFolder(int customerIndex)
     return m_customFolder.at(customerIndex);
 }
 
+int KMMailAccount::customerFolderSize() const
+{
+    return m_customFolder.size();
+}
+
 void KMMailAccount::setAccountProperty(int propertyIndex, const QString &value)
 {
     Q_ASSERT(propertyIndex>-1 && propertyIndex<MailAccountPropertiesCount);
@@ -92,9 +87,41 @@ void KMMailAccount::setAccountProperty(int propertyIndex, const QString &value)
 void KMMailAccount::clearCustomerFolder()
 {
     //Remove all customer folder model.
-    qDeleteAll(m_customFolder);
+    for(auto i=m_customFolder.begin(); i!=m_customFolder.end(); ++i)
+    {
+        //Delete the model.
+        (*i)->deleteLater();
+    }
     //Clear the folder list.
     m_customFolder.clear();
+}
+
+void KMMailAccount::saveAccountData()
+{
+    //Get the account folder root dir.
+    QString accountDir=kmGlobal->dirPath(KMGlobal::UserDataDir)+"/Accounts/"+
+                       m_dirName;
+    //Save the folder settings.
+    for(int i=0; i<MailSystemFoldersCount; ++i)
+    {
+        //Save the system folder.
+        m_systemFolder[i]->saveFolderData(accountDir);
+    }
+    //Save the customer folder data.
+    for(int i=0; i<m_customFolder.size(); ++i)
+    {
+        //Save the folder info.
+        m_customFolder.at(i)->saveFolderData(accountDir);
+    }
+}
+
+void KMMailAccount::retranslate()
+{
+    //Update the system folder name.
+    m_systemFolder[FolderInbox]->setFolderName(tr("Inbox"));
+    m_systemFolder[FolderDrafts]->setFolderName(tr("Drafts"));
+    m_systemFolder[FolderSentItems]->setFolderName(tr("Sent Items"));
+    m_systemFolder[FolderTrash]->setFolderName(tr("Trash"));
 }
 
 void KMMailAccount::setDirName(const QString &folderName)
