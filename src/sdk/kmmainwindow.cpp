@@ -25,6 +25,7 @@
 #include "kmmainwindowcontainer.h"
 #include "kmglobal.h"
 #include "kmcoverlayer.h"
+#include "kmleftbarbase.h"
 
 #include "kmunibarbase.h"
 #include "kmtitlebarbase.h"
@@ -42,6 +43,8 @@ KMMainWindow::KMMainWindow(QWidget *parent) :
     m_floatLayer(new KMCoverLayer(this)),
     m_floatAnime(new QTimeLine(200, this)),
     m_titleBar(nullptr),
+    m_leftBar(nullptr),
+    m_uniBar(nullptr),
     m_cacheConfigure(kmGlobal->cacheConfigure()->getConfigure("MainWindow"))
 {
     setObjectName("MainWindow");
@@ -104,8 +107,11 @@ void KMMainWindow::setTitleBar(KMTitleBarBase *titleBar)
             this, &KMMainWindow::showPreference);
 }
 
-void KMMainWindow::setMailList(QWidget *mailList)
+void KMMainWindow::setMailList(KMLeftBarBase *mailList)
 {
+    //Save the mail list.
+    m_leftBar=mailList;
+    //Set the left bar to container.
     m_container->setMailList(mailList);
 }
 
@@ -122,6 +128,8 @@ void KMMainWindow::setUniBar(KMUnibarBase *uniBar)
     m_uniBar->hide();
     m_uniBar->setShadowParent(m_floatLayer);
     //Link the unibar with the hide signal.
+    connect(m_uniBar, &KMUnibarBase::switchModel,
+            m_leftBar, &KMLeftBarBase::switchModel);
     connect(m_uniBar, &KMUnibarBase::switchModel,
             this, &KMMainWindow::onActionSwitchModel);
     connect(m_uniBar, &KMUnibarBase::requireUpdateTitle,
@@ -268,6 +276,7 @@ void KMMainWindow::onActionHidePreferenceFinished()
 
 void KMMainWindow::onActionSwitchModel()
 {
+    //Hide the unibar.
     hideUnibar();
 }
 

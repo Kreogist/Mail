@@ -17,11 +17,15 @@
  */
 #include "knsideshadowwidget.h"
 #include "kmmaillistview.h"
+#include "kmmailutil.h"
 #include "kmmaillistmodel.h"
+#include "mailaccount/kmmailaccount.h"
 
 #include "kmleftbar.h"
 
 #define ShadowHeight 10
+
+using namespace MailUtil;
 
 KMLeftBar::KMLeftBar(QWidget *parent) :
     KMLeftBarBase(parent),
@@ -38,6 +42,15 @@ void KMLeftBar::setMailListModel(KMMailListModel *model)
 {
     //Set the model to list view.
     m_mailList->setModel(model);
+}
+
+void KMLeftBar::switchModel(KMMailAccount *account, int modelIndex)
+{
+    //Set the current mail list model to the target model.
+    setMailListModel(
+                modelIndex>MailSystemFoldersCount?
+                    account->customFolder(modelIndex-MailSystemFoldersCount):
+                    account->systemFolder(modelIndex));
 }
 
 void KMLeftBar::resizeEvent(QResizeEvent *event)

@@ -27,11 +27,28 @@ KMMailAccount::KMMailAccount(QObject *parent) :
     QObject(parent),
     m_dirName(QString())
 {
+    //Debug.
+    QString sampleSender[MailSystemFoldersCount];
+    sampleSender[FolderInbox]="Mayazure Jerry <jerry@anu.edu.au>";
+    sampleSender[FolderDrafts]="Tojo Saki <saki.tojo@anu.edu.au>";
+    sampleSender[FolderTrash]="Freddie Wang <freddie@anu.edu.au>";
+    sampleSender[FolderSentItems]="Shayne Flint <shayne@anu.edu.au>";
+
     //Build system folder models.
     for(int i=0; i<MailSystemFoldersCount; ++i)
     {
         //Construct the model.
         m_systemFolder[i]=new KMMailListModel(this);
+
+        //Add some data for debug.
+        MailListItem sampleMail;
+        sampleMail.title="Sample Mail " + QString::number(i);
+        sampleMail.sender=sampleSender[i];
+        sampleMail.breifContext="This is a sample mail item for test only, it is not a real mail.";
+        for(int j=0; j<40; ++j)
+        {
+            m_systemFolder[i]->appendRow(sampleMail);
+        }
     }
     //Set the system directory.
     m_systemFolder[FolderInbox]->setDirectory("Inbox");

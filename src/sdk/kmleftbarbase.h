@@ -20,6 +20,7 @@
 
 #include <QWidget>
 
+class KMMailAccount;
 class KMMailListModel;
 /*!
  * \brief The KMLeftBarBase class provide the left bar port function of the mail
@@ -38,6 +39,14 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief switchModel
+     * \param account
+     * \param modelIndex
+     */
+    virtual void switchModel(KMMailAccount *account,
+                             int modelIndex)=0;
+
     /*!
      * \brief Set the mail list model to the left bar, and display the model.
      * \param model The current model.

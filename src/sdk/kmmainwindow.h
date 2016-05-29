@@ -26,6 +26,7 @@ class KMCoverLayer;
 class KNConfigure;
 class KMMainWindowContainer;
 class KMTitleBarBase;
+class KMLeftBarBase;
 class KMUnibarBase;
 /*!
  * \brief The KMMainWindow class provides the main window of the Mail
@@ -54,7 +55,7 @@ public slots:
      * \brief Set the mail list widget.
      * \param mailList The mail list widget pointer.
      */
-    void setMailList(QWidget *mailList);
+    void setMailList(KMLeftBarBase *mailList);
 
     /*!
      * \brief Set the unibar widget.
@@ -108,6 +109,7 @@ private:
     KMCoverLayer *m_floatLayer;
     QTimeLine *m_floatAnime;
     KMTitleBarBase *m_titleBar;
+    KMLeftBarBase *m_leftBar;
     KMUnibarBase *m_uniBar;
     KNConfigure *m_cacheConfigure;
 };
