@@ -18,6 +18,7 @@
 #include <QPainter>
 
 #include "kmmailutil.h"
+#include "knlocalemanager.h"
 
 #include "kmmaillistviewdelegate.h"
 
@@ -32,6 +33,9 @@ using namespace MailUtil;
 KMMailListViewDelegate::KMMailListViewDelegate(QWidget *parent) :
     QStyledItemDelegate(parent)
 {
+    //Link the retranslator.
+    knI18n->link(this, &KMMailListViewDelegate::retranslate);
+    retranslate();
 }
 
 void KMMailListViewDelegate::paint(QPainter *painter,
@@ -87,14 +91,17 @@ void KMMailListViewDelegate::paint(QPainter *painter,
                           index.data(BreifContextRole).toString(),
                           Qt::ElideRight,
                           widgetWidth));
-    //Draw the title font.
+    //Draw the title.
     painter->setFont(titleFont);
+    QString titleText=index.data(Qt::DisplayRole).toString();
     painter->drawText(option.rect.left()+LeftMargin,
                       option.rect.top()+titleFontHeight+TopMargin,
-                      QFontMetrics(titleFont).elidedText(
-                                        index.data(Qt::DisplayRole).toString(),
-                                        Qt::ElideRight,
-                                        widgetWidth));
+                      titleText.isEmpty()?
+                          m_emptyTitle:
+                          QFontMetrics(titleFont).elidedText(
+                              titleText,
+                              Qt::ElideRight,
+                              widgetWidth));
     //Draw the bottom line.
     painter->setPen(QColor(0, 0, 0));
     painter->drawLine(option.rect.bottomLeft(),
@@ -113,4 +120,9 @@ QSize KMMailListViewDelegate::sizeHint(const QStyleOptionViewItem &option,
 int KMMailListViewDelegate::itemHeight(int pixelSize)
 {
     return pixelSize*4 + (Spacing*3)+TopMargin;
+}
+
+void KMMailListViewDelegate::retranslate()
+{
+    m_emptyTitle=tr("(No Subject)");
 }

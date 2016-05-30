@@ -26,6 +26,7 @@
 
 using namespace MailUtil;
 
+class KMMailAccount;
 /*!
  * \brief The KMMailListModel class provides the E-mail list data. All the
  * E-mail collections could be describe as a mail list.
@@ -38,7 +39,7 @@ public:
      * \brief Construct a KMMailListModel object.
      * \param parent The parent widget.
      */
-    explicit KMMailListModel(QObject *parent = 0);
+    explicit KMMailListModel(KMMailAccount *parent = 0);
     ~KMMailListModel();
 
     /*!
@@ -59,6 +60,12 @@ public:
 
     QString folderName() const;
 
+    bool loaded() const;
+
+    void initial();
+
+    void clear();
+
 signals:
     void folderNameChanged(QString folderName);
 
@@ -66,11 +73,13 @@ public slots:
     void setFolderName(const QString &folderName);
     void setDirectory(const QString &dirName);
 
-    void saveFolderData(const QString &folderPath);
+    void saveFolderData();
 
 private:
     QList<MailListItem> m_mailLists;
     QString m_folderName, m_dirName;
+    KMMailAccount *m_account;
+    bool m_loaded;
 };
 
 #endif // KMMAILLISTMODEL_H

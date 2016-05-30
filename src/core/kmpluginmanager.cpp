@@ -37,6 +37,9 @@
 #include "plugins/kmleftbar/kmleftbar.h"
 #include "plugins/kmmailcomponent/kmmailcomponent.h"
 #include "plugins/kmunibar/kmunibar.h"
+#ifdef BACKEND_WEBKIT
+#include "plugins/kmwebkitcontentparser/kmwebkitcontentparser.h"
+#endif
 
 #include "kmpluginmanager.h"
 
@@ -89,6 +92,10 @@ void KMPluginManager::loadPlugins()
     loadMailComponent(new KMMailComponent);
     //Load the uni bar plugin.
     loadUnibar(new KMUnibar);
+    //Load the content parser.
+#ifdef BACKEND_WEBKIT
+    loadContentParser(new KMWebkitContentParser);
+#endif
 }
 
 void KMPluginManager::launchApplication()
@@ -172,7 +179,15 @@ void KMPluginManager::loadPreference(KMPreferenceBase *preference)
         return;
     }
     //Set the preference plugin to main window.
-//    m_mainWindow;
+    //    m_mainWindow;
+}
+
+void KMPluginManager::loadContentParser(KMMailContentParser *contentParser)
+{
+    //Update the parent relationship.
+    contentParser->setParent(kmGlobal);
+    //Save to global object.
+    kmGlobal->setContentParser(contentParser);
 }
 
 inline void KMPluginManager::setApplicationInformation()

@@ -87,6 +87,7 @@ KMGlobal::KMGlobal(QObject *parent) :
     QObject(parent),
     m_accountManager(nullptr),
     m_mainWindow(nullptr),
+    m_contentParser(nullptr),
     m_globalConfigure(nullptr)
 {
     //Initial the managers.
@@ -215,6 +216,16 @@ inline void KMGlobal::initialInfrastrcture()
     knTheme->setTheme(0);
     //Load the theme in the configure file.
     knTheme->setTheme(m_globalConfigure->data("Theme").toString());
+}
+
+KMMailContentParser *KMGlobal::contentParser()
+{
+    return m_contentParser;
+}
+
+void KMGlobal::setContentParser(KMMailContentParser *contentParser)
+{
+    m_contentParser = contentParser;
 }
 
 QWidget *KMGlobal::mainWindow() const

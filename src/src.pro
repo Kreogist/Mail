@@ -156,10 +156,12 @@ webkit-backend: {
     QT += webkitwidgets
     # Add header files.
     HEADERS += \
-        plugins/kmmailcomponent/plugins/kmmailcomponentwebkit/kmmailcomponentwebkit.h
+        plugins/kmmailcomponent/plugins/kmmailcomponentwebkit/kmmailcomponentwebkit.h \
+        plugins/kmwebkitcontentparser/kmwebkitcontentparser.h
     # Add source files.
     SOURCES += \
-        plugins/kmmailcomponent/plugins/kmmailcomponentwebkit/kmmailcomponentwebkit.cpp
+        plugins/kmmailcomponent/plugins/kmmailcomponentwebkit/kmmailcomponentwebkit.cpp \
+        plugins/kmwebkitcontentparser/kmwebkitcontentparser.cpp
 }
 
 webengine-backend: {
@@ -253,7 +255,11 @@ HEADERS += \
     sdk/composepanel/kmcomposeeditor.h \
     sdk/composepanel/kmcomposebutton.h \
     sdk/mailaccount/kmmailaccountmanager.h \
-    sdk/composepanel/kmcomposetextedit.h
+    sdk/composepanel/kmcomposetextedit.h \
+    plugins/kmmailcomponent/sdk/kmmailflowlayout.h \
+    sdk/mime/kmmailparser.h \
+    sdk/mime/kmmailparseutil.h \
+    sdk/kmmailcontentparser.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -316,7 +322,10 @@ SOURCES += \
     sdk/composepanel/kmcomposeeditor.cpp \
     sdk/composepanel/kmcomposebutton.cpp \
     sdk/mailaccount/kmmailaccountmanager.cpp \
-    sdk/composepanel/kmcomposetextedit.cpp
+    sdk/composepanel/kmcomposetextedit.cpp \
+    plugins/kmmailcomponent/sdk/kmmailflowlayout.cpp \
+    sdk/mime/kmmailparser.cpp \
+    sdk/mime/kmmailparseutil.cpp
 
 RESOURCES += \
     resource/res.qrc

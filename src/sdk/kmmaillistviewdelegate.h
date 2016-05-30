@@ -57,6 +57,12 @@ public:
 signals:
 
 public slots:
+
+private slots:
+    void retranslate();
+
+private:
+    QString m_emptyTitle;
 };
 
 #endif // KMMAILLISTVIEWDELEGATE_H

@@ -67,6 +67,8 @@ public:
 
     void setDirName(const QString &dirName);
 
+    QString accountDir() const;
+
 signals:
     void propertyChanged();
 
@@ -93,6 +95,7 @@ private:
     KMMailListModel *m_systemFolder[MailSystemFoldersCount];
     QString m_properties[MailAccountPropertiesCount];
     QString m_dirName;
+    QString m_accountDir;
 };
 
 #endif // KMMAILACCOUNT_H

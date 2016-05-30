@@ -27,6 +27,8 @@ namespace MailUtil
         QString sender;
         QString title;
         QString breifContext;
+        QString fileName;
+        qint64 index;
     };
 
     enum MailListRole

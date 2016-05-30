@@ -42,7 +42,7 @@ KMMailAccount::KMMailAccount(QObject *parent) :
 
         //Add some data for debug.
         MailListItem sampleMail;
-        sampleMail.title="Sample Mail " + QString::number(i);
+        sampleMail.title="Sample Mail " + QString::number(i) + QString::number(qrand());
         sampleMail.sender=sampleSender[i];
         sampleMail.breifContext="This is a sample mail item for test only, it is not a real mail.";
         for(int j=0; j<40; ++j)
@@ -115,20 +115,17 @@ void KMMailAccount::clearCustomerFolder()
 
 void KMMailAccount::saveAccountData()
 {
-    //Get the account folder root dir.
-    QString accountDir=kmGlobal->dirPath(KMGlobal::UserDataDir)+"/Accounts/"+
-                       m_dirName;
     //Save the folder settings.
     for(int i=0; i<MailSystemFoldersCount; ++i)
     {
         //Save the system folder.
-        m_systemFolder[i]->saveFolderData(accountDir);
+        m_systemFolder[i]->saveFolderData();
     }
     //Save the customer folder data.
     for(int i=0; i<m_customFolder.size(); ++i)
     {
         //Save the folder info.
-        m_customFolder.at(i)->saveFolderData(accountDir);
+        m_customFolder.at(i)->saveFolderData();
     }
 }
 
@@ -141,10 +138,18 @@ void KMMailAccount::retranslate()
     m_systemFolder[FolderTrash]->setFolderName(tr("Trash"));
 }
 
+QString KMMailAccount::accountDir() const
+{
+    return m_accountDir;
+}
+
 void KMMailAccount::setDirName(const QString &folderName)
 {
     //Save folder name.
     m_dirName = KMUtil::validFileName(folderName);
+    //Get the account folder root dir.
+    m_accountDir=kmGlobal->dirPath(KMGlobal::UserDataDir)+"/Accounts/"+
+            m_dirName;
 }
 
 QString KMMailAccount::dirName() const

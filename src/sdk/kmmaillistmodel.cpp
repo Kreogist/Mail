@@ -20,15 +20,24 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
+#include "mailaccount/kmmailaccount.h"
+#include "mime/kmmailparser.h"
+#include "kmglobal.h"
 #include "kmutil.h"
+#include "kmmailcontentparser.h"
 
 #include "kmmaillistmodel.h"
 
-KMMailListModel::KMMailListModel(QObject *parent) :
+#include <QDebug>
+
+KMMailListModel::KMMailListModel(KMMailAccount *parent) :
     QAbstractListModel(parent),
     m_folderName(QString()),
-    m_dirName(QString())
+    m_dirName(QString()),
+    m_loaded(false)
 {
+    //Save the account information.
+    m_account=parent;
 }
 
 KMMailListModel::~KMMailListModel()
@@ -87,10 +96,10 @@ void KMMailListModel::setDirectory(const QString &dirName)
     m_dirName=dirName;
 }
 
-void KMMailListModel::saveFolderData(const QString &folderPath)
+void KMMailListModel::saveFolderData()
 {
     //Combine the folder path together.
-    QString targetPath=folderPath + "/" + m_dirName;
+    QString targetPath=m_account->accountDir() + "/" + m_dirName;
     //Get target folder information.
     QFileInfo targetInfo(targetPath);
     //Check whether target path is existed or not.
@@ -121,6 +130,82 @@ void KMMailListModel::saveFolderData(const QString &folderPath)
     infoFile.write(QJsonDocument(folderInfo).toJson(QJsonDocument::Compact));
     //Close the file.
     infoFile.close();
+}
+
+bool KMMailListModel::loaded() const
+{
+    return m_loaded;
+}
+
+void KMMailListModel::initial()
+{
+    //Check load flag.
+    if(m_loaded)
+    {
+        //Ignore the loaded flag.
+        return;
+    }
+    //Clear the model.
+    clear();
+    //Load all the mails to the model.
+    QDir modelDirectory(m_account->accountDir() + "/" + m_dirName);
+    //Check directory exist.
+    if(!modelDirectory.exists())
+    {
+        //When the directory is not exist, exit.
+        return;
+    }
+    //Get the content parser.
+    KMMailContentParser *contentParser=kmGlobal->contentParser();
+    //Get the file info list.
+    QFileInfoList mailInfoList=
+            modelDirectory.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
+    //Check the mail info list.
+    for(auto i=mailInfoList.begin(); i!=mailInfoList.end(); ++i)
+    {
+        //Get the info list size.
+        if((*i).suffix()!="eml" && (*i).suffix()!="emlx")
+        {
+            //Ignore the file.
+            continue;
+        }
+
+        //Check whether file is already load to model.
+        //!FIXME: Replace to check cache code here.
+        if(true)
+        {
+            //Add the new mail informationn to the inbox model.
+            MailListItem mailItem;
+            mailItem.fileName=(*i).fileName();
+            mailItem.index=(*i).fileName().toLongLong();
+            //Parse the item and find the basic information.
+            KMMailParser::parseFile((*i).absoluteFilePath(),
+                                    mailItem.sender,
+                                    mailItem.title);
+            //Get the breif text.
+            qDebug()<<contentParser->rawTextContent((*i).absoluteFilePath());
+            mailItem.breifContext=
+                    contentParser->rawTextContent((*i).absoluteFilePath()).left(100);
+            //Add item to model.
+            appendRow(mailItem);
+        }
+    }
+}
+
+void KMMailListModel::clear()
+{
+    //Check is already clean or not.
+    if(m_mailLists.isEmpty())
+    {
+        //No need to clear.
+        return;
+    }
+    //Start to reset model.
+    beginResetModel();
+    //Clear the lists.
+    m_mailLists.clear();
+    //Mission complete.
+    endResetModel();
 }
 
 QString KMMailListModel::folderName() const

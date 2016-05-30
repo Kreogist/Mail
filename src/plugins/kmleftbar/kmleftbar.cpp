@@ -40,6 +40,12 @@ KMLeftBar::KMLeftBar(QWidget *parent) :
 
 void KMLeftBar::setMailListModel(KMMailListModel *model)
 {
+    //Check the model is loaded or not.
+    if(!model->loaded())
+    {
+        //Load the brief information of the mails.
+        model->initial();
+    }
     //Set the model to list view.
     m_mailList->setModel(model);
 }

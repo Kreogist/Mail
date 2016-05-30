@@ -17,6 +17,7 @@
  */
 #include <QTextCodec>
 
+#include "kmmailparseutil.h"
 #include "kmquotedprintable.h"
 
 #include "kmmailbody.h"
@@ -314,52 +315,6 @@ inline void KMMailBody::appendEncoding(QString &target, const QString &data)
     }
 }
 
-QString KMMailBody::parseEncoding(const QString &data)
-{
-    //Check if the data start with =? and ends with ?=
-    if(data.startsWith("=?") && data.endsWith("?=") && data.size()>4)
-    {
-        //It need to be parsed.
-        //Remove the first and last two chars.
-        QString content=data.mid(2, data.size()-4);
-        //The format of content should be:
-        //  Encoding(utf-8, GBK)?B(Base64)/Q(Quoted Printable)?Data
-        //Get the question mark pos.
-        int firstQuestionMark=content.indexOf('?'),
-                secondQuestionMark=content.indexOf('?', firstQuestionMark+1);
-        //Check validation of first question mark.
-        if(firstQuestionMark==-1 || secondQuestionMark==-1)
-        {
-            //Give back raw content.
-            return data;
-        }
-        //Get encoding codec.
-        QTextCodec *codec=
-                QTextCodec::codecForName(
-                    content.left(firstQuestionMark).toUtf8());
-        //Get data encoding codec.
-        QString encodingCodec=
-                content.mid(firstQuestionMark+1,
-                            secondQuestionMark-firstQuestionMark-1);
-        //Check data encoding type.
-        if(encodingCodec=="B")
-        {
-            return codec->toUnicode(
-                        QByteArray::fromBase64(
-                            content.mid(secondQuestionMark+1).toUtf8()));
-        }
-        if(encodingCodec=="Q")
-        {
-            return codec->toUnicode(
-                        KMQuotedPrintable::decode(
-                            content.mid(secondQuestionMark+1)));
-        }
-        return content;
-    }
-    //Or else, we don't need to parse.
-    return data;
-}
-
 bool KMMailBody::parseContact(const QString &data,
                               QString &address,
                               QString &name)
@@ -373,7 +328,7 @@ bool KMMailBody::parseContact(const QString &data,
         return false;
     }
     //Get the name of the contact.
-    name=parseEncoding(data.left(leftPos).simplified());
+    name=KMMailParseUtil::parseEncoding(data.left(leftPos).simplified());
     //GEt the contact address.
     address=data.mid(leftPos+1, data.size()-leftPos-2);
     //Success.

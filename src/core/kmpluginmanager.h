@@ -24,6 +24,7 @@
 class KMMainWindow;
 class KMTitleBarBase;
 class KMLeftBarBase;
+class KMMailContentParser;
 class KMMailComponentBase;
 class KMUnibarBase;
 class KMPreferenceBase;
@@ -83,6 +84,7 @@ private:
     void loadMailComponent(KMMailComponentBase *mailComponent);
     void loadUnibar(KMUnibarBase *uniBar);
     void loadPreference(KMPreferenceBase *preference);
+    void loadContentParser(KMMailContentParser *contentParser);
     inline void setApplicationInformation();
     KMMainWindow *m_mainWindow;
 };

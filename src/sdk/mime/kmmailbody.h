@@ -134,7 +134,6 @@ private:
     inline void appendContact(QString &target, int contactIndex);
     inline void appendEncoding(QString &target,
                                   const QString &data);
-    QString parseEncoding(const QString &data);
     bool parseContact(const QString &data, QString &address, QString &name);
     QStringList m_contact[MailContactCount], m_contactName[MailContactCount];
     QString m_element[MailElementCount];

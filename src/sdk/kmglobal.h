@@ -31,6 +31,7 @@
 
 class QWidget;
 class KNConfigure;
+class KMMailContentParser;
 class KMMailAccountManager;
 /*!
  * \brief The KMGlobal class is a global instance which contains several public
@@ -118,9 +119,17 @@ public:
       */
      KNConfigure *userConfigure();
 
+     KMMailContentParser *contentParser();
+
 signals:
 
 public slots:
+     /*!
+      * \brief setContentParser
+      * \param contentParser
+      */
+     void setContentParser(KMMailContentParser *contentParser);
+
      /*!
       * \brief Set and save the global main window pointer.
       * \param mainWindow The main window pointer.
@@ -143,6 +152,7 @@ private:
     QString m_dirPath[DefaultDirCount];
     KMMailAccountManager *m_accountManager;
     QWidget *m_mainWindow;
+    KMMailContentParser *m_contentParser;
     KNConfigure *m_globalConfigure;
     QThread m_receiverThread;
 };
