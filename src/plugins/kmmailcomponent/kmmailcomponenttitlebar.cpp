@@ -53,6 +53,7 @@ KMMailComponentTitleBar::KMMailComponentTitleBar(QWidget *parent) :
     m_titleLabel->setObjectName("MailComponentTitle");
     knTheme->registerWidget(m_titleLabel);
     m_titleLabel->setWordWrap(true);
+    //Set the title font and size.
     QFont titleFont=m_titleLabel->font();
     titleFont.setPixelSize(18);
     m_titleLabel->setFont(titleFont);
@@ -175,6 +176,7 @@ void KMMailComponentTitleBar::setReceiveDate(const QDate &receiveDate)
 
 void KMMailComponentTitleBar::retranslate()
 {
+   //Reset the labels.
     m_fromLabel->setText(tr("From: "));
     m_toLabel->setText(tr("To: "));
 }

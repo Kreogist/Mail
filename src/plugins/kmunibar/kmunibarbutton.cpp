@@ -53,6 +53,7 @@ void KMUnibarButton::paintEvent(QPaintEvent *event)
         }
         else
         {
+            //Draw the painter.
             painter.setOpacity(m_hoverOpacity);
             painter.setPen(Qt::NoPen);
             painter.setBrush(palette().color(QPalette::Button));
