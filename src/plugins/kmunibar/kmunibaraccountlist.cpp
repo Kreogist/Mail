@@ -72,7 +72,7 @@ KMUnibarAccountList::KMUnibarAccountList(QWidget *parent) :
     onThemeChanged();
 }
 
-QString KMUnibarAccountList::text() const
+QString KMUnibarAccountList::labelText() const
 {
     return m_accountLabel;
 }
