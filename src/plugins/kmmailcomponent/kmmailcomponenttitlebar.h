@@ -80,6 +80,7 @@ public slots:
 
     /*!
      * \brief updateHeight
+     * \param targetWidth
      */
     void updateHeight(int targetWidth=-1);
 

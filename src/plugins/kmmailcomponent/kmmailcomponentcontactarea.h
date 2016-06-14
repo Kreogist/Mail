@@ -24,15 +24,16 @@ class QTimeLine;
 class KNSideShadowWidget;
 class KMMailComponentContactList;
 /*!
- * \brief The KMMailComponentContactArea class
+ * \brief The KMMailComponentContactArea class provides the contact container
+ * for all the contact widget list.
  */
 class KMMailComponentContactArea : public QScrollArea
 {
     Q_OBJECT
 public:
     /*!
-     * \brief KMMailComponentContactArea
-     * \param parent
+     * \brief Construct a KMMailComponentContactArea object.
+     * \param parent The parent object.
      */
     explicit KMMailComponentContactArea(QWidget *parent = 0);
 
