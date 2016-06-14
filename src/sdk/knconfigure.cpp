@@ -123,6 +123,7 @@ QVariant KNConfigure::data(const QString &key,
                 {
                 case Font:
                 {
+                    //Generate a Font object.
                     QFont valueFont=QApplication::font();
                     valueFont.setFamily(valueObject.value("Family").toString());
                     valueFont.setPixelSize(valueObject.value("Size").toDouble());

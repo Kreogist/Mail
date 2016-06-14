@@ -34,14 +34,16 @@ public:
     explicit KMUnibarLabelButton(QWidget *parent = 0);
 
     /*!
-     * \brief rotate
-     * \return
+     * \brief Get current rotate
      */
     int rotate() const;
 
     QPixmap image() const;
 
 signals:
+    /*!
+     * \brief Label button clicked
+     */
     void clicked();
 
 public slots:

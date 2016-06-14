@@ -40,33 +40,64 @@ public:
      */
     explicit KMUnibarAccountList(QWidget *parent = 0);
 
-    QString text() const;
+    /*!
+     * \brief Get the account label text. It should be the account name with the
+     * addcount address.
+     * \return The account label text.
+     */
+    QString labelText() const;
 
+    /*!
+     * \brief Get the specific foldertext.
+     * \param modelIndex The index of specific folder
+     * \return The name of folder.
+     */
     QString folderText(int modelIndex) const;
 
+    /*!
+     * \brief Get the account object currently managed.
+     */
     KMMailAccount *account() const;
+
+    /*!
+     * \brief Set a new mail account.
+     * \param account The account object, default is a NULL.
+     */
     void setAccount(KMMailAccount *account);
 
+    /*!
+     * \brief reset the size and update.
+     */
     void reset();
 
 signals:
+    /*!
+     * \brief sizeChanged
+     * \param heightDelta
+     */
     void sizeChanged(int heightDelta);
 
+    /*!
+     * \brief currentModelChanged
+     * \param modelIndex
+     */
     void currentModelChanged(int modelIndex);
 
 public slots:
-    void setText(const QString &text);
+    /*!
+     * \brief Set the wiget text.
+     * \param text.
+     */
+    void setText(const QString &labelText);
 
 protected:
     /*!
-     * \brief paintEvent
-     * \param event
+     * \brief Reimplemented from QWidget::paintEvent().
      */
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
     /*!
-     * \brief resizeEvent
-     * \param event
+     * \brief Reimplemented from QWidget::resizeEvent().
      */
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 

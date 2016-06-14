@@ -19,7 +19,10 @@
 #define KMPREFERENCE_H
 
 #include "kmpreferencebase.h"
-
+/*!
+ * \brief The KMPreference class is to help users set preferences of the Mail
+ * application.
+ */
 class KMPreference : public KMPreferenceBase
 {
     Q_OBJECT
