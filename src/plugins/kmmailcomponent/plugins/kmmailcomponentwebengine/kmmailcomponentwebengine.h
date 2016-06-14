@@ -24,15 +24,19 @@
 class QWebEngineView;
 /*!
  * \brief The KMMailComponentWebEngine class provides the mail browser using the
- * Qt WebEngine module.
+ * Qt WebEngine module.\n
+ * This module will use QWebEngineView as the displayer of the web site. It will
+ * be enabled when Qt version is greater than 5.6 for 64-bit platforms. 32-bit
+ * platforms please use QWebView which is already out-of-date.
  */
 class KMMailComponentWebEngine : public KMMailComponentContentBase
 {
     Q_OBJECT
 public:
     /*!
-     * \brief KMMailComponentWebEngine
-     * \param parent
+     * \brief Construct a KMMailComponentWebEngine object with given parent
+     * object.
+     * \param parent The parent object.
      */
     explicit KMMailComponentWebEngine(QWidget *parent = 0);
 

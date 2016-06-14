@@ -31,6 +31,7 @@
 #include "kmmailcomponentbase.h"
 #include "kmunibarbase.h"
 #include "kmpreferencebase.h"
+#include "kmmailcontentparser.h"
 
 //Plugins.
 #include "plugins/kmtitlebar/kmtitlebar.h"

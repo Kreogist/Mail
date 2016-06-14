@@ -24,15 +24,17 @@
 class KNSideShadowWidget;
 /*!
  * \brief The KMMailComponentContentBase class provides a widget to show the
- * content of the mail content.
+ * content of the mail content.\n
+ * This is a base widget. It means that it should be implemented and realize the
+ * the new widget.
  */
 class KMMailComponentContentBase : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief KMMailComponentContentBase
-     * \param parent
+     * \brief Construct a KMMailComponentContentBase widget.
+     * \param parent The parent widget.
      */
     explicit KMMailComponentContentBase(QWidget *parent = 0);
 
