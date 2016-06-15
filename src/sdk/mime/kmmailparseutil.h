@@ -6,9 +6,10 @@
 class KMMailParseUtil
 {
 public:
-    static QString parseEncoding(const QString &data);
+    static QString parseEncoding(QString data);
 
 private:
+    static QString parseEncodingPart(const QString &data);
     KMMailParseUtil();
 };
 

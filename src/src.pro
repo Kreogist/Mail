@@ -259,7 +259,8 @@ HEADERS += \
     plugins/kmmailcomponent/sdk/kmmailflowlayout.h \
     sdk/mime/kmmailparser.h \
     sdk/mime/kmmailparseutil.h \
-    sdk/kmmailcontentparser.h
+    sdk/kmmailcontentparser.h \
+    plugins/kmwebenginecontentparser/kmwebenginecontentparser.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -325,7 +326,8 @@ SOURCES += \
     sdk/composepanel/kmcomposetextedit.cpp \
     plugins/kmmailcomponent/sdk/kmmailflowlayout.cpp \
     sdk/mime/kmmailparser.cpp \
-    sdk/mime/kmmailparseutil.cpp
+    sdk/mime/kmmailparseutil.cpp \
+    plugins/kmwebenginecontentparser/kmwebenginecontentparser.cpp
 
 RESOURCES += \
     resource/res.qrc

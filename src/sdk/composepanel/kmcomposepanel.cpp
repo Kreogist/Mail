@@ -45,6 +45,14 @@ KMComposePanel::KMComposePanel(QWidget *parent) :
     knTheme->registerWidget(this);
     //Initial the line edits.
     m_title->setObjectName("ComposeLineEdit");
+    connect(m_title, &KMComposeLineEdit::textChanged,
+            [=](const QString &titleText)
+            {
+                //Save the title text.
+                m_titleText=titleText;
+                //Update title.
+                updateTitle();
+            });
     knTheme->registerWidget(m_title);
     QFont titleFont=m_title->font();
     titleFont.setPixelSize(20);
@@ -83,6 +91,8 @@ KMComposePanel::KMComposePanel(QWidget *parent) :
     //Link the locale stuffs.
     knI18n->link(this, &KMComposePanel::retranslate);
     retranslate();
+    //Update the title text.
+    setWindowTitle(m_emptyText);
 
     //Debug.
     m_from->addItem("tojo.nozomi@ll-anime.com");
@@ -90,9 +100,20 @@ KMComposePanel::KMComposePanel(QWidget *parent) :
 
 void KMComposePanel::retranslate()
 {
+    //Update empty text.
+    m_emptyText=tr("(No title)");
+    //Update the title.
+    updateTitle();
     //Translate the line edit place holder text.
     m_title->setPlaceholderText(tr("Title"));
     //Update the label hints.
     m_fromHint->setText(tr("From: "));
     m_toHint->setText(tr("To: "));
+}
+
+inline void KMComposePanel::updateTitle()
+{
+    setWindowTitle(m_titleText.isEmpty()?
+                       m_emptyText:
+                       m_titleText);
 }

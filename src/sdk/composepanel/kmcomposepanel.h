@@ -46,10 +46,12 @@ private slots:
     void retranslate();
 
 private:
+    inline void updateTitle();
     QComboBox *m_from;
     KMComposeLineEdit *m_title, *m_receiver;
     QLabel *m_fromHint, *m_toHint;
     KMComposeEditor *m_editor;
+    QString m_emptyText, m_titleText;
 };
 
 #endif // KMCOMPOSEPANEL_H
