@@ -182,7 +182,7 @@ void KMMailListModel::initial()
             KMMailParser::parseFile((*i).absoluteFilePath(),
                                     mailItem.sender,
                                     mailItem.title);
-            //Check content parser is initial or not.
+            //Check whether the content parser is valid or not.
             if(contentParser)
             {
                 //Get the breif text.

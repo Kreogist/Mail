@@ -44,6 +44,9 @@ public slots:
      */
     void setMailListModel(KMMailListModel *model) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KMLeftBarBase::switchModel().
+     */
     void switchModel(KMMailAccount *account, int modelIndex) Q_DECL_OVERRIDE;
 
 protected:

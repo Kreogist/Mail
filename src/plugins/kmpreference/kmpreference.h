@@ -19,11 +19,18 @@
 #define KMPREFERENCE_H
 
 #include "kmpreferencebase.h"
-
+/*!
+ * \brief The KMPreference class is to help users set preferences of the Mail
+ * application.
+ */
 class KMPreference : public KMPreferenceBase
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief Constrcut a KMPreference widget with the parent widget.
+     * \param parent The parent widget pointer.
+     */
     explicit KMPreference(QWidget *parent = 0);
 
 signals:
