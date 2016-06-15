@@ -182,10 +182,14 @@ void KMMailListModel::initial()
             KMMailParser::parseFile((*i).absoluteFilePath(),
                                     mailItem.sender,
                                     mailItem.title);
-            //Get the breif text.
-            qDebug()<<contentParser->rawTextContent((*i).absoluteFilePath());
-            mailItem.breifContext=
-                    contentParser->rawTextContent((*i).absoluteFilePath()).left(100);
+            //Check whether the content parser is valid or not.
+            if(contentParser)
+            {
+                //Get the breif text.
+                qDebug()<<contentParser->rawTextContent((*i).absoluteFilePath());
+                mailItem.breifContext=
+                        contentParser->rawTextContent((*i).absoluteFilePath()).left(100);
+            }
             //Add item to model.
             appendRow(mailItem);
         }
