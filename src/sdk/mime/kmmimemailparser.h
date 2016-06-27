@@ -15,30 +15,33 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#ifndef KMMIMEMAILPARSER_H
+#define KMMIMEMAILPARSER_H
 
-#ifndef KMMIMEATTACHMENT_H
-#define KMMIMEATTACHMENT_H
+#include "kmmimepart.h"
 
-#include "kmmimefile.h"
+#include <QObject>
 
-/*!
- * \brief The KMMimeAttachment class provides the ability to describe the E-mail
- * attachment in mime format.
- */
-class KMMimeAttachment : public KMMimeFile
+class KMMimeMailParser : public QObject
 {
     Q_OBJECT
 public:
-    /*!
-     * \brief Construct a KMMimeAttachment object.
-     * \param parent The parent object pointer.
-     */
-    KMMimeAttachment(QObject *parent = 0) :
-        KMMimeFile(parent)
-    {
-        //Set properties.
-        setAppendixHeader("Content-disposition: attachment\r\n");
-    }
+
+    static KMMimePart *parseContent(const QString &filePath,
+                                    QObject *partParent);
+
+    static KMMimePart *parseContent(const QList<QByteArray> &contentLines,
+                                    QObject *partParent);
+
+    static bool getBriefContent(KMMimePart *mimePart,
+                                QString &content);
+
+signals:
+
+public slots:
+
+private:
+    explicit KMMimeMailParser(QObject *parent = 0);
 };
 
-#endif // KMMIMEATTACHMENT_H
+#endif // KMMIMEMAILPARSER_H

@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) Kreogist Dev Team
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ */
 #include <QTextCodec>
 
 #include "kmquotedprintable.h"
@@ -60,6 +77,27 @@ QString KMMailParseUtil::parseEncoding(QString data)
     }
     //Give the parsed result back.
     return parsedText;
+}
+
+QString KMMailParseUtil::parseContent(const QString &encoding,
+                                      const QString &rawData)
+{
+    //Check the encoding.
+    if(encoding=="QUOTED-PRINTABLE")
+    {
+        //Give back the raw data parsed with quoted printable.
+        return KMQuotedPrintable::decode(rawData);
+    }
+    if(encoding=="BASE64")
+    {
+        //Give back the BASE64 decoding result.
+        return QByteArray::fromBase64(rawData.toLatin1());
+    }
+    //For the left things:
+    // - 7bit
+    // - 8bit
+    //Treat them as raw data.
+    return rawData;
 }
 
 QString KMMailParseUtil::parseEncodingPart(const QString &data)

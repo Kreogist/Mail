@@ -205,16 +205,6 @@ HEADERS += \
     sdk/crypto/kmcryptoaes.h \
     sdk/crypto/kmcryptoaesprivate.h \
     sdk/kmmailreceivermanager.h \
-    sdk/mime/kmmimebase.h \
-    sdk/mime/kmquotedprintable.h \
-    sdk/mime/kmmimetext.h \
-    sdk/mime/kmmimehtml.h \
-    sdk/mime/kmmimefile.h \
-    sdk/mime/kmmimeinlinefile.h \
-    sdk/mime/kmmimeattachment.h \
-    sdk/mime/kmmimemultipart.h \
-    sdk/mime/kmmailbody.h \
-    sdk/mime/kmmimeparser.h \
     sdk/kmmainwindowleftcontainer.h \
     sdk/kmtitlebarbase.h \
     plugins/kmtitlebar/kmtitlebar.h \
@@ -257,10 +247,13 @@ HEADERS += \
     sdk/mailaccount/kmmailaccountmanager.h \
     sdk/composepanel/kmcomposetextedit.h \
     plugins/kmmailcomponent/sdk/kmmailflowlayout.h \
-    sdk/mime/kmmailparser.h \
-    sdk/mime/kmmailparseutil.h \
     sdk/kmmailcontentparser.h \
-    plugins/kmwebenginecontentparser/kmwebenginecontentparser.h
+    plugins/kmwebenginecontentparser/kmwebenginecontentparser.h \
+    sdk/mime/kmquotedprintable.h \
+    sdk/mime/kmmimemultipart.h \
+    sdk/mime/kmmimepart.h \
+    sdk/mime/kmmimemailparser.h \
+    sdk/mime/kmmailparseutil.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -283,12 +276,6 @@ SOURCES += \
     sdk/knfontmanager.cpp \
     sdk/crypto/kmcryptoaes.cpp \
     sdk/kmmailreceivermanager.cpp \
-    sdk/mime/kmmimebase.cpp \
-    sdk/mime/kmquotedprintable.cpp \
-    sdk/mime/kmmimefile.cpp \
-    sdk/mime/kmmimemultipart.cpp \
-    sdk/mime/kmmailbody.cpp \
-    sdk/mime/kmmimeparser.cpp \
     sdk/kmmainwindowleftcontainer.cpp \
     plugins/kmtitlebar/kmtitlebar.cpp \
     sdk/kmmaillistview.cpp \
@@ -325,9 +312,12 @@ SOURCES += \
     sdk/mailaccount/kmmailaccountmanager.cpp \
     sdk/composepanel/kmcomposetextedit.cpp \
     plugins/kmmailcomponent/sdk/kmmailflowlayout.cpp \
-    sdk/mime/kmmailparser.cpp \
-    sdk/mime/kmmailparseutil.cpp \
-    plugins/kmwebenginecontentparser/kmwebenginecontentparser.cpp
+    plugins/kmwebenginecontentparser/kmwebenginecontentparser.cpp \
+    sdk/mime/kmquotedprintable.cpp \
+    sdk/mime/kmmimemultipart.cpp \
+    sdk/mime/kmmimepart.cpp \
+    sdk/mime/kmmimemailparser.cpp \
+    sdk/mime/kmmailparseutil.cpp
 
 RESOURCES += \
     resource/res.qrc

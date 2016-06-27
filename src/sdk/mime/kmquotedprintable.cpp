@@ -18,6 +18,8 @@
 
 #include "kmquotedprintable.h"
 
+#include <QDebug>
+
 QString KMQuotedPrintable::encode(const QByteArray &data)
 {
     //Initial the hex data.
@@ -62,7 +64,7 @@ QByteArray KMQuotedPrintable::decode(const QString &text)
     for (int i = 0; i<text.size(); ++i)
     {
         //When the text is =, means we need to translate data.
-        if(text.at(i)=='=')
+        if(text.at(i)=='=' && i+2<text.size())
         {
             //Append the target char to raw data.
             rawData.append((hexVal[text.at(i + 1).toLatin1() - '0'] << 4) +

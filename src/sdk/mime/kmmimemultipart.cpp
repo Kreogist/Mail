@@ -15,79 +15,54 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#include <QCryptographicHash>
-#include <QTime>
-
 #include "kmmimemultipart.h"
 
-QString KMMimeMultiPart::m_multiTypeName[KMMimeMultiPart::MultiPartTypeCount] =
+KMMimeMultiPart::KMMimeMultiPart(QObject *parent) : KMMimePart(parent)
 {
-    "multipart/mixed",         //    Mixed
-    "multipart/digest",        //    Digest
-    "multipart/alternative",   //    Alternative
-    "multipart/related",       //    Related
-    "multipart/report",        //    Report
-    "multipart/signed",        //    Signed
-    "multipart/encrypted"      //    Encrypted
-};
 
-KMMimeMultiPart::KMMimeMultiPart(QObject *parent) :
-    KMMimeBase(parent),
-    m_multiType(Related)
-{
-    //Set properties.
-    setContentType(m_multiTypeName[m_multiType]);
-    setEncoding(Mime8Bit);
-    //Set the boundary of the mime part.
-    setContentBoundary(QCryptographicHash::hash(
-                           QByteArray().append(qrand()),
-                           QCryptographicHash::Md5).toHex());
 }
 
-void KMMimeMultiPart::addPart(KMMimeBase *part)
+KMMimeMultiPart::~KMMimeMultiPart()
 {
-    //Change part relationship.
-    part->setParent(this);
-    //Add part to list.
-    m_parts.append(part);
+    //Remove all the sub parts.
+    qDeleteAll(m_mimeParts);
 }
 
-QList<KMMimeBase *> KMMimeMultiPart::parts() const
+bool KMMimeMultiPart::addMimePart(KMMimePart *mimePart)
 {
-    return m_parts;
-}
-
-KMMimeMultiPart::MultiPartType KMMimeMultiPart::multiType() const
-{
-    return m_multiType;
-}
-
-QString KMMimeMultiPart::toString()
-{
-    //Prepare the multi content.
-    QByteArray multiContent;
-    //Add all content data to multi content.
-    for(auto i=m_parts.begin(); i!=m_parts.end(); ++i)
+    //Check the mime part is empty or not.
+    if(mimePart==nullptr)
     {
-        //Append data to multi content.
-        //--Append content boundary--
-        multiContent.append("--").append(contentBoundary()).append("\r\n")
-        //--Append mime part data--
-                    .append((*i)->toString()).append("\r\n");
+        //We won't add it.
+        return false;
     }
-    //--Append content boundary end--
-    multiContent.append("--").append(contentBoundary()).append("--\r\n");
-    //Set the multi content as content.
-    setContent(multiContent);
-    //Get the mime data.
-    return KMMimeBase::toString();
+    //Add the content to list.
+    m_mimeParts.append(mimePart);
+    //Finished.
+    return true;
 }
 
-void KMMimeMultiPart::setMultiType(const MultiPartType &multiType)
+QByteArray KMMimeMultiPart::content() const
 {
-    //Save the multi part.
-    m_multiType = multiType;
-    //Reset the content type.
-    setContentType(m_multiTypeName[m_multiType]);
+    return QByteArray();
 }
 
+bool KMMimeMultiPart::isMultipart() const
+{
+    return true;
+}
+
+KMMimePart *KMMimeMultiPart::part(int i)
+{
+    return m_mimeParts.at(i);
+}
+
+int KMMimeMultiPart::partCount() const
+{
+    return m_mimeParts.size();
+}
+
+void KMMimeMultiPart::setContent(const QByteArray &content)
+{
+    Q_UNUSED(content);
+}

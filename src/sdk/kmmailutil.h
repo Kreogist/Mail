@@ -26,7 +26,7 @@ namespace MailUtil
     {
         QString sender;
         QString title;
-        QString breifContext;
+        QString briefContext;
         QString fileName;
         qint64 index;
     };

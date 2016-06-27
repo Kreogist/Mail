@@ -20,11 +20,13 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
+#include "mime/kmmailparseutil.h"
+#include "mime/kmmimemailparser.h"
+#include "mime/kmmimepart.h"
+#include "mime/kmmimemultipart.h"
 #include "mailaccount/kmmailaccount.h"
-#include "mime/kmmailparser.h"
 #include "kmglobal.h"
 #include "kmutil.h"
-#include "kmmailcontentparser.h"
 
 #include "kmmaillistmodel.h"
 
@@ -69,7 +71,7 @@ QVariant KMMailListModel::data(const QModelIndex &index,
     case SenderRole:
         return m_mailLists.at(index.row()).sender;
     case BreifContextRole:
-        return m_mailLists.at(index.row()).breifContext;
+        return m_mailLists.at(index.row()).briefContext;
     default:
         return QVariant();
     }
@@ -155,8 +157,6 @@ void KMMailListModel::initial()
         //When the directory is not exist, exit.
         return;
     }
-    //Get the content parser.
-    KMMailContentParser *contentParser=kmGlobal->contentParser();
     //Get the file info list.
     QFileInfoList mailInfoList=
             modelDirectory.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
@@ -169,7 +169,6 @@ void KMMailListModel::initial()
             //Ignore the file.
             continue;
         }
-
         //Check whether file is already load to model.
         //!FIXME: Replace to check cache code here.
         if(true)
@@ -178,20 +177,37 @@ void KMMailListModel::initial()
             MailListItem mailItem;
             mailItem.fileName=(*i).fileName();
             mailItem.index=(*i).fileName().toLongLong();
-            //Parse the item and find the basic information.
-            KMMailParser::parseFile((*i).absoluteFilePath(),
-                                    mailItem.sender,
-                                    mailItem.title);
-            //Check whether the content parser is valid or not.
-            if(contentParser)
+            //Parse the mail data.
+            KMMimePart *parseResult=
+                    KMMimeMailParser::parseContent((*i).absoluteFilePath(),
+                                                   nullptr);
+            //Check parse result.
+            if(parseResult)
             {
-                //Get the breif text.
-                qDebug()<<contentParser->rawTextContent((*i).absoluteFilePath());
-                mailItem.breifContext=
-                        contentParser->rawTextContent((*i).absoluteFilePath()).left(100);
+                //Get one property.
+                mailItem.title=KMMailParseUtil::parseEncoding(
+                            parseResult->mimeProperty("subject"));
+                mailItem.sender=KMMailParseUtil::parseEncoding(
+                            parseResult->mimeProperty("from"));
+                //Check the from data.
+                int addressStart=mailItem.sender.indexOf('<');
+                //If the address start doesn't contains the start char, it
+                //should be a bug.
+                if(addressStart!=-1)
+                {
+                    //Rebuild the item.
+                    mailItem.sender=
+                            mailItem.sender.left(addressStart).simplified()
+                            + " " + mailItem.sender.mid(addressStart);
+                }
+                //Get the brief content.
+                KMMimeMailParser::getBriefContent(parseResult,
+                                                  mailItem.briefContext);
+                //Remove the parse result;
+                delete parseResult;
+                //Add item to model.
+                appendRow(mailItem);
             }
-            //Add item to model.
-            appendRow(mailItem);
         }
     }
 }

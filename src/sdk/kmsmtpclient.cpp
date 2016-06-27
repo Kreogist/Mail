@@ -18,7 +18,7 @@
 #include <QTcpSocket>
 #include <QSslSocket>
 
-#include "mime/kmmailbody.h"
+//#include "mime/kmmailbody.h"
 
 #include "kmsmtpclient.h"
 
@@ -229,8 +229,8 @@ void KMSmtpClient::sendMail(KMMailBody *mail)
     }
     //Send the mail message.
     //Send the MAIL command with the sender.
-    sendMessage("MAIL FROM: <" + mail->element(KMMailBody::ElementSender) +
-                ">");
+//    sendMessage("MAIL FROM: <" + mail->element(KMMailBody::ElementSender) +
+//                ">");
     //If the response is not 250 then someting wrong with mail server.
     if(!waitAndCheckResponse(250, ServerError))
     {
@@ -241,7 +241,7 @@ void KMSmtpClient::sendMail(KMMailBody *mail)
     QStringList contactName, contactAddress;
     //Send RCPT command for each recipient.
     // To (primary recipients)
-    mail->contactInfo(KMMailBody::Receiver, contactAddress, contactName);
+//    mail->contactInfo(KMMailBody::Receiver, contactAddress, contactName);
     for(auto i=contactAddress.begin(); i!=contactAddress.end(); ++i)
     {
         //Send RCPT TO message.
@@ -254,7 +254,7 @@ void KMSmtpClient::sendMail(KMMailBody *mail)
         }
     }
     // Cc (carbon copy)
-    mail->contactInfo(KMMailBody::CarbonCopy, contactAddress, contactName);
+//    mail->contactInfo(KMMailBody::CarbonCopy, contactAddress, contactName);
     for(auto i=contactAddress.begin(); i!=contactAddress.end(); ++i)
     {
         //Send RCPT TO message.
@@ -267,7 +267,7 @@ void KMSmtpClient::sendMail(KMMailBody *mail)
         }
     }
     // Bcc (blind carbon copy)
-    mail->contactInfo(KMMailBody::BlindCarbonCopy, contactAddress, contactName);
+//    mail->contactInfo(KMMailBody::BlindCarbonCopy, contactAddress, contactName);
     for(auto i=contactAddress.begin(); i!=contactAddress.end(); ++i)
     {
         //Send RCPT TO message.
@@ -289,7 +289,7 @@ void KMSmtpClient::sendMail(KMMailBody *mail)
         return;
     }
     //Send the E-mail data.
-    sendMessage(mail->toString());
+//    sendMessage(mail->toString());
     // Send \r\n.\r\n to end the mail data
     sendMessage(".");
     //Check response.

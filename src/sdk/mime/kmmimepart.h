@@ -15,30 +15,39 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#ifndef KMMIMEPART_H
+#define KMMIMEPART_H
 
-#ifndef KMMIMEINLINEFILE_H
-#define KMMIMEINLINEFILE_H
+#include <QMap>
 
-#include "kmmimefile.h"
+#include <QObject>
 
-/*!
- * \brief The KMMimeInlineFile class provides the ability to describe an inline
- * file in mime format.
- */
-class KMMimeInlineFile : public KMMimeFile
+class KMMimePart : public QObject
 {
     Q_OBJECT
 public:
-    /*!
-     * \brief Construct a KMMimeInlineFile object.
-     * \param parent The parent object pointer.
-     */
-    KMMimeInlineFile(QObject *parent = 0) :
-        KMMimeFile(parent)
-    {
-        //Set properties.
-        setAppendixHeader("Content-Disposition: inline\r\n");
-    }
+    explicit KMMimePart(QObject *parent = 0);
+
+    QMap<QString, QString> properties() const;
+
+    bool hasMimeProperty(const QString &field) const;
+
+    QString mimeProperty(const QString &field) const;
+
+    virtual QByteArray content() const;
+
+    virtual bool isMultipart() const;
+
+signals:
+
+public slots:
+    void setMimeProperty(const QString name, const QString &data);
+    void setMimeProperties(const QMap<QString, QString> &properties);
+    virtual void setContent(const QByteArray &content);
+
+protected:
+    QMap<QString, QString> m_properties;
+    QByteArray m_content;
 };
 
-#endif // KMMIMEINLINEFILE_H
+#endif // KMMIMEPART_H

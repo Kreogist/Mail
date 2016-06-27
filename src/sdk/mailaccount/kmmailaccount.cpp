@@ -44,7 +44,7 @@ KMMailAccount::KMMailAccount(QObject *parent) :
         MailListItem sampleMail;
         sampleMail.title="Sample Mail " + QString::number(i) + QString::number(qrand());
         sampleMail.sender=sampleSender[i];
-        sampleMail.breifContext="This is a sample mail item for test only, it is not a real mail.";
+        sampleMail.briefContext="This is a sample mail item for test only, it is not a real mail.";
         for(int j=0; j<40; ++j)
         {
             m_systemFolder[i]->appendRow(sampleMail);

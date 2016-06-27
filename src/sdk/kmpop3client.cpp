@@ -18,7 +18,7 @@
 #include <QTcpSocket>
 #include <QSslSocket>
 
-#include "mime/kmmailbody.h"
+//#include "mime/kmmailbody.h"
 
 #include "kmpop3client.h"
 
@@ -216,8 +216,6 @@ void KMPop3Client::getMailList()
         }
     }
     qDebug()<<totalData;
-    KMMailBody *parseMail=new KMMailBody(this);
-    parseMail->fromString(totalData);
 //    }
 }
 
