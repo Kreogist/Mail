@@ -34,9 +34,19 @@ public:
      */
     KMMailComponentBase(QWidget *parent = 0):QWidget(parent){}
 
+    /*!
+     * \brief reset
+     */
+    virtual void reset()=0;
+
 signals:
 
 public slots:
+    /*!
+     * \brief loadMail
+     * \param filePath
+     */
+    virtual void loadMail(const QString &filePath)=0;
 };
 
 #endif // KMMAILCOMPONENTBASE_H

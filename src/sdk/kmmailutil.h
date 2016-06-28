@@ -34,7 +34,8 @@ namespace MailUtil
     enum MailListRole
     {
         SenderRole = Qt::UserRole + 1,
-        BreifContextRole
+        BreifContextRole,
+        FilePathRole
     };
 
     enum MailAccountProperties

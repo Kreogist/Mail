@@ -34,13 +34,17 @@ KMMailComponentWebEngine::KMMailComponentWebEngine(QWidget *parent) :
                            true);
     settings->setAttribute(QWebEngineSettings::FullScreenSupportEnabled,
                            true);
-    //Configure the browser.
-    m_browser->load(QUrl("http://www.google.com.au"));
 }
 
 QSize KMMailComponentWebEngine::sizeHint() const
 {
     return m_browser->sizeHint();
+}
+
+void KMMailComponentWebEngine::reset()
+{
+    //Reset the broswer.
+    m_browser->setUrl(QUrl("about:blank"));
 }
 
 void KMMailComponentWebEngine::resizeEvent(QResizeEvent *event)

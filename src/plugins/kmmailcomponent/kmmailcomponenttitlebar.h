@@ -18,7 +18,7 @@
 #ifndef KMMAILCOMPONENTTITLEBAR_H
 #define KMMAILCOMPONENTTITLEBAR_H
 
-#include <QDate>
+#include <QDateTime>
 
 #include <QWidget>
 
@@ -46,6 +46,11 @@ public:
      * \return If any of the contact list is expanded, this will return true.
      */
     bool isExpand() const;
+
+    /*!
+     * \brief reset
+     */
+    void reset();
 
 signals:
     /*!
@@ -76,7 +81,7 @@ public slots:
      * \brief Set the receive date of the mail.
      * \param receiveDate The receive date of the mail.
      */
-    void setReceiveDate(const QDate &receiveDate);
+    void setReceiveDate(const QDateTime &receiveDate);
 
     /*!
      * \brief updateHeight
@@ -92,7 +97,8 @@ private slots:
 private:
     inline KMMailContactButton *generateButton(const QString &address);
     QList<KMMailContactButton *> m_fromList, m_toList;
-    QDate m_receiveDate;
+    QString m_noTitle;
+    QDateTime m_receiveDate;
     QBoxLayout *m_mainLayout;
     QLabel *m_titleLabel, *m_receiveLabel, *m_fromLabel, *m_toLabel;
     KMMailComponentContactArea *m_fromArea, *m_toArea;

@@ -48,6 +48,12 @@ void KMLeftBar::setMailListModel(KMMailListModel *model)
     }
     //Set the model to list view.
     m_mailList->setModel(model);
+    connect(m_mailList->selectionModel(), &QItemSelectionModel::currentChanged,
+            [=](const QModelIndex &current)
+            {
+                //Emit the data change signal.
+                emit requireLoadMail(current.data(FilePathRole).toString());
+            });
 }
 
 void KMLeftBar::switchModel(KMMailAccount *account, int modelIndex)

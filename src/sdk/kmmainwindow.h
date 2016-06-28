@@ -28,6 +28,7 @@ class KMMainWindowContainer;
 class KMTitleBarBase;
 class KMLeftBarBase;
 class KMUnibarBase;
+class KMMailComponentBase;
 /*!
  * \brief The KMMainWindow class provides the main window of the Mail
  * application. All the plugins should be add to main window.
@@ -67,7 +68,7 @@ public slots:
      * \brief Set the mail component widget.
      * \param mailComponent Mail component widget pointer.
      */
-    void setMailComponent(QWidget *mailComponent);
+    void setMailComponent(KMMailComponentBase *mailComponent);
 
     /*!
      * \brief Set the preference widget.

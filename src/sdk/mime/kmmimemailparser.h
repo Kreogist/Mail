@@ -18,6 +18,7 @@
 #ifndef KMMIMEMAILPARSER_H
 #define KMMIMEMAILPARSER_H
 
+#include <QDateTime>
 #include "kmmimepart.h"
 
 #include <QObject>
@@ -35,6 +36,8 @@ public:
 
     static bool getBriefContent(KMMimePart *mimePart,
                                 QString &content);
+
+    static QDateTime getDate(const QString &dateTimeData);
 
 signals:
 

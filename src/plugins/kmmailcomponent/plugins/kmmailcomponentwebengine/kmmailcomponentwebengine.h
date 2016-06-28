@@ -48,6 +48,10 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief reset
+     */
+    void reset() Q_DECL_OVERRIDE;
 
 protected:
     /*!

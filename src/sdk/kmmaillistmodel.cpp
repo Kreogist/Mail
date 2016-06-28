@@ -72,6 +72,9 @@ QVariant KMMailListModel::data(const QModelIndex &index,
         return m_mailLists.at(index.row()).sender;
     case BreifContextRole:
         return m_mailLists.at(index.row()).briefContext;
+    case FilePathRole:
+        return m_account->accountDir() + "/" + m_dirName + "/" +
+                m_mailLists.at(index.row()).fileName;
     default:
         return QVariant();
     }

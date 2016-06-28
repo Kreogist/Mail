@@ -23,6 +23,7 @@
 class QScrollArea;
 class QScrollBar;
 class QTimeLine;
+class KMMimePart;
 class KMMailComponentTitleBar;
 class KMMailComponentContentBase;
 /*!
@@ -38,10 +39,17 @@ public:
      * \param parent The parent widget.
      */
     explicit KMMailComponent(QWidget *parent = 0);
+    ~KMMailComponent();
+
+    void reset() Q_DECL_OVERRIDE;
 
 signals:
 
 public slots:
+    /*!
+     * \brief Reimplemented from KMMailComponentBase::loadMail().
+     */
+    void loadMail(const QString &filePath) Q_DECL_OVERRIDE;
 
 protected:
     /*!
@@ -53,8 +61,10 @@ private slots:
     void updateGeometries();
 
 private:
+    inline void recoveryMimePart();
     KMMailComponentTitleBar *m_titleBar;
     KMMailComponentContentBase *m_content;
+    KMMimePart *m_mimePart;
 };
 
 #endif // KMMAILCOMPONENT_H

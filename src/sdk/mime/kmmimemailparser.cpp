@@ -17,6 +17,7 @@
  */
 #include <QFile>
 #include <QTextDocument>
+#include <QTimeZone>
 
 #include "kmmimepart.h"
 #include "kmmimemultipart.h"
@@ -304,4 +305,41 @@ bool KMMimeMailParser::getBriefContent(KMMimePart *mimePart,
         return false;
     }
     return false;
+}
+
+QDateTime KMMimeMailParser::getDate(const QString &dateTimeData)
+{
+    qDebug()<<dateTimeData<<dateTimeData.size();
+    //Construct a date time class.
+    QDateTime targetTime;
+    //The format should be:
+    //  Tue, 27 Jan 2015 16:51:20 +0800 (CST)
+    //Check data size.
+    if(dateTimeData.size()<30)
+    {
+        //Give a null date time back.
+        return QDateTime();
+    }
+    //Generate the month letters.
+    QStringList monthList;
+    monthList << "jan" << "feb" << "mar" << "apr" << "may" << "jun"
+              << "jul" << "aug" << "sep" << "oct" << "nov" << "dec";
+    //First, get the date data.
+    targetTime.setDate(QDate(dateTimeData.mid(12, 4).toInt(),
+                             monthList.indexOf(dateTimeData.mid(8, 3).toLower())
+                             + 1,
+                             dateTimeData.mid(5, 2).toInt()));
+    qDebug()<<QDate(dateTimeData.mid(12, 4).toInt(),
+                    monthList.indexOf(dateTimeData.mid(8, 3).toLower())
+                    + 1,
+                    dateTimeData.mid(5, 2).toInt());
+    //Then, get the time data.
+    targetTime.setTime(QTime(dateTimeData.mid(17, 2).toInt(),
+                             dateTimeData.mid(20, 2).toInt(),
+                             dateTimeData.mid(23, 2).toInt()));
+    //Last the time zone.
+    //Actually, I think maybe there will only left the CST?
+    targetTime.setTimeZone(QTimeZone(60*60*dateTimeData.mid(26, 3).toInt()));
+    //Give back the target time.
+    return targetTime;
 }

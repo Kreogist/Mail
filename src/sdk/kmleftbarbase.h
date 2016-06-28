@@ -37,6 +37,11 @@ public:
     KMLeftBarBase(QWidget *parent = 0): QWidget(parent){}
 
 signals:
+    /*!
+     * \brief Ask the mail display widget to load a mail from local file.
+     * \param filePath The target file path.
+     */
+    void requireLoadMail(const QString &filePath);
 
 public slots:
     /*!

@@ -32,7 +32,6 @@ KMMailComponentWebKit::KMMailComponentWebKit(QWidget *parent) :
     settings->setAttribute(QWebSettings::PluginsEnabled,
                            true);
     //Configure the browser.
-    m_browser->load(QUrl("http://www.google.com.au"));
     m_browser->page()->mainFrame()->setScrollBarPolicy(Qt::Horizontal,
                                                        Qt::ScrollBarAsNeeded);
     m_browser->page()->mainFrame()->setScrollBarPolicy(Qt::Vertical,

@@ -40,6 +40,12 @@ public:
 
 signals:
 
+public slots:
+    /*!
+     * \brief reset
+     */
+    virtual void reset()=0;
+
 protected:
     /*!
      * \brief Reimplemented from QWidget::resizeEvent().

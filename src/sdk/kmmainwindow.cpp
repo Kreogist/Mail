@@ -26,6 +26,7 @@
 #include "kmglobal.h"
 #include "kmcoverlayer.h"
 #include "kmleftbarbase.h"
+#include "kmmailcomponentbase.h"
 
 #include "kmunibarbase.h"
 #include "kmtitlebarbase.h"
@@ -136,9 +137,13 @@ void KMMainWindow::setUniBar(KMUnibarBase *uniBar)
             m_titleBar, &KMTitleBarBase::setTitleText);
 }
 
-void KMMainWindow::setMailComponent(QWidget *mailComponent)
+void KMMainWindow::setMailComponent(KMMailComponentBase *mailComponent)
 {
+    //Set the mail component widget.
     m_container->setMailComponent(mailComponent);
+    //Link the mail component with the left bar.
+    connect(m_leftBar, &KMLeftBarBase::requireLoadMail,
+            mailComponent, &KMMailComponentBase::loadMail);
 }
 
 void KMMainWindow::setPreference(QWidget *preference)

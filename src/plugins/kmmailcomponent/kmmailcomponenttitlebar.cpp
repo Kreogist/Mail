@@ -108,6 +108,15 @@ bool KMMailComponentTitleBar::isExpand() const
     return m_toListWidget->isExpaned() || m_fromListWidget->isExpaned();
 }
 
+void KMMailComponentTitleBar::reset()
+{
+    //Clear all the data content label.
+    m_titleLabel->clear();
+    //Reset the mail item list.
+    m_toListWidget->clear();
+    m_fromListWidget->clear();
+}
+
 void KMMailComponentTitleBar::setReceiverList(const QStringList &addressList)
 {
     //Clear the layout.
@@ -164,21 +173,23 @@ void KMMailComponentTitleBar::setTitle(const QString &text)
     updateHeight();
 }
 
-void KMMailComponentTitleBar::setReceiveDate(const QDate &receiveDate)
+void KMMailComponentTitleBar::setReceiveDate(const QDateTime &receiveDate)
 {
     //Save the date.
     m_receiveDate = receiveDate;
     //Update the label.
     m_receiveLabel->setText(
                 m_receiveDate.toString(
-                    QLocale::system().dateFormat(QLocale::LongFormat)));
+                    QLocale::system().dateTimeFormat(QLocale::LongFormat)));
 }
 
 void KMMailComponentTitleBar::retranslate()
 {
-   //Reset the labels.
+    //Reset the labels.
     m_fromLabel->setText(tr("From: "));
     m_toLabel->setText(tr("To: "));
+    //Update no title text.
+    m_noTitle=tr("No Subject");
 }
 
 void KMMailComponentTitleBar::onThemeChanged()

@@ -21,6 +21,9 @@
 #include <QScrollBar>
 
 #include "knthememanager.h"
+#include "mime/kmmimepart.h"
+#include "mime/kmmimemailparser.h"
+#include "mime/kmmailparseutil.h"
 #include "sao/knsaostyle.h"
 
 #include "kmmailcomponenttitlebar.h"
@@ -43,7 +46,8 @@
 KMMailComponent::KMMailComponent(QWidget *parent) :
     KMMailComponentBase(parent),
     m_titleBar(new KMMailComponentTitleBar(this)),
-    m_content(nullptr)
+    m_content(nullptr),
+    m_mimePart(nullptr)
 {
     setObjectName("MailComponent");
     //Set properties.
@@ -57,6 +61,12 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
 #ifdef BACKEND_WEBKIT
     m_content=new KMMailComponentWebKit(this);
 #endif
+    //Check the content data.
+    if(!m_content)
+    {
+        //No content, we cannot continue to load data.
+        return;
+    }
     //Configure the title bar.
     connect(m_titleBar, &KMMailComponentTitleBar::titleSizeUpdate,
             this, &KMMailComponent::updateGeometries);
@@ -72,34 +82,80 @@ KMMailComponent::KMMailComponent(QWidget *parent) :
     mainLayout->addWidget(m_titleBar);
     //Add component widget to layout.
     mainLayout->addWidget(m_content, 1);
+}
 
-    //Debug.
-    m_titleBar->setTitle("TechLauncher: First peer assessment is due at 17:00 today");
-    m_titleBar->setReceiveDate(QDate(2016,3,1));
-    //Debug
-    QStringList receiverList;
-    receiverList << "ayase.eri@ll-anime.com" << "tojo.nozomi@ll-anime.com";
-    m_titleBar->setReceiverList(receiverList);
-    receiverList << "yazawa.nico@ll-anime.com"
-                 << "minami.kotori@ll-anime.com"
-                 << "sonoda.umi@ll-anime.com"
-                 << "nishikino.maki@ll-anime.com"
-                 << "koitsumi.hanayo@ll-anime.com"
-                 << "hoshizora.rin@ll-anime.com"
-                 << "kousaka.honoka@ll-anime.com"
-                 << "nitta.emi@ll-anime.com"
-                 << "mimorin.suzuko@ll-anime.com"
-                 << "utchida.aya@ll-anime.com"
-                 << "kubo.yurika@ll-anime.com"
-                 << "itta.riho@ll-anime.com"
-                 << "pile@ll-anime.com"
-                 << "toukui.sora@ll-anime.com"
-                 << "nanjo.yoshino@ll-anime.com"
-                 << "kusuda.aina@ll-anime.com";
-    m_titleBar->setReceiverList(receiverList);
-    QStringList senderList;
-    senderList << "tojo.nozomi@ll-anime.com";
-    m_titleBar->setSenderList(senderList);
+KMMailComponent::~KMMailComponent()
+{
+    //Recover the mime part memory.
+    recoveryMimePart();
+}
+
+void KMMailComponent::reset()
+{
+    //Recover the mime part memory.
+    recoveryMimePart();
+    //Reset the title bar.
+    m_titleBar->reset();
+    m_content->reset();
+}
+
+void KMMailComponent::loadMail(const QString &filePath)
+{
+    //Reset the component first.
+    reset();
+    //Load the mail file.
+    m_mimePart=KMMimeMailParser::parseContent(filePath, nullptr);
+    //Get the title data.
+    m_titleBar->setTitle(KMMailParseUtil::parseEncoding(
+                             m_mimePart->mimeProperty("subject")));
+    //Build the from address string list.
+    QString fromAddress=
+            KMMailParseUtil::parseEncoding(m_mimePart->mimeProperty("from"));
+    {
+        //Parse the data.
+        int addressStart=fromAddress.indexOf('<');
+        //Check result first.
+        if(addressStart!=-1)
+        {
+            //Insert a spacing between the name and address.
+            fromAddress=fromAddress.left(addressStart).simplified() + " "
+                    + fromAddress.mid(addressStart).simplified();
+        }
+    }
+    //Construct the from list.
+    QStringList fromList;
+    fromList.append(fromAddress);
+    m_titleBar->setSenderList(fromList);
+    //Construct the to list.
+    QStringList toList;
+    {
+        //Get the target address.
+        QString toAddress=
+                KMMailParseUtil::parseEncoding(m_mimePart->mimeProperty("to"));
+        //Split the to address.
+        toList=toAddress.split(", ", QString::SkipEmptyParts);
+        //Check all the parts of the to list.
+        for(int i=0; i<toList.size(); ++i)
+        {
+            //Get the current item.
+            QString currentAddress=toList.at(i);
+            //Parse the data.
+            int addressStart=currentAddress.indexOf('<');
+            //Check result first.
+            if(addressStart!=-1)
+            {
+                //Insert a spacing between the name and address.
+                currentAddress=currentAddress.left(addressStart).simplified() +
+                        " " + currentAddress.mid(addressStart).simplified();
+                //Replace the current address.
+                toList.replace(i, currentAddress);
+            }
+        }
+    }
+    m_titleBar->setReceiverList(toList);
+    //Get the receive date from the data.
+    m_titleBar->setReceiveDate(
+                KMMimeMailParser::getDate(m_mimePart->mimeProperty("date")));
 }
 
 void KMMailComponent::resizeEvent(QResizeEvent *event)
@@ -122,5 +178,17 @@ void KMMailComponent::updateGeometries()
                                m_titleBar->height(),
                                width(),
                                height()-m_titleBar->height());
+    }
+}
+
+inline void KMMailComponent::recoveryMimePart()
+{
+    //Check the mime part data.
+    if(m_mimePart)
+    {
+        //Recover the memory.
+        delete m_mimePart;
+        //Reset the pointer.
+        m_mimePart=nullptr;
     }
 }
