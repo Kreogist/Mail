@@ -25,8 +25,8 @@ class KMMailParseUtil
 public:
     static QString parseEncoding(QString data);
 
-    static QString parseContent(const QString &encoding,
-                                const QString &rawData);
+    static QByteArray parseContent(const QString &encoding,
+                                   const QByteArray &rawData);
 
 private:
     static QString parseEncodingPart(const QString &data);

@@ -41,12 +41,12 @@ QString KMMailParseUtil::parseEncoding(QString data)
         while(dataEnd>-1 &&
               //If the "?=" is not the last one, or
               (dataEnd!=data.length()-2) &&
-                //It is not followed by a space.
-                (data.at(dataEnd+2)!=' '))
+                //It is not followed by a space or a quote mark.
+                (data.at(dataEnd+2)!=' ') &&
+                (data.at(dataEnd+2)!='"'))
         {
             //Find the next data end.
-            dataEnd=data.indexOf(EncodingEndMark,
-                                 dataEnd+1);
+            dataEnd=data.indexOf(EncodingEndMark, dataEnd+1);
         }
         //Check the end of the data end.
         if(dataEnd>-1)
@@ -59,7 +59,8 @@ QString KMMailParseUtil::parseEncoding(QString data)
             parsedText.append(parseEncodingPart(encodedPart));
             //Remove the data.
             data.remove(0, dataEnd+2);
-            //Check data is start with a spacing or not, if so, remove the spacing.
+            //Check data is start with a spacing or not, if so, remove the
+            //spacing.
             if(!data.isEmpty() && (data.at(0)==' '))
             {
                 //Remove the splitter spacing.
@@ -79,19 +80,19 @@ QString KMMailParseUtil::parseEncoding(QString data)
     return parsedText;
 }
 
-QString KMMailParseUtil::parseContent(const QString &encoding,
-                                      const QString &rawData)
+QByteArray KMMailParseUtil::parseContent(const QString &encoding,
+                                         const QByteArray &rawData)
 {
     //Check the encoding.
     if(encoding=="QUOTED-PRINTABLE")
     {
         //Give back the raw data parsed with quoted printable.
-        return KMQuotedPrintable::decode(rawData);
+        return KMQuotedPrintable::decode(rawData.simplified());
     }
     if(encoding=="BASE64")
     {
         //Give back the BASE64 decoding result.
-        return QByteArray::fromBase64(rawData.toLatin1());
+        return QByteArray::fromBase64(rawData.simplified());
     }
     //For the left things:
     // - 7bit

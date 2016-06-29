@@ -207,7 +207,7 @@ KMMimePart *KMMimeMailParser::parseContent(
                     }
                     //Check whether the content line is exactly the same as the
                     //boundary.
-                    if(boundary.size()==contentLines.at(i).size())
+                    if(boundary.size()<contentLines.at(i).size())
                     {
                         //Mission complete.
                         break;
@@ -231,6 +231,7 @@ KMMimePart *KMMimeMailParser::parseContent(
     {
         //Save the data to container.
         dataContainer.append(contentLines.at(i));
+        dataContainer.append('\n');
     }
     //Give the data container to the mime part.
     mimeContent->setContent(dataContainer);
@@ -309,7 +310,6 @@ bool KMMimeMailParser::getBriefContent(KMMimePart *mimePart,
 
 QDateTime KMMimeMailParser::getDate(const QString &dateTimeData)
 {
-    qDebug()<<dateTimeData<<dateTimeData.size();
     //Construct a date time class.
     QDateTime targetTime;
     //The format should be:
@@ -329,10 +329,6 @@ QDateTime KMMimeMailParser::getDate(const QString &dateTimeData)
                              monthList.indexOf(dateTimeData.mid(8, 3).toLower())
                              + 1,
                              dateTimeData.mid(5, 2).toInt()));
-    qDebug()<<QDate(dateTimeData.mid(12, 4).toInt(),
-                    monthList.indexOf(dateTimeData.mid(8, 3).toLower())
-                    + 1,
-                    dateTimeData.mid(5, 2).toInt());
     //Then, get the time data.
     targetTime.setTime(QTime(dateTimeData.mid(17, 2).toInt(),
                              dateTimeData.mid(20, 2).toInt(),

@@ -47,7 +47,8 @@ KMMailComponentTitleBar::KMMailComponentTitleBar(QWidget *parent) :
     m_fromArea(new KMMailComponentContactArea(this)),
     m_toArea(new KMMailComponentContactArea(this)),
     m_fromListWidget(new KMMailComponentContactList(this)),
-    m_toListWidget(new KMMailComponentContactList(this))
+    m_toListWidget(new KMMailComponentContactList(this)),
+    m_isTitleEmpty(true)
 {
     //Configrue the title label.
     m_titleLabel->setObjectName("MailComponentTitle");
@@ -167,8 +168,12 @@ void KMMailComponentTitleBar::setSenderList(const QStringList &senderList)
 
 void KMMailComponentTitleBar::setTitle(const QString &text)
 {
+    //Check the empty data.
+    m_isTitleEmpty=text.isEmpty();
     //Save the title label text.
-    m_titleLabel->setText(text);
+    m_titleLabel->setText(m_isTitleEmpty?
+                              m_noTitle:
+                              text);
     //Update the title height.
     updateHeight();
 }
@@ -190,6 +195,12 @@ void KMMailComponentTitleBar::retranslate()
     m_toLabel->setText(tr("To: "));
     //Update no title text.
     m_noTitle=tr("No Subject");
+    //Check the states.
+    if(m_isTitleEmpty)
+    {
+        //Update the title label.
+        m_titleLabel->setText(m_noTitle);
+    }
 }
 
 void KMMailComponentTitleBar::onThemeChanged()

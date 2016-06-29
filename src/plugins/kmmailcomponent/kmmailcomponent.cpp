@@ -156,6 +156,8 @@ void KMMailComponent::loadMail(const QString &filePath)
     //Get the receive date from the data.
     m_titleBar->setReceiveDate(
                 KMMimeMailParser::getDate(m_mimePart->mimeProperty("date")));
+    //Set the content data to the content.
+    m_content->setMimePart(m_mimePart);
 }
 
 void KMMailComponent::resizeEvent(QResizeEvent *event)

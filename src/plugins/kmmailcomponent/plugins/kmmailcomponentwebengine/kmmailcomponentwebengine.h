@@ -22,6 +22,7 @@
 #include "../../sdk/kmmailcomponentcontentbase.h"
 
 class QWebEngineView;
+class KMMimePart;
 /*!
  * \brief The KMMailComponentWebEngine class provides the mail browser using the
  * Qt WebEngine module.\n
@@ -53,6 +54,12 @@ public slots:
      */
     void reset() Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief setMimePart
+     * \param mimePart
+     */
+    void setMimePart(KMMimePart *mimePart) Q_DECL_OVERRIDE;
+
 protected:
     /*!
      * \brief Reimplemented from KMMailComponentContentBase::resizeEvent().
@@ -60,7 +67,11 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    inline void loadPlainText(KMMimePart *mimePart);
+    inline void loadHtml(KMMimePart *mimePart,
+                         const QString &prefix=QString());
     QWebEngineView *m_browser;
+    KMMimePart *m_mimePart;
 };
 
 #endif // KMMAILCOMPONENTWEBENGINE_H

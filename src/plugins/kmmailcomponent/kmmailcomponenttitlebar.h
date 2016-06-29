@@ -103,6 +103,7 @@ private:
     QLabel *m_titleLabel, *m_receiveLabel, *m_fromLabel, *m_toLabel;
     KMMailComponentContactArea *m_fromArea, *m_toArea;
     KMMailComponentContactList *m_fromListWidget, *m_toListWidget;
+    bool m_isTitleEmpty;
 };
 
 #endif // KMMAILCOMPONENTTITLEBAR_H

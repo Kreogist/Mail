@@ -22,6 +22,7 @@
 #include <QWidget>
 
 class KNSideShadowWidget;
+class KMMimePart;
 /*!
  * \brief The KMMailComponentContentBase class provides a widget to show the
  * content of the mail content.\n
@@ -45,6 +46,12 @@ public slots:
      * \brief reset
      */
     virtual void reset()=0;
+
+    /*!
+     * \brief setMimePart
+     * \param mimePart
+     */
+    virtual void setMimePart(KMMimePart *mimePart)=0;
 
 protected:
     /*!
