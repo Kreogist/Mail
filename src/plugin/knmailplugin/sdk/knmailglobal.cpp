@@ -15,6 +15,27 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#include "knmainwindowleftbarbase.h"
+#include "knmailglobal.h"
 
-KNMainWindowLeftBarBase::KNMainWindowLeftBarBase(QWidget *parent)
+KNMailGlobal *KNMailGlobal::m_instance=nullptr;
+
+KNMailGlobal *KNMailGlobal::instance()
+{
+    return m_instance;
+}
+
+void KNMailGlobal::initial(QObject *parent)
+{
+    //Check if the singleton instance variable is null. Set the pointer to this
+    //object if this is the first constructed object.
+    if(m_instance==nullptr)
+    {
+        m_instance=new KNMailGlobal(parent);
+    }
+}
+
+KNMailGlobal::KNMailGlobal(QObject *parent) :
+    QObject(parent)
+{
+
+}

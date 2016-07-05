@@ -1,0 +1,9 @@
+{
+    "Application" : {
+    },
+    "MainWindow" : {
+        "Parent" : "Application",
+        "Window" : "#000000",
+        "WindowText" : "#FFFFFF"
+    }
+}

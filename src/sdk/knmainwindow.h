@@ -20,6 +20,7 @@
 
 #include <QMainWindow>
 
+class QSplitter;
 /*!
  * \brief The KNMainWindow class provides the main window of the Mail
  * application. It will host for all the visible widget. It might be hide but it
@@ -35,9 +36,36 @@ public:
      */
     explicit KNMainWindow(QWidget *parent = 0);
 
+    /*!
+     * \brief Set the left bar widget, the main window will host the widget.\n
+     * This function must be called before the set content widget, this function
+     * must be called before the set main widget. Or else the main window will
+     * break down the the program via assert.\n
+     * The main window will take the ownership of the left bar.
+     * \param leftBar The left bar widget pointer.
+     */
+    void setLeftBar(QWidget *leftBar);
+
+    /*!
+     * \brief Set main widget to main window, main window will host the widget.
+     * \n
+     * This function must be called after set the left bar. Or else main window
+     * will break down the program via assert.\n
+     * Main window will take the ownership of the main widget.
+     * \param widget The widget pointer.
+     */
+    void setMainWidget(QWidget *widget);
+
 signals:
 
 public slots:
+
+private slots:
+    void onActionFullScreen();
+
+private:
+    QSplitter *m_container;
+    Qt::WindowStates m_originalWindowState;
 };
 
 #endif // KNMAINWINDOW_H

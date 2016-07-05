@@ -22,22 +22,38 @@
 
 /*!
  * \brief The KNMainWindowLeftBarBase class provides the basic port functions of
- * the left bar in the main window. It is the
+ * the left bar in the main window. It is an abstract class, to subclass a left
+ * bar widget, you have to implement this class and realize all the virtual
+ * functions.
  */
 class KNMainWindowLeftBarBase : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief KNMainWindowLeftBarBase
-     * \param parent
+     * \brief Construct a KNMainWindowLeftBarBase widget.
+     * \param parent The parent widget pointer.
      */
     KNMainWindowLeftBarBase(QWidget *parent = 0): QWidget(parent){}
 
+    /*!
+     * \brief Add a widget to left bar. There may be many widgets will be added
+     * to left bar, so the header widget should provide a layout or a stacked
+     * widget to store these widgets. You'd better to use a box layout.
+     * \param widget The widget pointer.
+     * \param stretch The widget stretch parameter. Default is 0.
+     * \param alignment The widget prefer alignment. Default is 0, which means
+     * use default alignment.
+     */
+    virtual void addLeftBarWidget(QWidget *widget,
+                                  int stretch = 0,
+                                  Qt::Alignment alignment = 0) = 0;
 
 signals:
 
 public slots:
+
+private:
 };
 
 #endif // KNMAINWINDOWLEFTBARBASE_H

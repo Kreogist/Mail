@@ -30,6 +30,8 @@
 
 #include "knglobal.h"
 
+KNGlobal *KNGlobal::m_instance=nullptr;
+
 KNGlobal *KNGlobal::instance()
 {
     //Return the instance pointer.
@@ -72,7 +74,9 @@ void KNGlobal::updateInfrastructure()
 }
 
 KNGlobal::KNGlobal(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_globalConfigure(nullptr),
+    m_mainWindow(nullptr)
 {
     //Initial the managers.
     //Gerenate the configure manager.
@@ -217,7 +221,7 @@ inline void KNGlobal::initialDefaultDirPath()
             KNUtil::simplifiedPath(m_dirPath[KreogistDir]+"/General");
 }
 
-KNMainWindow *KNGlobal::mainWindow() const
+KNMainWindow *KNGlobal::mainWindow()
 {
     return m_mainWindow;
 }

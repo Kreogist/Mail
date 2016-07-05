@@ -15,10 +15,85 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#include <QAction>
+#include <QSplitter>
+
+#include "knthememanager.h"
+
 #include "knmainwindow.h"
 
 KNMainWindow::KNMainWindow(QWidget *parent) :
-    QMainWindow(parent)
+    QMainWindow(parent),
+    m_container(new QSplitter(this)),
+    m_originalWindowState(Qt::WindowNoState)
 {
+    setObjectName("MainWindow");
+    //Set properties.
+    setAutoFillBackground(true);
+    setCentralWidget(m_container);
+    setContentsMargins(0,0,0,0);
+    setWindowIcon(QIcon("://icon/mu.png"));
+    //Mac OS X title hack.
+#ifdef Q_OS_MACX
+    setWindowTitle(qApp->applicationDisplayName());
+#endif
 
+    //Add main window to theme list.
+    knTheme->registerWidget(this);
+    //Add full screen short cut actions.
+#ifdef Q_OS_LINUX
+    QAction *fullScreen=new QAction(this);
+    fullScreen->setShortcut(QKeySequence(Qt::Key_F11));
+    fullScreen->setShortcutContext(Qt::WindowShortcut);
+    connect(fullScreen, &QAction::triggered,
+            this, &KNMainWindow::onActionFullScreen);
+    addAction(fullScreen);
+#else
+    QAction *fullScreen=new QAction(this);
+    fullScreen->setShortcut(QKeySequence(QKeySequence::FullScreen));
+    connect(fullScreen, &QAction::triggered,
+            this, &KNMainWindow::onActionFullScreen);
+    addAction(fullScreen);
+#endif
+}
+
+void KNMainWindow::setLeftBar(QWidget *leftBar)
+{
+    //Check the container is empty or not.
+    Q_ASSERT(m_container->count()==0);
+    //Add widget to main layout.
+    m_container->addWidget(leftBar);
+}
+
+void KNMainWindow::setMainWidget(QWidget *widget)
+{
+    //Check the container is empty or not.
+    Q_ASSERT(m_container->count()!=0);
+    //Add widget to main layout.
+    m_container->addWidget(widget);
+    //Update the strectch parameter.
+    m_container->setStretchFactor(1, 1);
+}
+
+void KNMainWindow::onActionFullScreen()
+{
+    //Check out the full screen state.
+    if(isFullScreen())
+    {
+        //Check the original window state.
+        if(m_originalWindowState==Qt::WindowFullScreen)
+        {
+            //Set it to be no state.
+            m_originalWindowState=Qt::WindowNoState;
+        }
+        //Set the window to normal state.
+        setWindowState(m_originalWindowState);
+    }
+    else
+    {
+        //Save the original window state.
+        m_originalWindowState=windowState();
+        //Full screen the window.
+        setWindowState(Qt::WindowFullScreen);
+    }
 }

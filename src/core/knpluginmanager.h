@@ -22,7 +22,7 @@
 
 class KNMainWindow;
 class KNMainWindowLeftBarBase;
-class KNMainWindowEmptyHintBase;
+class KNMailPluginBase;
 /*!
  * \brief The KNPluginManager class is a port-class manager. It will create and
  * load all the plugin classes with the specific port class. It will also be
@@ -72,7 +72,7 @@ public slots:
 private:
     inline void setApplicationInformation();
     void loadLeftBar(KNMainWindowLeftBarBase *leftBar);
-    void loadEmptyHint(KNMainWindowEmptyHintBase *emptyHint);
+    void loadMailPlugin(KNMailPluginBase *mailPlugin);
     KNMainWindow *m_mainWindow;
 };
 

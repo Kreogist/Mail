@@ -24,7 +24,14 @@
 #include "knmainwindow.h"
 
 //Ports
+#include "knmainwindowleftbarbase.h"
+#include "knmailpluginbase.h"
 
+//Plugins
+// Left Bar.
+#include "knmainwindowleftbar.h"
+// Mail Plugin.
+#include "plugin/knmailplugin/knmailplugin.h"
 
 #include "knpluginmanager.h"
 
@@ -48,12 +55,16 @@ void KNPluginManager::setMainWindow(KNMainWindow *mainWindow)
 void KNPluginManager::loadPlugins()
 {
     //Initial the main window infrasturctures.
-    ;
+    loadLeftBar(new KNMainWindowLeftBar);
+    loadMailPlugin(new KNMailPlugin);
 }
 
 void KNPluginManager::launchApplication()
 {
-    ;
+    //Get the main window pointer.
+    KNMainWindow *mainWindow=knGlobal->mainWindow();
+    //Show the main window.
+    mainWindow->show();
 }
 
 void KNPluginManager::onActionArgumentsAvaliable(QStringList arguments)
@@ -77,10 +88,14 @@ void KNPluginManager::loadLeftBar(KNMainWindowLeftBarBase *leftBar)
 {
     //Get the main window.
     KNMainWindow *mainWindow=knGlobal->mainWindow();
-    ;
+    //Set the left bar widget to main window.
+    mainWindow->setLeftBar(leftBar);
 }
 
-void KNPluginManager::loadEmptyHint(KNMainWindowEmptyHintBase *emptyHint)
+void KNPluginManager::loadMailPlugin(KNMailPluginBase *mailPlugin)
 {
-    ;
+    //Get the main window.
+    KNMainWindow *mainWindow=knGlobal->mainWindow();
+    //Set the main window widget to main window.
+    mainWindow->setMainWidget(mailPlugin);
 }

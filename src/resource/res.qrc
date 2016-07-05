@@ -1,1 +1,7 @@
-<RCC/>
+<RCC>
+    <qresource prefix="/">
+        <file>icon/mail.png</file>
+        <file>public/default_font.json</file>
+        <file>public/default_theme.json</file>
+    </qresource>
+</RCC>

@@ -1,4 +1,4 @@
-IDI_ICON1 ICON DISCARDABLE "mu.ico"
+IDI_ICON1 ICON DISCARDABLE "mail.ico"
 #include <winver.h>
 #include "../../sdk/knversion.h"
 
@@ -23,23 +23,23 @@ VS_VERSION_INFO VERSIONINFO
             BLOCK "040904B0"
             BEGIN
                 VALUE "CompanyName", "Kreogist Dev Team\0"
-                VALUE "FileDescription", "Kreogist mu\0"
+                VALUE "FileDescription", "Kreogist Mail\0"
                 VALUE "FileVersion", VER_FILEVERSION_STR
                 VALUE "LegalCopyright", "(C) Kreogist Dev Team. All rights reserved.\0"
-                VALUE "InternalName", "Nerve\0"
-                VALUE "OriginalFilename", "mu.exe\0"
-                VALUE "ProductName", "mu\0"
+                VALUE "InternalName", "Kotori\0"
+                VALUE "OriginalFilename", "mail.exe\0"
+                VALUE "ProductName", "mail\0"
                 VALUE "ProductVersion", VER_PRODUCTVERSION_STR
             END
             BLOCK "080404B0"
             BEGIN
                 VALUE "CompanyName", "Kreogist Dev Team\0"
-                VALUE "FileDescription", "Kreogist mu\0"
+                VALUE "FileDescription", "Kreogist Mail\0"
                 VALUE "FileVersion", VER_FILEVERSION_STR
                 VALUE "LegalCopyright", "(C) Kreogist Dev Team. 保留所有权利.\0"
-                VALUE "InternalName", "Nerve\0"
-                VALUE "OriginalFilename", "mu.exe\0"
-                VALUE "ProductName", "mu\0"
+                VALUE "InternalName", "Kotori\0"
+                VALUE "OriginalFilename", "mail.exe\0"
+                VALUE "ProductName", "mail\0"
                 VALUE "ProductVersion", VER_PRODUCTVERSION_STR
             END
         END

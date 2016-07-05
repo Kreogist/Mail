@@ -168,7 +168,9 @@ SOURCES += \
     sdk/knlocalemanager.cpp \
     sdk/knthememanager.cpp \
     sdk/knutil.cpp \
-    sdk/knmainwindowleftbarbase.cpp
+    core/knmainwindowleftbar.cpp \
+    plugin/knmailplugin/knmailplugin.cpp \
+    plugin/knmailplugin/sdk/knmailglobal.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -182,4 +184,9 @@ HEADERS += \
     sdk/knlocalemanager.h \
     sdk/knthememanager.h \
     sdk/knutil.h \
-    sdk/knmainwindowleftbarbase.h
+    sdk/knmainwindowleftbarbase.h \
+    core/knmainwindowleftbar.h \
+    sdk/knmailpluginbase.h \
+    plugin/knmailplugin/knmailplugin.h \
+    plugin/knmailplugin/sdk/knaccountpanelbase.h \
+    plugin/knmailplugin/sdk/knmailglobal.h
