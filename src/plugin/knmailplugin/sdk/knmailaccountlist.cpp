@@ -41,6 +41,7 @@ KNMailAccountList::KNMailAccountList(QWidget *parent) :
     //Set properties.
     setContentsMargins(0,0,0,0);
     setFrameStyle(QFrame::NoFrame);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setMinimumWidth(256);
     knTheme->registerWidget(this);
     //Configure the scroll bar.

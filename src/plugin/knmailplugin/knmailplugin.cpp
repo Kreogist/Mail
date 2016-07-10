@@ -51,11 +51,19 @@ void KNMailPlugin::loadPlugins()
     KNMailAccount *account=new KNMailAccount(this);
     account->setDisplayName("Mimami Kotori");
     account->setUsername("kotori@ll-anime.com");
+    account->setProvider("netease");
     knMailAccountManager->appendAccount(account);
 
     account=new KNMailAccount(this);
     account->setDisplayName("Sonoda Umi");
     account->setUsername("umi@ll-anime.com");
+    account->setProvider("google");
+    knMailAccountManager->appendAccount(account);
+
+    account=new KNMailAccount(this);
+    account->setDisplayName("Kosaka Honoka");
+    account->setUsername("honoka@ll-anime.com");
+    account->setProvider("netease");
     knMailAccountManager->appendAccount(account);
 }
 

@@ -52,6 +52,16 @@ void KNMailAccount::setReceiveConfig(const KNMailProtocolConfig &receiveConfig)
     m_receiveConfig = receiveConfig;
 }
 
+QString KNMailAccount::provider() const
+{
+    return m_provider;
+}
+
+void KNMailAccount::setProvider(const QString &provider)
+{
+    m_provider = provider;
+}
+
 QString KNMailAccount::password() const
 {
     return m_password;
@@ -65,6 +75,14 @@ QString KNMailAccount::displayString() const
 int KNMailAccount::folderCount()
 {
     return DefaultFolderCount + m_customFolders.size();
+}
+
+QString KNMailAccount::folderName(int folderIndex)
+{
+    return folderIndex<DefaultFolderCount?
+                m_defaultFolders[folderIndex]->folderName() :
+                m_customFolders.at(
+                    folderIndex-DefaultFolderCount)->folderName();
 }
 
 void KNMailAccount::setPassword(const QString &password)

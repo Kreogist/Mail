@@ -191,7 +191,9 @@ SOURCES += \
     sdk/account/knaccountavatarbutton.cpp \
     sdk/account/knaccountloginpanel.cpp \
     sdk/knunderlinelineedit.cpp \
-    sdk/account/knaccountwidgetbutton.cpp
+    plugin/knmailplugin/sdk/knmailaccountbutton.cpp \
+    sdk/knopacityanimebutton.cpp \
+    sdk/knopacitybutton.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -232,4 +234,6 @@ HEADERS += \
     sdk/account/knaccountloginpanel.h \
     sdk/account/knaccountpanel.h \
     sdk/knunderlinelineedit.h \
-    sdk/account/knaccountwidgetbutton.h
+    plugin/knmailplugin/sdk/knmailaccountbutton.h \
+    sdk/knopacityanimebutton.h \
+    sdk/knopacitybutton.h

@@ -4,9 +4,16 @@
         <file>public/default_font.json</file>
         <file>public/default_theme.json</file>
         <file>public/anonymous.png</file>
+        <file>public/down_arrow.png</file>
+        <file>public/left_arrow.png</file>
+        <file>public/right_arrow.png</file>
+        <file>public/top_arrow.png</file>
     </qresource>
     <qresource prefix="/plugin">
         <file>mail/providers/netease.png</file>
         <file>mail/providers/gmail.png</file>
+        <file>mail/account/account_expand.png</file>
+        <file>mail/account/account_config.png</file>
+        <file>mail/account/account_update.png</file>
     </qresource>
 </RCC>

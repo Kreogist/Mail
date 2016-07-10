@@ -87,9 +87,28 @@ public:
      */
     int folderCount();
 
+    /*!
+     * \brief Get name of the specific folder.
+     * \param folderIndex The folder index.
+     * \return The folder name.
+     */
+    QString folderName(int folderIndex);
+
+    /*!
+     * \brief Get the provider name.
+     * \return The service provider name, default is an empty string.
+     */
+    QString provider() const;
+
 signals:
 
 public slots:
+    /*!
+     * \brief Set the provider name.
+     * \param provider The E-mail account provider name.
+     */
+    void setProvider(const QString &provider);
+
     /*!
      * \brief Set the login username.
      * \param username The account login username.
@@ -126,7 +145,7 @@ private slots:
 private:
     QList<KNMailModel *> m_customFolders;
     KNMailProtocolConfig m_sendConfig, m_receiveConfig;
-    QString m_username, m_password, m_displayName;
+    QString m_username, m_password, m_displayName, m_provider;
     KNMailModel *m_defaultFolders[DefaultFolderCount];
 };
 

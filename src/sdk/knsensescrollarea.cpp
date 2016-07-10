@@ -25,6 +25,8 @@ KNSenseScrollArea::KNSenseScrollArea(QWidget *parent) :
     QScrollArea(parent),
     m_scrollBar(new QScrollBar(this))
 {
+    //Set properties.
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     //Configure the vertical scroll bar.
     m_scrollBar->setStyle(KNSaoStyle::instance());
     m_scrollBar->setFixedWidth(ScrollBarWidth);
@@ -83,6 +85,6 @@ void KNSenseScrollArea::resizeEvent(QResizeEvent *event)
     //Update the scroll bar height.
     m_scrollBar->setGeometry(width()-ScrollBarWidth,
                              0,
-                             height()-hScrollBarHeight,
-                             ScrollBarWidth);
+                             ScrollBarWidth,
+                             height()-hScrollBarHeight);
 }

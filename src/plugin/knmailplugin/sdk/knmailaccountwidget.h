@@ -22,10 +22,11 @@
 
 #define ItemHeight 24
 #define ItemSpacing 7
-#define ItemMargin 2
+#define ItemMargin 3
 
 class QTimeLine;
 class KNMailAccount;
+class KNMailAccountButton;
 /*!
  * \brief The KNMailAccountWidget class provides a view of mail account. It will
  * emit the model change signal for switching the model.\n
@@ -95,15 +96,30 @@ protected:
      */
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from QWidget::resizeEvent().
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
 private slots:
     void onActionResizePanel(int currentHeight);
 
 private:
+    enum MailAccountButtons
+    {
+        ButtonSync,
+        ButtonOption,
+        ButtonExpand,
+        MailAccountButtonCount
+    };
+    inline void updateExpandParameters();
+    inline void updateFoldParameters();
     inline void startHeightAnime(int targetHeight);
-    QPoint m_pressedPoint;
+    KNMailAccountButton *m_button[MailAccountButtonCount];
     QTimeLine *m_expandAnime;
     KNMailAccount *m_account;
-    bool m_expanded, m_drawContent;
+    int m_selectedIndex;
+    bool m_expanded, m_drawContent, m_isPressed;
 };
 
 #endif // KNMAILACCOUNTWIDGET_H
