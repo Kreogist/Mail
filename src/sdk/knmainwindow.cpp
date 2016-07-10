@@ -33,6 +33,8 @@ KNMainWindow::KNMainWindow(QWidget *parent) :
     setCentralWidget(m_container);
     setContentsMargins(0,0,0,0);
     setWindowIcon(QIcon("://icon/mu.png"));
+    //Configure the splitter.
+    m_container->setHandleWidth(0);
     //Mac OS X title hack.
 #ifdef Q_OS_MACX
     setWindowTitle(qApp->applicationDisplayName());

@@ -1,9 +1,43 @@
 {
     "Application" : {
+        "Highlight" : "#FFFFFF30"
     },
     "MainWindow" : {
         "Parent" : "Application",
         "Window" : "#000000",
         "WindowText" : "#FFFFFF"
+    },
+    "MainWindowLeftBar" : {
+        "Parent" : "MainWindow",
+        "Base" : "#171717",
+        "Window" : "#171717",
+        "Button" : "#505050"
+    },
+    "AccountPanel" : {
+        "Parent" : "MainWindowLeftBar"
+    },
+    "AccountPanelLineEdit" : {
+        "Parent" : "AccountPanel",
+        "Base" : "#00000000",
+        "Window" : "#A0A0A0",
+        "Text" : "#FFFFFF"
+    },
+    "MailAccountWidget" : {
+        "Parent" : "MainWindowLeftBar",
+        "Base" : "#303030",
+        "Window" : "#505050",
+        "Text" : "#FFFFFF"
+    },
+    "MailAccountList" : {
+        "Parent" : "MainWindowLeftBar"
+    },
+    "MailAccountScrollBar" : {
+        "Parent" : "MailAccountList",
+        "Base" : "#303030",
+        "Button" : "#FFFFFF"
+    },
+    "MailEmptyHint" : {
+        "Parent" : "MainWindow",
+        "Window" : "#101010"
     }
 }

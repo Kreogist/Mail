@@ -15,24 +15,39 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNACCOUNTPANELBASE_H
-#define KNACCOUNTPANELBASE_H
+#ifndef KNACCOUNTLOGINPANEL_H
+#define KNACCOUNTLOGINPANEL_H
 
-#include <QWidget>
+#include "knaccountpanel.h"
 
-class KNAccountPanelBase : public QWidget
+class KNAccountAvatarButton;
+class KNUnderLineLineEdit;
+/*!
+ * \brief The KNAccountLoginPanel class provides a interface for user to login
+ * the Kreogist Account. It will only used for calling the account class
+ * functions, itself won't contains and operations about the account information.
+ */
+class KNAccountLoginPanel : public KNAccountPanel
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNAccountPanelBase widget.
-     * \param parent The parent widget pointer.
+     * \brief Construct a KNAccountLoginPanel widget.
+     * \param parent The parent widget.
      */
-    KNAccountPanelBase(QWidget *parent = 0): QWidget(parent){}
+    explicit KNAccountLoginPanel(QWidget *parent = 0);
 
 signals:
 
 public slots:
+
+private slots:
+    void retranslate();
+    void onActionThemeChanged();
+
+private:
+    KNAccountAvatarButton *m_nullAvatar;
+    KNUnderLineLineEdit *m_username, *m_password;
 };
 
-#endif // KNACCOUNTPANELBASE_H
+#endif // KNACCOUNTLOGINPANEL_H

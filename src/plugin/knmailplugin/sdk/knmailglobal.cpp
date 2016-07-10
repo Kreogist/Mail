@@ -15,6 +15,11 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#include "knlocalemanager.h"
+
+#include "knmailaccount.h"
+#include "knmailaccountmanager.h"
+
 #include "knmailglobal.h"
 
 KNMailGlobal *KNMailGlobal::m_instance=nullptr;
@@ -34,8 +39,40 @@ void KNMailGlobal::initial(QObject *parent)
     }
 }
 
+QString KNMailGlobal::defaultFolderName(int index)
+{
+    Q_ASSERT(index>-1 && index<DefaultFolderCount);
+    //Give back the folder name.
+    return m_defaultFolderName[index];
+}
+
+QPixmap KNMailGlobal::providerIcon(const QString &providerName)
+{
+    return m_providerIcon.value(providerName);
+}
+
+void KNMailGlobal::retranslate()
+{
+    //Update the default folder name.
+    m_defaultFolderName[FolderInbox]=tr("Inbox");
+    m_defaultFolderName[FolderDrafts]=tr("Drafts");
+    m_defaultFolderName[FolderSentItems]=tr("Sent Items");
+    m_defaultFolderName[FolderTrash]=tr("Trash");
+}
+
 KNMailGlobal::KNMailGlobal(QObject *parent) :
     QObject(parent)
 {
+    //Initial the infrastructures.
+    KNMailAccountManager::initial(this);
 
+    //Initial the provider icons.
+    m_providerIcon.insert("netease",
+                          QPixmap(":/plugin/mail/providers/netease.png"));
+    m_providerIcon.insert("google",
+                          QPixmap(":/plugin/mail/providers/gmail.png"));
+
+    //Link retranslate.
+    knI18n->link(this, &KNMailGlobal::retranslate);
+    retranslate();
 }

@@ -149,7 +149,7 @@ i18n: {
 # Add sdk directory to include path.
 INCLUDEPATH += \
     sdk \
-    plugin/knmmailplugin/sdk/
+    plugin/knmailplugin/sdk
 
 DISTFILES +=
 
@@ -170,7 +170,28 @@ SOURCES += \
     sdk/knutil.cpp \
     core/knmainwindowleftbar.cpp \
     plugin/knmailplugin/knmailplugin.cpp \
-    plugin/knmailplugin/sdk/knmailglobal.cpp
+    plugin/knmailplugin/sdk/knmailglobal.cpp \
+    plugin/knmailplugin/sdk/knmailutil.cpp \
+    plugin/knmailplugin/sdk/knmailaccount.cpp \
+    plugin/knmailplugin/sdk/knmailmodel.cpp \
+    plugin/knmailplugin/sdk/knmailaccountmanager.cpp \
+    plugin/knmailplugin/sdk/knmailaccountlist.cpp \
+    sdk/knsensescrollarea.cpp \
+    sdk/sao/knmessageboxblock.cpp \
+    sdk/sao/knmessageboxcontent.cpp \
+    sdk/sao/knsaobutton.cpp \
+    sdk/sao/knsaostyle.cpp \
+    sdk/sao/knsaosubmenu.cpp \
+    plugin/knmailplugin/sdk/knmailaccountwidget.cpp \
+    sdk/account/knaccountwidget.cpp \
+    plugin/knmailplugin/sdk/knmailemptyhint.cpp \
+    sdk/knhwidgetswitcher.cpp \
+    sdk/knwidgetswitcher.cpp \
+    sdk/account/knaccountutil.cpp \
+    sdk/account/knaccountavatarbutton.cpp \
+    sdk/account/knaccountloginpanel.cpp \
+    sdk/knunderlinelineedit.cpp \
+    sdk/account/knaccountwidgetbutton.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -188,5 +209,27 @@ HEADERS += \
     core/knmainwindowleftbar.h \
     sdk/knmailpluginbase.h \
     plugin/knmailplugin/knmailplugin.h \
-    plugin/knmailplugin/sdk/knaccountpanelbase.h \
-    plugin/knmailplugin/sdk/knmailglobal.h
+    plugin/knmailplugin/sdk/knmailglobal.h \
+    sdk/knaccountpanelbase.h \
+    plugin/knmailplugin/sdk/knmailutil.h \
+    plugin/knmailplugin/sdk/knmailaccount.h \
+    plugin/knmailplugin/sdk/knmailmodel.h \
+    plugin/knmailplugin/sdk/knmailaccountmanager.h \
+    plugin/knmailplugin/sdk/knmailaccountlist.h \
+    sdk/knsensescrollarea.h \
+    sdk/sao/knmessageboxblock.h \
+    sdk/sao/knmessageboxcontent.h \
+    sdk/sao/knsaobutton.h \
+    sdk/sao/knsaostyle.h \
+    sdk/sao/knsaosubmenu.h \
+    plugin/knmailplugin/sdk/knmailaccountwidget.h \
+    sdk/account/knaccountwidget.h \
+    plugin/knmailplugin/sdk/knmailemptyhint.h \
+    sdk/knhwidgetswitcher.h \
+    sdk/knwidgetswitcher.h \
+    sdk/account/knaccountutil.h \
+    sdk/account/knaccountavatarbutton.h \
+    sdk/account/knaccountloginpanel.h \
+    sdk/account/knaccountpanel.h \
+    sdk/knunderlinelineedit.h \
+    sdk/account/knaccountwidgetbutton.h

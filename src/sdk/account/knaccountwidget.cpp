@@ -15,27 +15,18 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#include <QBoxLayout>
+#include "knaccountutil.h"
 
-#include "knmainwindowleftbar.h"
+//Panels.
+#include "knaccountloginpanel.h"
 
-KNMainWindowLeftBar::KNMainWindowLeftBar(QWidget *parent) :
-    KNMainWindowLeftBarBase(parent),
-    m_mainLayout(new QBoxLayout(QBoxLayout::TopToBottom, this))
+#include "knaccountwidget.h"
+
+KNAccountWidget::KNAccountWidget(QWidget *parent) :
+    KNHWidgetSwitcher(parent)
 {
-    setObjectName("MainWindowLeftBar");
     //Set properties.
-    setContentsMargins(0, 0, 0, 0);
-    //Configure the layout.
-    m_mainLayout->setContentsMargins(0, 0, 0, 0);
-    m_mainLayout->setSpacing(0);
-    setLayout(m_mainLayout);
-}
-
-void KNMainWindowLeftBar::addLeftBarWidget(QWidget *widget,
-                                           int stretch,
-                                           Qt::Alignment alignment)
-{
-    //Add widget directly to the layout widget.
-    m_mainLayout->addWidget(widget, stretch, alignment);
+    setFixedHeight(AccountPanelHeight);
+    //Add widgets.
+    addWidget(new KNAccountLoginPanel(this));
 }

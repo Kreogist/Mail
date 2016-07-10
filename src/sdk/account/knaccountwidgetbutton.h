@@ -15,44 +15,29 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILPLUGIN_H
-#define KNMAILPLUGIN_H
+#ifndef KNACCOUNTWIDGETBUTTON_H
+#define KNACCOUNTWIDGETBUTTON_H
 
-#include "knmailpluginbase.h"
+#include <QAbstractButton>
 
-class QStackedLayout;
-class KNMailAccountList;
 /*!
- * \brief The KNMailPlugin class is a default implementation of the mail plugin.
+ * \brief The KNAccountWidgetButton class provides the button for the account
+ * widget. It will not only provides the animation of the opacity changes, but
+ * also provides the rotate image.
  */
-class KNMailPlugin : public KNMailPluginBase
+class KNAccountWidgetButton : public QAbstractButton
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailPlugin widget.
+     * \brief Construct a KNAccountWidgetButton widget.
      * \param parent The parent widget.
      */
-    explicit KNMailPlugin(QWidget *parent = 0);
-
-    /*!
-     * \brief Reimplemented from KNMailPluginBase::accountPanel().
-     */
-    QWidget *accountPanel() Q_DECL_OVERRIDE;
-
-    /*!
-     * \brief Reimplemented from KNMailPluginBase::loadPlugins().
-     */
-    void loadPlugins() Q_DECL_OVERRIDE;
+    explicit KNAccountWidgetButton(QWidget *parent = 0);
 
 signals:
 
 public slots:
-
-private:
-    inline void initialInfrastructure();
-    KNMailAccountList *m_leftBarContainer;
-    QStackedLayout *m_mainLayout;
 };
 
-#endif // KNMAILPLUGIN_H
+#endif // KNACCOUNTWIDGETBUTTON_H

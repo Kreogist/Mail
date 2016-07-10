@@ -22,6 +22,7 @@
 #include "knversion.h"
 #include "knglobal.h"
 #include "knmainwindow.h"
+#include "account/knaccountwidget.h"
 
 //Ports
 #include "knmainwindowleftbarbase.h"
@@ -36,7 +37,9 @@
 #include "knpluginmanager.h"
 
 KNPluginManager::KNPluginManager(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_mainWindow(nullptr),
+    m_leftBar(nullptr)
 {
     //Set the application information.
     setApplicationInformation();
@@ -86,16 +89,26 @@ void KNPluginManager::setApplicationInformation()
 
 void KNPluginManager::loadLeftBar(KNMainWindowLeftBarBase *leftBar)
 {
+    Q_ASSERT(leftBar);
     //Get the main window.
     KNMainWindow *mainWindow=knGlobal->mainWindow();
+    //Save the pointer.
+    m_leftBar=leftBar;
+    //Add account widget.
+    m_leftBar->addLeftBarWidget(new KNAccountWidget(m_leftBar));
     //Set the left bar widget to main window.
-    mainWindow->setLeftBar(leftBar);
+    mainWindow->setLeftBar(m_leftBar);
 }
 
 void KNPluginManager::loadMailPlugin(KNMailPluginBase *mailPlugin)
 {
+    Q_ASSERT(mailPlugin);
     //Get the main window.
     KNMainWindow *mainWindow=knGlobal->mainWindow();
+    //Load the plugin.
+    mailPlugin->loadPlugins();
     //Set the main window widget to main window.
     mainWindow->setMainWidget(mailPlugin);
+    //Add the sidebar to left bar.
+    m_leftBar->addLeftBarWidget(mailPlugin->accountPanel(), 1);
 }

@@ -1,0 +1,109 @@
+/*
+ * Copyright (C) Kreogist Dev Team
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ */
+#ifndef KNMAILACCOUNTWIDGET_H
+#define KNMAILACCOUNTWIDGET_H
+
+#include <QWidget>
+
+#define ItemHeight 24
+#define ItemSpacing 7
+#define ItemMargin 2
+
+class QTimeLine;
+class KNMailAccount;
+/*!
+ * \brief The KNMailAccountWidget class provides a view of mail account. It will
+ * emit the model change signal for switching the model.\n
+ * When expanding an account widget, it will asking for switching the model into
+ * the inbox of the account. When folding an account widget, it will reset all
+ * the selection of the current managed account.
+ */
+class KNMailAccountWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    /*!
+     * \brief Construct a KNMailAccountWidget widget with given account.
+     * \param account The managed mail account.
+     * \param parent The parent widget.
+     */
+    explicit KNMailAccountWidget(KNMailAccount *account, QWidget *parent = 0);
+
+    /*!
+     * \brief Get the expanded height of the current account widget.
+     * \return The expanded height of the widget.
+     */
+    int expandedHeight();
+
+signals:
+    /*!
+     * \brief When the mail account expanded, this signal will be emitted.
+     * \param targetHeight The target height of the panel.
+     */
+    void panelExpanded(int targetHeight);
+
+    /*!
+     * \brief When the mail panel folded, this signal will be folded.
+     */
+    void panelFolded();
+
+public slots:
+    /*!
+     * \brief Set whether the panel is expanded.
+     * \param expand Expanded state.
+     */
+    void setExpand(bool expand);
+
+    /*!
+     * \brief Fold the account information panel.
+     */
+    void foldPanel();
+
+    /*!
+     * \brief Expand the account information panel.
+     */
+    void expandPanel();
+
+protected:
+    /*!
+     * \brief Reimplemented from QWidget::mousePressEvent().
+     */
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QWidget::mouseReleaseEvent().
+     */
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QWidget::paintEvent().
+     */
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+
+private slots:
+    void onActionResizePanel(int currentHeight);
+
+private:
+    inline void startHeightAnime(int targetHeight);
+    QPoint m_pressedPoint;
+    QTimeLine *m_expandAnime;
+    KNMailAccount *m_account;
+    bool m_expanded, m_drawContent;
+};
+
+#endif // KNMAILACCOUNTWIDGET_H

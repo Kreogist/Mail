@@ -3,5 +3,10 @@
         <file>icon/mail.png</file>
         <file>public/default_font.json</file>
         <file>public/default_theme.json</file>
+        <file>public/anonymous.png</file>
+    </qresource>
+    <qresource prefix="/plugin">
+        <file>mail/providers/netease.png</file>
+        <file>mail/providers/gmail.png</file>
     </qresource>
 </RCC>

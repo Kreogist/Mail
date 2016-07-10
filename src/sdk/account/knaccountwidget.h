@@ -15,44 +15,33 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILPLUGIN_H
-#define KNMAILPLUGIN_H
+#ifndef KNACCOUNTWIDGET_H
+#define KNACCOUNTWIDGET_H
 
-#include "knmailpluginbase.h"
+#include "knhwidgetswitcher.h"
 
-class QStackedLayout;
-class KNMailAccountList;
 /*!
- * \brief The KNMailPlugin class is a default implementation of the mail plugin.
+ * \brief The KNAccountWidget class provides a widget container for the Kreogist
+ * Account system for Kreogist Mail application. It should be used with the
+ * account object.\n
+ * It is a widget like plugin manager, it will control those panels according to
+ * the signals. It works like a finite state machine.
  */
-class KNMailPlugin : public KNMailPluginBase
+class KNAccountWidget : public KNHWidgetSwitcher
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailPlugin widget.
-     * \param parent The parent widget.
+     * \brief Construct a KNAccountWidget widget.
+     * \param parent The parent widget pointer.
      */
-    explicit KNMailPlugin(QWidget *parent = 0);
-
-    /*!
-     * \brief Reimplemented from KNMailPluginBase::accountPanel().
-     */
-    QWidget *accountPanel() Q_DECL_OVERRIDE;
-
-    /*!
-     * \brief Reimplemented from KNMailPluginBase::loadPlugins().
-     */
-    void loadPlugins() Q_DECL_OVERRIDE;
+    explicit KNAccountWidget(QWidget *parent = 0);
 
 signals:
 
 public slots:
 
-private:
-    inline void initialInfrastructure();
-    KNMailAccountList *m_leftBarContainer;
-    QStackedLayout *m_mainLayout;
+private slots:
 };
 
-#endif // KNMAILPLUGIN_H
+#endif // KNACCOUNTWIDGET_H

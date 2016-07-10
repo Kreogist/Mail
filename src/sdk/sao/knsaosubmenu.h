@@ -15,44 +15,51 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILPLUGIN_H
-#define KNMAILPLUGIN_H
 
-#include "knmailpluginbase.h"
+#ifndef KNSAOSUBMENU_H
+#define KNSAOSUBMENU_H
 
-class QStackedLayout;
-class KNMailAccountList;
+#include <QMenu>
+
+class QLabel;
+class QPropertyAnimation;
 /*!
- * \brief The KNMailPlugin class is a default implementation of the mail plugin.
+ * \brief The KNSaoSubMenu class provides a Sword Art Online style sub menu.
  */
-class KNMailPlugin : public KNMailPluginBase
+class KNSaoSubMenu : public QMenu
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailPlugin widget.
+     * \brief Construct a KNSaoSubMenu menu.
      * \param parent The parent widget.
      */
-    explicit KNMailPlugin(QWidget *parent = 0);
-
-    /*!
-     * \brief Reimplemented from KNMailPluginBase::accountPanel().
-     */
-    QWidget *accountPanel() Q_DECL_OVERRIDE;
-
-    /*!
-     * \brief Reimplemented from KNMailPluginBase::loadPlugins().
-     */
-    void loadPlugins() Q_DECL_OVERRIDE;
+    explicit KNSaoSubMenu(QWidget *parent = 0);
+    ~KNSaoSubMenu();
 
 signals:
 
 public slots:
 
+protected:
+    /*!
+     * \brief Reimplemented from QMenu::showEvent().
+     */
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QMenu::hideEvent().
+     */
+    void hideEvent(QHideEvent *event) Q_DECL_OVERRIDE;
+
 private:
-    inline void initialInfrastructure();
-    KNMailAccountList *m_leftBarContainer;
-    QStackedLayout *m_mainLayout;
+    inline void renderingIndicator();
+    QPixmap m_rawIndicator;
+#ifndef Q_OS_MACX
+    QPropertyAnimation *m_start;
+#endif
+    QWidget *m_indicator;
+    QLabel *m_indicatorLabel;
 };
 
-#endif // KNMAILPLUGIN_H
+#endif // KNSAOSUBMENU_H

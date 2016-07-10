@@ -15,44 +15,30 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILPLUGIN_H
-#define KNMAILPLUGIN_H
+#ifndef KNACCOUNTPANEL_H
+#define KNACCOUNTPANEL_H
 
-#include "knmailpluginbase.h"
+#include <QWidget>
 
-class QStackedLayout;
-class KNMailAccountList;
 /*!
- * \brief The KNMailPlugin class is a default implementation of the mail plugin.
+ * \brief The KNAccountPanel class provides a panel port for all the account
+ * panels. It will provides all the necessary signals and functions which might
+ * be used in a account panel widget. The account widget will managed use this
+ * port class.
  */
-class KNMailPlugin : public KNMailPluginBase
+class KNAccountPanel : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailPlugin widget.
-     * \param parent The parent widget.
+     * \brief Construct a KNAccountPanel widget with given parent widget.
+     * \param parent The parent widget pointer.
      */
-    explicit KNMailPlugin(QWidget *parent = 0);
-
-    /*!
-     * \brief Reimplemented from KNMailPluginBase::accountPanel().
-     */
-    QWidget *accountPanel() Q_DECL_OVERRIDE;
-
-    /*!
-     * \brief Reimplemented from KNMailPluginBase::loadPlugins().
-     */
-    void loadPlugins() Q_DECL_OVERRIDE;
+    explicit KNAccountPanel(QWidget *parent = 0): QWidget(parent){}
 
 signals:
 
 public slots:
-
-private:
-    inline void initialInfrastructure();
-    KNMailAccountList *m_leftBarContainer;
-    QStackedLayout *m_mainLayout;
 };
 
-#endif // KNMAILPLUGIN_H
+#endif // KNACCOUNTPANEL_H

@@ -74,6 +74,7 @@ private:
     void loadLeftBar(KNMainWindowLeftBarBase *leftBar);
     void loadMailPlugin(KNMailPluginBase *mailPlugin);
     KNMainWindow *m_mainWindow;
+    KNMainWindowLeftBarBase *m_leftBar;
 };
 
 #endif // KNPLUGINMANAGER_H

@@ -15,27 +15,36 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#include <QBoxLayout>
+#ifndef KNACCOUNTUTIL_H
+#define KNACCOUNTUTIL_H
 
-#include "knmainwindowleftbar.h"
-
-KNMainWindowLeftBar::KNMainWindowLeftBar(QWidget *parent) :
-    KNMainWindowLeftBarBase(parent),
-    m_mainLayout(new QBoxLayout(QBoxLayout::TopToBottom, this))
+namespace AccountUtil
 {
-    setObjectName("MainWindowLeftBar");
-    //Set properties.
-    setContentsMargins(0, 0, 0, 0);
-    //Configure the layout.
-    m_mainLayout->setContentsMargins(0, 0, 0, 0);
-    m_mainLayout->setSpacing(0);
-    setLayout(m_mainLayout);
+    enum AccountPanels
+    {
+        PanelLogin,
+        PanelWait,
+        PanelUserState,
+        AccountPanelCount
+    };
 }
 
-void KNMainWindowLeftBar::addLeftBarWidget(QWidget *widget,
-                                           int stretch,
-                                           Qt::Alignment alignment)
+#define AccountPanelHeight (80)
+#define AccountAvatarSize (48)
+
+/*!
+ * \brief The KNAccountUtil class provides the structures and enumerous used in
+ * the Kreogist Account system.
+ */
+class KNAccountUtil
 {
-    //Add widget directly to the layout widget.
-    m_mainLayout->addWidget(widget, stretch, alignment);
-}
+public:
+    ;
+
+private:
+    KNAccountUtil();
+    KNAccountUtil(const KNAccountUtil &);
+    KNAccountUtil(KNAccountUtil &&);
+};
+
+#endif // KNACCOUNTUTIL_H

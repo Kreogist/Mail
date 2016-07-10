@@ -42,6 +42,11 @@ public:
      */
     virtual QWidget *accountPanel()=0;
 
+    /*!
+     * \brief Load the plugins of the mail plugin.
+     */
+    virtual void loadPlugins() = 0;
+
 signals:
 
 public slots:
