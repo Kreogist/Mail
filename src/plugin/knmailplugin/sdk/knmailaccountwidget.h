@@ -23,8 +23,10 @@
 #define ItemHeight 24
 #define ItemSpacing 7
 #define ItemMargin 3
+#define ItemShadowHeight 10
 
 class QTimeLine;
+class KNMailModel;
 class KNMailAccount;
 class KNMailAccountButton;
 /*!
@@ -46,6 +48,18 @@ public:
     explicit KNMailAccountWidget(KNMailAccount *account, QWidget *parent = 0);
 
     /*!
+     * \brief Set the account global shadow gradient.
+     * \param shadowGradient The shadow gradient.
+     */
+    static void setShadowGradient(const QLinearGradient &shadowGradient);
+
+    /*!
+     * \brief Get the current model.
+     * \return The current model.
+     */
+    KNMailModel *currentModel();
+
+    /*!
      * \brief Get the expanded height of the current account widget.
      * \return The expanded height of the widget.
      */
@@ -63,6 +77,13 @@ signals:
      */
     void panelFolded();
 
+    /*!
+     * \brief When user click one folder, this signal will be emitted for
+     * requiring to show the folder.
+     * \param folder The folder model.
+     */
+    void requireShowFolder(KNMailModel *folder);
+
 public slots:
     /*!
      * \brief Set whether the panel is expanded.
@@ -79,6 +100,13 @@ public slots:
      * \brief Expand the account information panel.
      */
     void expandPanel();
+
+    /*!
+     * \brief Set the selected model index. To remove the selected folder, set
+     * the index to be -1.
+     * \param index The folder index.
+     */
+    void setCurrentIndex(int index);
 
 protected:
     /*!
@@ -115,7 +143,9 @@ private:
     inline void updateExpandParameters();
     inline void updateFoldParameters();
     inline void startHeightAnime(int targetHeight);
+    static QLinearGradient m_shadowGradient;
     KNMailAccountButton *m_button[MailAccountButtonCount];
+    qreal m_animeProgress;
     QTimeLine *m_expandAnime;
     KNMailAccount *m_account;
     int m_selectedIndex;

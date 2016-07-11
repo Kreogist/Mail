@@ -47,6 +47,14 @@ KNMailAccountList::KNMailAccountList(QWidget *parent) :
     //Configure the scroll bar.
     customScrollBar()->setObjectName("MailAccountScrollBar");
     knTheme->registerWidget(customScrollBar());
+
+    //Configure the account list gradient.
+    QLinearGradient shadowGradient(QPoint(0, ItemHeight),
+                                   QPoint(0, ItemHeight + ItemShadowHeight));
+    shadowGradient.setColorAt(0, QColor(0,0,0,80));
+    shadowGradient.setColorAt(1, QColor(0,0,0,0));
+    KNMailAccountWidget::setShadowGradient(shadowGradient);
+
     //Configure the container.
     m_container->setContentsMargins(ItemSpacing, 0, ItemSpacing, 0);
     setWidget(m_container);
@@ -58,7 +66,7 @@ KNMailAccountList::KNMailAccountList(QWidget *parent) :
     m_containerLayout->addStretch();
     //Configure the time line.
     m_expandAnime->setUpdateInterval(33);
-    m_expandAnime->setEasingCurve(QEasingCurve::OutCubic);
+    m_expandAnime->setEasingCurve(QEasingCurve::Linear);
     connect(m_expandAnime, &QTimeLine::frameChanged,
             this, &KNMailAccountList::onActionChangeHeight);
     //Get the latest account palette.
@@ -70,6 +78,25 @@ KNMailAccountList::KNMailAccountList(QWidget *parent) :
             this, &KNMailAccountList::onActionAccountAdded);
 }
 
+KNMailModel *KNMailAccountList::currentModel()
+{
+    //Check all the managed widget, there will be only one widget provides an
+    //"un-null" pointer.
+    for(auto i : m_accountList)
+    {
+        //Get the selected model.
+        KNMailModel *selectedModel=i->currentModel();
+        //Check the model.
+        if(selectedModel)
+        {
+            //Give back the un-null model.
+            return selectedModel;
+        }
+    }
+    //If all of them provides null, then we will return a null pointer.
+    return nullptr;
+}
+
 void KNMailAccountList::addAccountWidget(KNMailAccountWidget *accountWidget)
 {
     //Check the container index.
@@ -79,6 +106,8 @@ void KNMailAccountList::addAccountWidget(KNMailAccountWidget *accountWidget)
         accountWidget->setExpand(true);
         //Set the current index to the first account.
         m_currentIndex=0;
+        //Load the inbox model.
+        emit requireShowFolder(accountWidget->currentModel());
     }
     //Update the widget palette.
     accountWidget->setPalette(m_accountPalette);
@@ -94,6 +123,9 @@ void KNMailAccountList::addAccountWidget(KNMailAccountWidget *accountWidget)
     //Link the account widget expanded height.
     connect(accountWidget, &KNMailAccountWidget::panelExpanded,
             this, &KNMailAccountList::onActionPanelExpanded);
+    //Link the show request to the manager's request.
+    connect(accountWidget, &KNMailAccountWidget::requireShowFolder,
+            this, &KNMailAccountList::requireShowFolder);
 }
 
 void KNMailAccountList::resizeEvent(QResizeEvent *event)

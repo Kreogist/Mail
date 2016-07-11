@@ -15,14 +15,28 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#include "knthememanager.h"
+#ifndef KNMAILEMPTYHINT_H
+#define KNMAILEMPTYHINT_H
 
-#include "knmailemptyhint.h"
+#include "knmailemptyhintbase.h"
 
-KNMailEmptyHint::KNMailEmptyHint(QWidget *parent) :
-    QWidget(parent)
+/*!
+ * \brief The KNMailEmptyHint class is a basic widget which release the basic
+ * use of the empty hint.
+ */
+class KNMailEmptyHint : public KNMailEmptyHintBase
 {
-    setObjectName("MailEmptyHint");
-    //Set properties.
-    knTheme->registerWidget(this);
-}
+    Q_OBJECT
+public:
+    /*!
+     * \brief Construct a KNMailEmptyHint widget.
+     * \param parent The parent widget.
+     */
+    explicit KNMailEmptyHint(QWidget *parent = 0);
+
+signals:
+
+public slots:
+};
+
+#endif // KNMAILEMPTYHINT_H

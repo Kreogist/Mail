@@ -39,5 +39,15 @@
     "MailEmptyHint" : {
         "Parent" : "MainWindow",
         "Window" : "#101010"
+    },
+    "MailFolderViewer" : {
+        "Parent" : "MainWindow",
+        "Window" : "#252525"
+    },
+    "MailFolderViewerTitle" : {
+        "Parent" : "MailFolderViewer",
+        "Window" : "#000000",
+        "WindowText" : "#FFFFFF",
+        "Highlight" : "#FFFFFF20"
     }
 }

@@ -15,32 +15,37 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILEMPTYHINT_H
-#define KNMAILEMPTYHINT_H
+#ifndef KNMAILFOLDERVIEWER_H
+#define KNMAILFOLDERVIEWER_H
 
-#include <QWidget>
+#include "knmailfolderviewerbase.h"
 
-class QLabel;
+class KNMailFolderViewerTitle;
+class KNMailModel;
 /*!
- * \brief The KNMailEmptyHint class provides the empty hint when there's no
- * selected model or folder. This will be used for the first time installation
- * and no E-mail account managed.
+ * \brief The KNMailFolderViewer class is an official realized which used all
+ * SDKs to achieve the basic needs of a folder viewer.
  */
-class KNMailEmptyHint : public QWidget
+class KNMailFolderViewer : public KNMailFolderViewerBase
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailEmptyHint widget.
-     * \param parent The parent widget.
+     * \brief Construct a KNMailFolderViewer widget.
+     * \param parent The parent widget pointer.
      */
-    explicit KNMailEmptyHint(QWidget *parent = 0);
+    explicit KNMailFolderViewer(QWidget *parent = 0);
 
 signals:
 
 public slots:
+    /*!
+     * \brief Reimplemented from KNMailFolderViewerBase::setFolderModel().
+     */
+    void setFolderModel(KNMailModel *folderModel) Q_DECL_OVERRIDE;
 
 private:
+    KNMailFolderViewerTitle *m_title;
 };
 
-#endif // KNMAILEMPTYHINT_H
+#endif // KNMAILFOLDERVIEWER_H

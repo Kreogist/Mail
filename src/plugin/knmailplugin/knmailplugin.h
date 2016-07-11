@@ -22,6 +22,8 @@
 
 class QStackedLayout;
 class KNMailAccountList;
+class KNMailEmptyHintBase;
+class KNMailFolderViewerBase;
 /*!
  * \brief The KNMailPlugin class is a default implementation of the mail plugin.
  */
@@ -51,6 +53,8 @@ public slots:
 
 private:
     inline void initialInfrastructure();
+    void loadEmptyHint(KNMailEmptyHintBase *emptyHint);
+    void loadFolderViewer(KNMailFolderViewerBase *folderViewer);
     KNMailAccountList *m_leftBarContainer;
     QStackedLayout *m_mainLayout;
 };

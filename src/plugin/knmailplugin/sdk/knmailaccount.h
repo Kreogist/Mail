@@ -100,6 +100,13 @@ public:
      */
     QString provider() const;
 
+    /*!
+     * \brief Get the folder model.
+     * \param index The folder index.
+     * \return The folder model object pointer.
+     */
+    KNMailModel *folder(int index);
+
 signals:
 
 public slots:

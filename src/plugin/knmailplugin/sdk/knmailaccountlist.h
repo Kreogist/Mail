@@ -18,6 +18,8 @@
 #ifndef KNMAILACCOUNTLIST_H
 #define KNMAILACCOUNTLIST_H
 
+#include "knmailmodel.h"
+
 #include "knsensescrollarea.h"
 
 class QBoxLayout;
@@ -39,7 +41,19 @@ public:
      */
     explicit KNMailAccountList(QWidget *parent = 0);
 
+    /*!
+     * \brief Get the current model.
+     * \return The current model.
+     */
+    KNMailModel *currentModel();
+
 signals:
+    /*!
+     * \brief When user click one folder, this signal will be emitted for
+     * requiring to show the folder.
+     * \param folder The folder model.
+     */
+    void requireShowFolder(KNMailModel *folder);
 
 public slots:
 

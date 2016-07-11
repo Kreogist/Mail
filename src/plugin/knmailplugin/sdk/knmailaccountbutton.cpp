@@ -48,12 +48,12 @@ void KNMailAccountButton::paintEvent(QPaintEvent *event)
     painter.drawPixmap(0,0,width(),height(),icon().pixmap(size()));
 }
 
-int KNMailAccountButton::rotate() const
+qreal KNMailAccountButton::rotate() const
 {
     return m_rotate;
 }
 
-void KNMailAccountButton::setRotate(int rotate)
+void KNMailAccountButton::setRotate(const qreal &rotate)
 {
     //Save the rotateion.
     m_rotate = rotate;

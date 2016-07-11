@@ -184,7 +184,6 @@ SOURCES += \
     sdk/sao/knsaosubmenu.cpp \
     plugin/knmailplugin/sdk/knmailaccountwidget.cpp \
     sdk/account/knaccountwidget.cpp \
-    plugin/knmailplugin/sdk/knmailemptyhint.cpp \
     sdk/knhwidgetswitcher.cpp \
     sdk/knwidgetswitcher.cpp \
     sdk/account/knaccountutil.cpp \
@@ -193,7 +192,11 @@ SOURCES += \
     sdk/knunderlinelineedit.cpp \
     plugin/knmailplugin/sdk/knmailaccountbutton.cpp \
     sdk/knopacityanimebutton.cpp \
-    sdk/knopacitybutton.cpp
+    sdk/knopacitybutton.cpp \
+    sdk/knsideshadowwidget.cpp \
+    plugin/knmailplugin/plugin/knmailemptyhint/knmailemptyhint.cpp \
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewer.cpp \
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewertitle.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -226,7 +229,6 @@ HEADERS += \
     sdk/sao/knsaosubmenu.h \
     plugin/knmailplugin/sdk/knmailaccountwidget.h \
     sdk/account/knaccountwidget.h \
-    plugin/knmailplugin/sdk/knmailemptyhint.h \
     sdk/knhwidgetswitcher.h \
     sdk/knwidgetswitcher.h \
     sdk/account/knaccountutil.h \
@@ -236,4 +238,10 @@ HEADERS += \
     sdk/knunderlinelineedit.h \
     plugin/knmailplugin/sdk/knmailaccountbutton.h \
     sdk/knopacityanimebutton.h \
-    sdk/knopacitybutton.h
+    sdk/knopacitybutton.h \
+    sdk/knsideshadowwidget.h \
+    plugin/knmailplugin/sdk/knmailemptyhintbase.h \
+    plugin/knmailplugin/plugin/knmailemptyhint/knmailemptyhint.h \
+    plugin/knmailplugin/sdk/knmailfolderviewerbase.h \
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewer.h \
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewertitle.h

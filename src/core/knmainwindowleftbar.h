@@ -21,6 +21,7 @@
 #include "knmainwindowleftbarbase.h"
 
 class QBoxLayout;
+class KNSideShadowWidget;
 /*!
  * \brief The KNMainWindowLeftBar class is default realize of the main window
  * left bar.
@@ -46,7 +47,14 @@ signals:
 
 public slots:
 
+protected:
+    /*!
+     * \brief Reimplemented from KNMainWindowLeftBarBase::resizeEvent().
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
 private:
+    KNSideShadowWidget *m_rightShadow;
     QBoxLayout *m_mainLayout;
 };
 

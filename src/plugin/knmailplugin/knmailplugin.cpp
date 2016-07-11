@@ -23,11 +23,21 @@
 //Mail plugin sdks.
 #include "knmailglobal.h"
 #include "knmailaccountlist.h"
-#include "knmailemptyhint.h"
+
+//Ports.
+#include "knmailemptyhintbase.h"
+#include "knmailfolderviewerbase.h"
+
+//Plugins.
+// Empty hint.
+#include "plugin/knmailemptyhint/knmailemptyhint.h"
+// Folder viewer.
+#include "plugin/knmailfolderviewer/knmailfolderviewer.h"
 
 #include "knmailplugin.h"
 
 //Debug
+#include <QDebug>
 #include "knmailaccount.h"
 #include "knmailaccountmanager.h"
 
@@ -47,22 +57,29 @@ QWidget *KNMailPlugin::accountPanel()
 
 void KNMailPlugin::loadPlugins()
 {
-    //Debug
-    KNMailAccount *account=new KNMailAccount(this);
-    account->setDisplayName("Mimami Kotori");
-    account->setUsername("kotori@ll-anime.com");
-    account->setProvider("netease");
-    knMailAccountManager->appendAccount(account);
+    //Load all the plugins in order.
+    //Load the empty hint.
+    loadEmptyHint(new KNMailEmptyHint);
+    //Load the folder viewer.
+    loadFolderViewer(new KNMailFolderViewer);
 
-    account=new KNMailAccount(this);
-    account->setDisplayName("Sonoda Umi");
-    account->setUsername("umi@ll-anime.com");
+    //Debug
+    m_mainLayout->setCurrentIndex(1);
+    KNMailAccount *account=new KNMailAccount(this);
+    account->setDisplayName("Han Wang");
+    account->setUsername("abc@anu.edu.au");
     account->setProvider("google");
     knMailAccountManager->appendAccount(account);
 
     account=new KNMailAccount(this);
-    account->setDisplayName("Kosaka Honoka");
-    account->setUsername("honoka@ll-anime.com");
+    account->setDisplayName("Haolei Ye");
+    account->setUsername("abc@anu.edu.au");
+    account->setProvider("netease");
+    knMailAccountManager->appendAccount(account);
+
+    account=new KNMailAccount(this);
+    account->setDisplayName("JinShuai Ma");
+    account->setUsername("def@anu.edu.au");
     account->setProvider("netease");
     knMailAccountManager->appendAccount(account);
 }
@@ -77,6 +94,19 @@ inline void KNMailPlugin::initialInfrastructure()
     //Configure the layout.
     m_mainLayout->setContentsMargins(0,0,0,0);
     setLayout(m_mainLayout);
-    //Initial the empty hint widget.
-    m_mainLayout->addWidget(new KNMailEmptyHint(this));
+}
+
+void KNMailPlugin::loadEmptyHint(KNMailEmptyHintBase *emptyHint)
+{
+    //Add widget to the stacked layout.
+    m_mainLayout->addWidget(emptyHint);
+}
+
+void KNMailPlugin::loadFolderViewer(KNMailFolderViewerBase *folderViewer)
+{
+    //Add widget to the stacked layout.
+    m_mainLayout->addWidget(folderViewer);
+    //Connect with the mail account list.
+    connect(m_leftBarContainer, &KNMailAccountList::requireShowFolder,
+            folderViewer, &KNMailFolderViewerBase::setFolderModel);
 }

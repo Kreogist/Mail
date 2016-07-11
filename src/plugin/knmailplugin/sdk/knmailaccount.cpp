@@ -57,6 +57,14 @@ QString KNMailAccount::provider() const
     return m_provider;
 }
 
+KNMailModel *KNMailAccount::folder(int index)
+{
+    //Check the index.
+    return index<DefaultFolderCount?
+                m_defaultFolders[index]:
+                m_customFolders.at(index-DefaultFolderCount);
+}
+
 void KNMailAccount::setProvider(const QString &provider)
 {
     m_provider = provider;

@@ -17,10 +17,16 @@
  */
 #include <QBoxLayout>
 
+#include "knsideshadowwidget.h"
+
 #include "knmainwindowleftbar.h"
+
+#define SideShadowWidth 15
 
 KNMainWindowLeftBar::KNMainWindowLeftBar(QWidget *parent) :
     KNMainWindowLeftBarBase(parent),
+    m_rightShadow(new KNSideShadowWidget(KNSideShadowWidget::RightShadow,
+                                         this)),
     m_mainLayout(new QBoxLayout(QBoxLayout::TopToBottom, this))
 {
     setObjectName("MainWindowLeftBar");
@@ -30,6 +36,8 @@ KNMainWindowLeftBar::KNMainWindowLeftBar(QWidget *parent) :
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
     m_mainLayout->setSpacing(0);
     setLayout(m_mainLayout);
+    //Configure the shadow.
+    m_rightShadow->setDarkness(160);
 }
 
 void KNMainWindowLeftBar::addLeftBarWidget(QWidget *widget,
@@ -38,4 +46,17 @@ void KNMainWindowLeftBar::addLeftBarWidget(QWidget *widget,
 {
     //Add widget directly to the layout widget.
     m_mainLayout->addWidget(widget, stretch, alignment);
+    //Move up the shadow.
+    m_rightShadow->raise();
+}
+
+void KNMainWindowLeftBar::resizeEvent(QResizeEvent *event)
+{
+    //Update the widge size.
+    KNMainWindowLeftBarBase::resizeEvent(event);
+    //Update the side shadow widget.
+    m_rightShadow->setGeometry(width()-SideShadowWidth,
+                               0,
+                               SideShadowWidth,
+                               height());
 }

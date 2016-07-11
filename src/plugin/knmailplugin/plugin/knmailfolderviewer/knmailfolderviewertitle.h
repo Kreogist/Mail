@@ -15,49 +15,53 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILACCOUNTBUTTON_H
-#define KNMAILACCOUNTBUTTON_H
+#ifndef KNMAILFOLDERVIEWERTITLE_H
+#define KNMAILFOLDERVIEWERTITLE_H
 
-#include "knopacitybutton.h"
+#include <QWidget>
 
 /*!
- * \brief The KNMailAccountButton class provides the button widget of the mail
- * account title bar. It will provides the button function as the normal opacity
- * animation button, but also provide the rotate function.
+ * \brief The KNMailFolderViewerTitle class provides the title of the folder, it
+ * will display the folder name.
  */
-class KNMailAccountButton : public KNOpacityButton
+class KNMailFolderViewerTitle : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailAccountButton widget with given parent widget.
-     * \param parent The parent widget pointer.
+     * \brief Construct a KNMailFolderViewerTitle widget.
+     * \param parent The parent widget.
      */
-    explicit KNMailAccountButton(QWidget *parent = 0);
+    explicit KNMailFolderViewerTitle(QWidget *parent = 0);
 
     /*!
-     * \brief Get the current rotate of the button.
-     * \return The image rotate degree. Default is 0.
+     * \brief Get the title display folder name.
+     * \return The folder name. Default is empty string.
      */
-    qreal rotate() const;
+    QString folderName() const;
 
 signals:
 
 public slots:
     /*!
-     * \brief Set image rotate degree.
-     * \param rotate The image rotate degree.
+     * \brief Set the title folder name.
+     * \param folderName The folder name which will be displayed.
      */
-    void setRotate(const qreal &rotate);
+    void setFolderName(const QString &folderName);
+
+    /*!
+     * \brief Clear the title bar folder name text.
+     */
+    void clear();
 
 protected:
     /*!
-     * \brief Reimplemented from KNOpacityButton::paintEvent().
+     * \brief Reimplemented from QWidget::paintEvent().
      */
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    qreal m_rotate;
+    QString m_folderName;
 };
 
-#endif // KNMAILACCOUNTBUTTON_H
+#endif // KNMAILFOLDERVIEWERTITLE_H

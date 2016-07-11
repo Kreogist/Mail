@@ -33,9 +33,12 @@
 #define TextStart 24
 #define TextHeight 12
 
+QLinearGradient KNMailAccountWidget::m_shadowGradient=QLinearGradient();
+
 KNMailAccountWidget::KNMailAccountWidget(KNMailAccount *account,
                                          QWidget *parent) :
     QWidget(parent),
+    m_animeProgress(0.0),
     m_expandAnime(new QTimeLine(200, this)),
     m_account(account),
     m_selectedIndex(-1),
@@ -74,6 +77,25 @@ KNMailAccountWidget::KNMailAccountWidget(KNMailAccount *account,
             this, &KNMailAccountWidget::onActionResizePanel);
 }
 
+void KNMailAccountWidget::setShadowGradient(
+        const QLinearGradient &shadowGradient)
+{
+    //Save the gradient.
+    m_shadowGradient=shadowGradient;
+}
+
+KNMailModel *KNMailAccountWidget::currentModel()
+{
+    //Check the selected index.
+    if(m_selectedIndex==-1)
+    {
+        //It doesn't select any model.
+        return nullptr;
+    }
+    //Or else give back the model.
+    return m_account->folder(m_selectedIndex);
+}
+
 int KNMailAccountWidget::expandedHeight()
 {
     return (m_account->folderCount() + 1) * ItemHeight + ItemMargin;
@@ -101,18 +123,8 @@ void KNMailAccountWidget::mouseReleaseEvent(QMouseEvent *event)
             if(m_drawContent)
             {
                 //Check the click position, calculate the model index.
-                int clickedIndex=(event->pos().y()/ItemHeight)-1;
-                //Check the index is valid or not, then check the click position
-                //with the current index.
-                if(clickedIndex>-1 && clickedIndex!=m_selectedIndex)
-                {
-                    //Update the selected index.
-                    m_selectedIndex=clickedIndex;
-                    //Update the widget.
-                    update();
-                    //Emit the model switch signal.
-                    //!FIXME: Add codes here!
-                }
+                //Set current index to be clicked index.
+                setCurrentIndex((event->pos().y()/ItemHeight)-1);
             }
         }
         else
@@ -151,6 +163,8 @@ void KNMailAccountWidget::paintEvent(QPaintEvent *event)
     //Draw the content when it is on.
     if(m_drawContent)
     {
+        //Set the painter opacity.
+        painter.setOpacity(m_animeProgress);
         //Get the text pen and line pen.
         QPen textPen=palette().color(QPalette::Text),
                 linePen=palette().color(QPalette::Window);
@@ -166,10 +180,8 @@ void KNMailAccountWidget::paintEvent(QPaintEvent *event)
                 //Remove the pen.
                 painter.setPen(Qt::NoPen);
                 painter.setBrush(palette().color(QPalette::Highlight));
-                painter.setOpacity(0.5);
                 //Draw the selector.
                 painter.drawRect(QRect(0, currentY, width(), ItemHeight));
-                painter.setOpacity(1.0);
             }
             //Update the pen.
             painter.setPen(textPen);
@@ -194,12 +206,16 @@ void KNMailAccountWidget::paintEvent(QPaintEvent *event)
         }
         //Reset the pen and opacity.
         painter.setPen(Qt::NoPen);
+        painter.setOpacity(1.0);
     }
     //Draw the top button.
     painter.setBrush(pal.color(QPalette::Window));
     painter.drawRoundedRect(QRect(0, 0, width(), ItemHeight),
                             RoundedRadius,
                             RoundedRadius);
+    //Draw the shadow.
+    painter.fillRect(QRect(0, ItemHeight, width(), ItemShadowHeight),
+                     m_shadowGradient);
     //Draw the icon.
     painter.drawPixmap(IconSpacing, IconSpacing,
                        knMailGlobal->providerIcon(m_account->provider()));
@@ -230,20 +246,23 @@ void KNMailAccountWidget::resizeEvent(QResizeEvent *event)
 
 void KNMailAccountWidget::onActionResizePanel(int currentHeight)
 {
+    //Save the progress.
+    m_animeProgress=(qreal)(currentHeight-ItemHeight)
+                        / (qreal)(expandedHeight()-ItemHeight);
     //Update the rotation.
-    m_button[ButtonExpand]->setRotate(
-                (qreal)(currentHeight-ItemHeight) /
-                (qreal)(expandedHeight()-ItemHeight)*90.0);
+    m_button[ButtonExpand]->setRotate(m_animeProgress*90.0);
     //Resize the widget.
     setFixedHeight(currentHeight);
 }
 
 inline void KNMailAccountWidget::updateExpandParameters()
 {
+    //Enabled draw content.
+    m_drawContent=true;
     //Save the expanded state.
     m_expanded=true;
     //Update the selector data.
-    m_selectedIndex=0;
+    setCurrentIndex(0);
 }
 
 inline void KNMailAccountWidget::updateFoldParameters()
@@ -253,7 +272,7 @@ inline void KNMailAccountWidget::updateFoldParameters()
     //Save the expanded state.
     m_expanded=false;
     //Reset the selected models.
-    m_selectedIndex=-1;
+    setCurrentIndex(-1);
 }
 
 void KNMailAccountWidget::setExpand(bool expand)
@@ -263,8 +282,8 @@ void KNMailAccountWidget::setExpand(bool expand)
     {
         //Update expand parameters.
         updateExpandParameters();
-        //Set the draw content to true.
-        m_drawContent=true;
+        //Update the opacity.
+        m_animeProgress=1.0;
         //Update the button expand rotation.
         m_button[ButtonExpand]->setRotate(90);
         //Get the target height.
@@ -279,6 +298,8 @@ void KNMailAccountWidget::setExpand(bool expand)
     //Switch to fold state.
     //Update fold parameters.
     updateFoldParameters();
+    //Update the opacity.
+    m_animeProgress=0.0;
     //Update the button expand rotation.
     m_button[ButtonExpand]->setRotate(0);
     //Resize the widget.
@@ -289,6 +310,12 @@ void KNMailAccountWidget::setExpand(bool expand)
 
 void KNMailAccountWidget::foldPanel()
 {
+    //Check the expanded state.
+    if(!m_expanded)
+    {
+        //No need to expand again.
+        return;
+    }
     //Update fold parameters.
     updateFoldParameters();
     //Start the animation to the fold state.
@@ -309,21 +336,31 @@ void KNMailAccountWidget::expandPanel()
     updateExpandParameters();
     //Get the expanded height.
     int targetHeight=expandedHeight();
-    //Link to enable content.
-    connect(m_expandAnime, &QTimeLine::finished,
-            [=]
-            {
-                //Cut all the finish connection.
-                disconnect(m_expandAnime, &QTimeLine::finished, 0, 0);
-                //Enabled to draw the content.
-                m_drawContent=true;
-                //Update the widget.
-                update();
-            });
     //Start the animation to the expand state.
     startHeightAnime(targetHeight);
     //Emit the signal.
     emit panelExpanded(targetHeight);
+}
+
+void KNMailAccountWidget::setCurrentIndex(int index)
+{
+    //Check the index is valid or not, then check the click position
+    //with the current index.
+    if(index>-1 && index!=m_selectedIndex)
+    {
+        //Check the clicked index if larger than the last one.
+        if(index>=m_account->folderCount())
+        {
+            //Get the clicked index.
+            index=m_account->folderCount()-1;
+        }
+        //Update the selected index.
+        m_selectedIndex=index;
+        //Update the widget.
+        update();
+        //Emit the model switch signal.
+        emit requireShowFolder(m_account->folder(m_selectedIndex));
+    }
 }
 
 inline void KNMailAccountWidget::startHeightAnime(int targetHeight)
