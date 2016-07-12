@@ -196,7 +196,9 @@ SOURCES += \
     sdk/knsideshadowwidget.cpp \
     plugin/knmailplugin/plugin/knmailemptyhint/knmailemptyhint.cpp \
     plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewer.cpp \
-    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewertitle.cpp
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewertitle.cpp \
+    plugin/knmailplugin/sdk/knmailtreeviewbase.cpp \
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeview.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -244,4 +246,6 @@ HEADERS += \
     plugin/knmailplugin/plugin/knmailemptyhint/knmailemptyhint.h \
     plugin/knmailplugin/sdk/knmailfolderviewerbase.h \
     plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewer.h \
-    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewertitle.h
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewertitle.h \
+    plugin/knmailplugin/sdk/knmailtreeviewbase.h \
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeview.h

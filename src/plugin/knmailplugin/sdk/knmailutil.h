@@ -44,7 +44,9 @@ namespace MailUtil
     {
         //Meta data.
         QString sender;
+        QString senderName;
         QString receiver;
+        QString receiverName;
         QString title;
         QString breifContext;
         //File information.

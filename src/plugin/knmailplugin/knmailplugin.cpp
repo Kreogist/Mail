@@ -71,6 +71,19 @@ void KNMailPlugin::loadPlugins()
     account->setProvider("google");
     knMailAccountManager->appendAccount(account);
 
+    KNMailModel *inboxFolder=account->folder(FolderInbox);
+    KNMailListItem mailItem;
+    mailItem.title="Follow Charlie Miller, and Dino A. Dai Zovi on Twitter!";
+    mailItem.sender="info@twitter.com";
+    mailItem.senderName="Twitter";
+    mailItem.receiver="tomguts@126.com";
+    mailItem.receiverName="Harinlen";
+    mailItem.breifContext="Hey Harinlen Angela, Here are some prople we think you might like to follow.";
+    for(int i=0; i<20; ++i)
+    {
+        inboxFolder->appendRow(mailItem);
+    }
+
     account=new KNMailAccount(this);
     account->setDisplayName("Haolei Ye");
     account->setUsername("abc@anu.edu.au");

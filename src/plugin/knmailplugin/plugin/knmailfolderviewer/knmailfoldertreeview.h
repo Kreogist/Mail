@@ -15,39 +15,27 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILFOLDERVIEWER_H
-#define KNMAILFOLDERVIEWER_H
+#ifndef KNMAILFOLDERTREEVIEW_H
+#define KNMAILFOLDERTREEVIEW_H
 
-#include "knmailfolderviewerbase.h"
+#include "knmailtreeviewbase.h"
 
-class KNMailModel;
-class KNMailFolderViewerTitle;
-class KNMailFolderTreeView;
 /*!
- * \brief The KNMailFolderViewer class is an official realized which used all
- * SDKs to achieve the basic needs of a folder viewer.
+ * \brief The KNMailFolderTreeView class
  */
-class KNMailFolderViewer : public KNMailFolderViewerBase
+class KNMailFolderTreeView : public KNMailTreeViewBase
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailFolderViewer widget.
-     * \param parent The parent widget pointer.
+     * \brief KNMailFolderTreeView
+     * \param parent
      */
-    explicit KNMailFolderViewer(QWidget *parent = 0);
+    explicit KNMailFolderTreeView(QWidget *parent = 0);
 
 signals:
 
 public slots:
-    /*!
-     * \brief Reimplemented from KNMailFolderViewerBase::setFolderModel().
-     */
-    void setFolderModel(KNMailModel *folderModel) Q_DECL_OVERRIDE;
-
-private:
-    KNMailFolderViewerTitle *m_title;
-    KNMailFolderTreeView *m_folderView;
 };
 
-#endif // KNMAILFOLDERVIEWER_H
+#endif // KNMAILFOLDERTREEVIEW_H

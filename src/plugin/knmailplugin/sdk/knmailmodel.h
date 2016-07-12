@@ -65,6 +65,13 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
 
     /*!
+     * \brief Reimplemented from QAbstractTableModel::headerData().
+     */
+    QVariant headerData(int section,
+                        Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const;
+
+    /*!
      * \brief Append one item to the end of the model.
      * \param item The mail item.
      */

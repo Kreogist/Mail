@@ -21,6 +21,7 @@
 
 #include "knmailmodel.h"
 #include "knmailfolderviewertitle.h"
+#include "knmailfoldertreeview.h"
 
 #include "knmailfolderviewer.h"
 
@@ -28,13 +29,16 @@
 
 KNMailFolderViewer::KNMailFolderViewer(QWidget *parent) :
     KNMailFolderViewerBase(parent),
-    m_title(new KNMailFolderViewerTitle(this))
+    m_title(new KNMailFolderViewerTitle(this)),
+    m_folderView(new KNMailFolderTreeView(this))
 {
     setObjectName("MailFolderViewer");
     //Set properties.
     setAutoFillBackground(true);
     //Register to the theme manager.
     knTheme->registerWidget(this);
+    //Configure the folder view.
+    m_folderView->setObjectName("");
 
     //Initial the layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -43,7 +47,7 @@ KNMailFolderViewer::KNMailFolderViewer(QWidget *parent) :
     setLayout(mainLayout);
     //Add widget to main layout.
     mainLayout->addWidget(m_title);
-    mainLayout->addStretch();
+    mainLayout->addWidget(m_folderView, 1);
 }
 
 void KNMailFolderViewer::setFolderModel(KNMailModel *folderModel)
@@ -57,4 +61,5 @@ void KNMailFolderViewer::setFolderModel(KNMailModel *folderModel)
     }
     //Set the folder model title.
     m_title->setFolderName(folderModel->folderName());
+    m_folderView->setModel(folderModel);
 }

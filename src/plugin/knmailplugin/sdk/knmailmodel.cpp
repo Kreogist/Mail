@@ -69,11 +69,39 @@ QVariant KNMailModel::data(const QModelIndex &index, int role) const
         case ColumnFlag:
             return false;
         case ColumnSender:
-            return item.sender;
+            return item.senderName.isEmpty()?
+                        item.sender:
+                        item.senderName;
         case ColumnReceiveDate:
             return QString();
         }
 
+    default:
+        return QVariant();
+    }
+}
+
+QVariant KNMailModel::headerData(int section,
+                                 Qt::Orientation orientation,
+                                 int role) const
+{
+    //Check the orientation.
+    if(orientation==Qt::Vertical)
+    {
+        //No useful vertical header data.
+        return QVariant();
+    }
+    //Check the role and section.
+    switch(role)
+    {
+    case Qt::DisplayRole:
+    case Qt::EditRole:
+        //Check the column:
+        switch(section)
+        {
+        case ColumnTitle:
+            return QString();
+        }
     default:
         return QVariant();
     }
