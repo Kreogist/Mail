@@ -23,6 +23,7 @@
 class KNMailModel;
 class KNMailFolderViewerTitle;
 class KNMailFolderTreeView;
+class KNMailViewerBase;
 /*!
  * \brief The KNMailFolderViewer class is an official realized which used all
  * SDKs to achieve the basic needs of a folder viewer.
@@ -45,9 +46,23 @@ public slots:
      */
     void setFolderModel(KNMailModel *folderModel) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMailFolderViewerBase::setViewer().
+     */
+    void setViewer(KNMailViewerBase *viewer) Q_DECL_OVERRIDE;
+
+protected:
+    /*!
+     * \brief Reimplemented from KNMailFolderViewerBase::resizeEvent().
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
 private:
+    inline void updateViewerPos();
     KNMailFolderViewerTitle *m_title;
     KNMailFolderTreeView *m_folderView;
+    QWidget *m_shadowLayer;
+    KNMailViewerBase *m_viewer;
 };
 
 #endif // KNMAILFOLDERVIEWER_H

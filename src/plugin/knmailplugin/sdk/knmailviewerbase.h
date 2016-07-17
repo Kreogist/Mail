@@ -15,49 +15,29 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILTREEVIEWBASE_H
-#define KNMAILTREEVIEWBASE_H
+#ifndef KNMAILVIEWERBASE_H
+#define KNMAILVIEWERBASE_H
 
-#include <QTreeView>
+#include <QWidget>
 
-class QTimeLine;
 /*!
- * \brief The KNMailTreeViewBase class provides the tree view of the mail model.
+ * \brief The KNMailViewerBase class provides the basic ports and functions
+ * which a mail viewer should be provided. This port widget should be generate
+ * by a factor of the viewer for multiple viewers.
  */
-class KNMailTreeViewBase : public QTreeView
+class KNMailViewerBase : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailTreeViewBase widget.
+     * \brief Construct a KNMailViewerBase widget.
      * \param parent The parent widget.
      */
-    explicit KNMailTreeViewBase(QWidget *parent = 0);
-
+    KNMailViewerBase(QWidget *parent = 0) : QWidget(parent){}
 
 signals:
 
 public slots:
-
-protected:
-    /*!
-     * \brief Reimplemented from QTreeView::resizeEvent().
-     */
-    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-
-    /*!
-     * \brief Get the custom vertical scroll bar widget.
-     * \return The scroll bar widget.
-     */
-    QScrollBar *customScrollBar();
-
-private slots:
-    void onActionRangeChanged(int min, int max);
-    void onActionValueChanged(int value);
-
-private:
-    inline void updateScrollBarGeometry();
-    QScrollBar *m_scrollBar;
 };
 
-#endif // KNMAILTREEVIEWBASE_H
+#endif // KNMAILVIEWERBASE_H

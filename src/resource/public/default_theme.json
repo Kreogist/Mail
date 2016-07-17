@@ -33,7 +33,7 @@
     },
     "MailAccountScrollBar" : {
         "Parent" : "MailAccountList",
-        "Base" : "#303030",
+        "Base" : "#FFFFFF",
         "Button" : "#FFFFFF"
     },
     "MailEmptyHint" : {
@@ -49,5 +49,23 @@
         "Window" : "#000000",
         "WindowText" : "#FFFFFF",
         "Highlight" : "#FFFFFF20"
+    },
+    "MailFolderTreeView" : {
+        "Parent" : "MailFolderViewer",
+        "Base" : "#00000000",
+        "Text" : "#FFFFFF",
+        "Button" : "#FFFFFF",
+        "Highlight" : "#505050",
+        "HighlightedText" : "#F7F7F7"
+    },
+    "MailTreeViewScrollBar" : {
+        "Parent" : "MailFolderViewer",
+        "Base" : "#FFFFFF",
+        "Button" : "#FFFFFF"
+    },
+    "MailViewer" : {
+        "Parent" : "MainWindow",
+        "Window" : "#FFFFFF",
+        "WindowText" : "#000000"
     }
 }

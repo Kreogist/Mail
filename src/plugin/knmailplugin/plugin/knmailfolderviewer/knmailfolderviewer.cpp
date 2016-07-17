@@ -16,6 +16,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QBoxLayout>
+#include <QTimeLine>
 
 #include "knthememanager.h"
 
@@ -30,7 +31,9 @@
 KNMailFolderViewer::KNMailFolderViewer(QWidget *parent) :
     KNMailFolderViewerBase(parent),
     m_title(new KNMailFolderViewerTitle(this)),
-    m_folderView(new KNMailFolderTreeView(this))
+    m_folderView(new KNMailFolderTreeView(this)),
+    m_shadowLayer(new QWidget(this)),
+    m_viewer(nullptr)
 {
     setObjectName("MailFolderViewer");
     //Set properties.
@@ -39,6 +42,9 @@ KNMailFolderViewer::KNMailFolderViewer(QWidget *parent) :
     knTheme->registerWidget(this);
     //Configure the folder view.
     m_folderView->setObjectName("");
+    //Configure the shadow layer.
+    m_shadowLayer->hide();
+    m_shadowLayer->setAutoFillBackground(true);
 
     //Initial the layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -62,4 +68,22 @@ void KNMailFolderViewer::setFolderModel(KNMailModel *folderModel)
     //Set the folder model title.
     m_title->setFolderName(folderModel->folderName());
     m_folderView->setModel(folderModel);
+}
+
+void KNMailFolderViewer::setViewer(KNMailViewerBase *viewer)
+{
+    //Save the viewer base pointer.
+    m_viewer=viewer;
+    //Check the viewer pointer.
+    if(!m_viewer)
+    {
+        //Ignore the viewer.
+        return;
+    }
+}
+
+inline void KNMailFolderViewer::updateViewerPos()
+{
+    //Update the viewer size.
+    ;
 }

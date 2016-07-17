@@ -41,7 +41,7 @@ KNMailAccountWidget::KNMailAccountWidget(KNMailAccount *account,
     m_animeProgress(0.0),
     m_expandAnime(new QTimeLine(200, this)),
     m_account(account),
-    m_selectedIndex(-1),
+    m_currentIndex(-1),
     m_expanded(false),
     m_drawContent(false),
     m_isPressed(false)
@@ -87,13 +87,13 @@ void KNMailAccountWidget::setShadowGradient(
 KNMailModel *KNMailAccountWidget::currentModel()
 {
     //Check the selected index.
-    if(m_selectedIndex==-1)
+    if(m_currentIndex==-1)
     {
         //It doesn't select any model.
         return nullptr;
     }
     //Or else give back the model.
-    return m_account->folder(m_selectedIndex);
+    return m_account->folder(m_currentIndex);
 }
 
 int KNMailAccountWidget::expandedHeight()
@@ -175,7 +175,7 @@ void KNMailAccountWidget::paintEvent(QPaintEvent *event)
             ++i)
         {
             //Check the folder index.
-            if(m_selectedIndex==i)
+            if(m_currentIndex==i)
             {
                 //Remove the pen.
                 painter.setPen(Qt::NoPen);
@@ -272,7 +272,7 @@ inline void KNMailAccountWidget::updateFoldParameters()
     //Save the expanded state.
     m_expanded=false;
     //Reset the selected models.
-    setCurrentIndex(-1);
+    m_currentIndex=-1;
 }
 
 void KNMailAccountWidget::setExpand(bool expand)
@@ -346,7 +346,7 @@ void KNMailAccountWidget::setCurrentIndex(int index)
 {
     //Check the index is valid or not, then check the click position
     //with the current index.
-    if(index>-1 && index!=m_selectedIndex)
+    if(index>-1 && index!=m_currentIndex)
     {
         //Check the clicked index if larger than the last one.
         if(index>=m_account->folderCount())
@@ -355,11 +355,11 @@ void KNMailAccountWidget::setCurrentIndex(int index)
             index=m_account->folderCount()-1;
         }
         //Update the selected index.
-        m_selectedIndex=index;
+        m_currentIndex=index;
         //Update the widget.
         update();
         //Emit the model switch signal.
-        emit requireShowFolder(m_account->folder(m_selectedIndex));
+        emit requireShowFolder(m_account->folder(m_currentIndex));
     }
 }
 

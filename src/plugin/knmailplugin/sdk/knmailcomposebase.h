@@ -15,49 +15,28 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILTREEVIEWBASE_H
-#define KNMAILTREEVIEWBASE_H
+#ifndef KNMAILCOMPOSEBASE_H
+#define KNMAILCOMPOSEBASE_H
 
-#include <QTreeView>
+#include <QWidget>
 
-class QTimeLine;
 /*!
- * \brief The KNMailTreeViewBase class provides the tree view of the mail model.
+ * \brief The KNMailComposeBase class provides the basic information about the
+ * compose widget window. This widget will be used for composing the
  */
-class KNMailTreeViewBase : public QTreeView
+class KNMailComposeBase : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailTreeViewBase widget.
+     * \brief Construct a KNMailComposeBase widget.
      * \param parent The parent widget.
      */
-    explicit KNMailTreeViewBase(QWidget *parent = 0);
-
+    KNMailComposeBase(QWidget *parent = 0) : QWidget(parent){}
 
 signals:
 
 public slots:
-
-protected:
-    /*!
-     * \brief Reimplemented from QTreeView::resizeEvent().
-     */
-    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-
-    /*!
-     * \brief Get the custom vertical scroll bar widget.
-     * \return The scroll bar widget.
-     */
-    QScrollBar *customScrollBar();
-
-private slots:
-    void onActionRangeChanged(int min, int max);
-    void onActionValueChanged(int value);
-
-private:
-    inline void updateScrollBarGeometry();
-    QScrollBar *m_scrollBar;
 };
 
-#endif // KNMAILTREEVIEWBASE_H
+#endif // KNMAILCOMPOSEBASE_H

@@ -21,6 +21,7 @@
 #include <QWidget>
 
 class KNMailModel;
+class KNMailViewerBase;
 /*!
  * \brief The KNMailFolderViewerBase class provides the ports, signals and slots
  * which will be used in a folder viewer widget. To realize a new folder viewer,
@@ -46,6 +47,12 @@ public slots:
      * \param folderModel The folder model.
      */
     virtual void setFolderModel(KNMailModel *folderModel)=0;
+
+    /*!
+     * \brief Set the signel mail viewer.
+     * \param viewer The mail viewer widget.
+     */
+    virtual void setViewer(KNMailViewerBase *viewer)=0;
 };
 
 #endif // KNMAILFOLDERVIEWERBASE_H

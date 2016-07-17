@@ -69,17 +69,29 @@ protected:
      */
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNSenseScrollArea::enterEvent().
+     */
+    void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from KNSenseScrollArea::leaveEvent().
+     */
+    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+
 private slots:
     void onActionThemeChanged();
     void onActionAccountAdded(int accountIndex);
     void onActionPanelExpanded(int panelHeight);
     void onActionChangeHeight(int containerHeight);
+    void onActionMouseInOut(int opacity);
 
 private:
     inline void startAnime(int targetHeight);
+    inline void startScrollAnime(int targetAlpha);
     QList<KNMailAccountWidget *> m_accountList;
     QPalette m_accountPalette;
-    QTimeLine *m_expandAnime;
+    QTimeLine *m_expandAnime, *m_mouseAnime;
     QWidget *m_container;
     QBoxLayout *m_containerLayout;
     int m_containerHeight, m_currentIndex;

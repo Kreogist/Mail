@@ -148,7 +148,7 @@ private:
     qreal m_animeProgress;
     QTimeLine *m_expandAnime;
     KNMailAccount *m_account;
-    int m_selectedIndex;
+    int m_currentIndex;
     bool m_expanded, m_drawContent, m_isPressed;
 };
 

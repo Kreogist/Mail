@@ -66,7 +66,15 @@ void KNSenseScrollArea::onActionValueChanged(int value)
 
 inline void KNSenseScrollArea::updateScrollBarGeometry()
 {
-    ;
+    //Update the scroll bar, check the horizontal scroll bar is visible or not.
+    int hScrollBarHeight=
+            (horizontalScrollBar()!=nullptr &&
+            horizontalScrollBar()->isVisible()) ? ScrollBarWidth : 0;
+    //Update the scroll bar geometry.
+    m_scrollBar->setGeometry(width()-ScrollBarWidth,
+                             0,
+                             ScrollBarWidth,
+                             height()-hScrollBarHeight);
 }
 
 QScrollBar *KNSenseScrollArea::customScrollBar()
@@ -78,13 +86,6 @@ void KNSenseScrollArea::resizeEvent(QResizeEvent *event)
 {
     //Update the widget size.
     QScrollArea::resizeEvent(event);
-    //Update the scroll bar, check the horizontal scroll bar is visible or not.
-    int hScrollBarHeight=
-            (horizontalScrollBar()!=nullptr &&
-            horizontalScrollBar()->isVisible()) ? ScrollBarWidth : 0;
     //Update the scroll bar height.
-    m_scrollBar->setGeometry(width()-ScrollBarWidth,
-                             0,
-                             ScrollBarWidth,
-                             height()-hScrollBarHeight);
+    updateScrollBarGeometry();
 }

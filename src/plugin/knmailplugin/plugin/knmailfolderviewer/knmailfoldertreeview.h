@@ -21,21 +21,41 @@
 #include "knmailtreeviewbase.h"
 
 /*!
- * \brief The KNMailFolderTreeView class
+ * \brief The KNMailFolderTreeView class provides the folder tree view for the
+ * folder. The tree view could be used to show the tree view of a mail model.
  */
 class KNMailFolderTreeView : public KNMailTreeViewBase
 {
     Q_OBJECT
 public:
     /*!
-     * \brief KNMailFolderTreeView
-     * \param parent
+     * \brief Construct a KNMailFolderTreeView widget.
+     * \param parent The parent widget pointer.
      */
     explicit KNMailFolderTreeView(QWidget *parent = 0);
 
 signals:
 
 public slots:
+
+protected:
+    /*!
+     * \brief Reimplemented from KNMailTreeViewBase::enterEvent().
+     */
+    void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from KNMailTreeViewBase::leaveEvent().
+     */
+    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
+
+private slots:
+    void onActionThemeChange();
+    void onActionMouseInOut(int opacity);
+
+private:
+    inline void startScrollAnime(int targetAlpha);
+    QTimeLine *m_mouseAnime;
 };
 
 #endif // KNMAILFOLDERTREEVIEW_H

@@ -28,9 +28,13 @@
 
 #include <QDebug>
 
+#define ScrollBarShow 150
+#define ScrollBarHide 0
+
 KNMailAccountList::KNMailAccountList(QWidget *parent) :
     KNSenseScrollArea(parent),
     m_expandAnime(new QTimeLine(200, this)),
+    m_mouseAnime(new QTimeLine(200, this)),
     m_container(new QWidget(this)),
     m_containerLayout(new QBoxLayout(QBoxLayout::TopToBottom,
                                      m_container)),
@@ -46,7 +50,7 @@ KNMailAccountList::KNMailAccountList(QWidget *parent) :
     knTheme->registerWidget(this);
     //Configure the scroll bar.
     customScrollBar()->setObjectName("MailAccountScrollBar");
-    knTheme->registerWidget(customScrollBar());
+    onActionMouseInOut(0);
 
     //Configure the account list gradient.
     QLinearGradient shadowGradient(QPoint(0, ItemHeight),
@@ -64,11 +68,16 @@ KNMailAccountList::KNMailAccountList(QWidget *parent) :
     m_container->setLayout(m_containerLayout);
     //Add ended stretch.
     m_containerLayout->addStretch();
-    //Configure the time line.
+    //Configure the expand time line.
     m_expandAnime->setUpdateInterval(33);
     m_expandAnime->setEasingCurve(QEasingCurve::Linear);
     connect(m_expandAnime, &QTimeLine::frameChanged,
             this, &KNMailAccountList::onActionChangeHeight);
+    //Configure the mouse time line.
+    m_mouseAnime->setUpdateInterval(33);
+    m_mouseAnime->setEasingCurve(QEasingCurve::OutCubic);
+    connect(m_mouseAnime, &QTimeLine::frameChanged,
+            this, &KNMailAccountList::onActionMouseInOut);
     //Get the latest account palette.
     connect(knTheme, &KNThemeManager::themeChange,
             this, &KNMailAccountList::onActionThemeChanged);
@@ -136,6 +145,22 @@ void KNMailAccountList::resizeEvent(QResizeEvent *event)
     m_container->setFixedWidth(width());
 }
 
+void KNMailAccountList::enterEvent(QEvent *event)
+{
+    //Do original event.
+    KNSenseScrollArea::enterEvent(event);
+    //Start the scroll bar anime.
+    startScrollAnime(ScrollBarShow);
+}
+
+void KNMailAccountList::leaveEvent(QEvent *event)
+{
+    //Do original event.
+    KNSenseScrollArea::leaveEvent(event);
+    //Start the scroll bar anime.
+    startScrollAnime(ScrollBarHide);
+}
+
 void KNMailAccountList::onActionThemeChanged()
 {
     //Update the account palette.
@@ -146,6 +171,10 @@ void KNMailAccountList::onActionThemeChanged()
         //Update the widget palette.
         i->setPalette(m_accountPalette);
     }
+    //Update the scroll bar palette.
+    customScrollBar()->setPalette(
+                knTheme->getPalette(customScrollBar()->objectName()));
+    onActionMouseInOut(0);
 }
 
 void KNMailAccountList::onActionAccountAdded(int accountIndex)
@@ -181,6 +210,22 @@ void KNMailAccountList::onActionChangeHeight(int containerHeight)
     m_container->setFixedHeight(containerHeight);
 }
 
+void KNMailAccountList::onActionMouseInOut(int opacity)
+{
+    //Get the scroll bar palette.
+    QPalette pal=customScrollBar()->palette();
+    //Change the button color.
+    QColor color=pal.color(QPalette::Button);
+    color.setAlpha(opacity);
+    pal.setColor(QPalette::Button, color);
+    //Change the base color.
+    color=pal.color(QPalette::Base);
+    color.setAlpha(opacity>>1);
+    pal.setColor(QPalette::Base, color);
+    //Update the palette of the scroll bar.
+    customScrollBar()->setPalette(pal);
+}
+
 inline void KNMailAccountList::startAnime(int targetHeight)
 {
     //Start the time line.
@@ -190,4 +235,16 @@ inline void KNMailAccountList::startAnime(int targetHeight)
                                  targetHeight);
     //Start the anime.
     m_expandAnime->start();
+}
+
+inline void KNMailAccountList::startScrollAnime(int targetAlpha)
+{
+    //Start the time line.
+    m_mouseAnime->stop();
+    //Update the frame range.
+    m_mouseAnime->setFrameRange(
+                customScrollBar()->palette().color(QPalette::Button).alpha(),
+                targetAlpha);
+    //Start the time line.
+    m_mouseAnime->start();
 }

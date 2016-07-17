@@ -198,7 +198,10 @@ SOURCES += \
     plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewer.cpp \
     plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewertitle.cpp \
     plugin/knmailplugin/sdk/knmailtreeviewbase.cpp \
-    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeview.cpp
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeview.cpp \
+    sdk/knmousesenseheader.cpp \
+    plugin/knmailplugin/plugin/knmailviewer/knmailviewer.cpp \
+    plugin/knmailplugin/sdk/knmailviewermanager.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -248,4 +251,9 @@ HEADERS += \
     plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewer.h \
     plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderviewertitle.h \
     plugin/knmailplugin/sdk/knmailtreeviewbase.h \
-    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeview.h
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeview.h \
+    sdk/knmousesenseheader.h \
+    plugin/knmailplugin/sdk/knmailviewerbase.h \
+    plugin/knmailplugin/sdk/knmailcomposebase.h \
+    plugin/knmailplugin/plugin/knmailviewer/knmailviewer.h \
+    plugin/knmailplugin/sdk/knmailviewermanager.h
