@@ -63,6 +63,14 @@ public:
     QString defaultFolderName(int index);
 
     /*!
+     * \brief Get the viewer title text according to the index.
+     * \param index Title viewer text index. Must in range of enumeration
+     * MailViewerTitleField.
+     * \return The title viewer text.
+     */
+    QString viewerTitleText(int index);
+
+    /*!
      * \brief Get the provider icon.
      * \param index The provider index.
      * \return The icon of the E-mail provider.
@@ -82,7 +90,8 @@ private:
     KNMailGlobal(const KNMailGlobal &);
     KNMailGlobal(KNMailGlobal &&);
 
-    QString m_defaultFolderName[DefaultFolderCount];
+    QString m_defaultFolderName[DefaultFolderCount],
+            m_titleFieldText[MailViewerTitleFieldCount];
     QHash<QString, QPixmap> m_providerIcon;
 };
 

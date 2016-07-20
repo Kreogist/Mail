@@ -21,6 +21,7 @@
 #include "knmailpluginbase.h"
 
 class QStackedLayout;
+class KNMailViewerBase;
 class KNMailAccountList;
 class KNMailEmptyHintBase;
 class KNMailFolderViewerBase;
@@ -53,6 +54,7 @@ public slots:
 
 private:
     inline void initialInfrastructure();
+    inline KNMailViewerBase *generateViewer();
     void loadEmptyHint(KNMailEmptyHintBase *emptyHint);
     void loadFolderViewer(KNMailFolderViewerBase *folderViewer);
     KNMailAccountList *m_leftBarContainer;

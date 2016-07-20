@@ -201,7 +201,8 @@ SOURCES += \
     plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeview.cpp \
     sdk/knmousesenseheader.cpp \
     plugin/knmailplugin/plugin/knmailviewer/knmailviewer.cpp \
-    plugin/knmailplugin/sdk/knmailviewermanager.cpp
+    plugin/knmailplugin/sdk/knmailviewermanager.cpp \
+    plugin/knmailplugin/sdk/knmailcontactbutton.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -256,4 +257,5 @@ HEADERS += \
     plugin/knmailplugin/sdk/knmailviewerbase.h \
     plugin/knmailplugin/sdk/knmailcomposebase.h \
     plugin/knmailplugin/plugin/knmailviewer/knmailviewer.h \
-    plugin/knmailplugin/sdk/knmailviewermanager.h
+    plugin/knmailplugin/sdk/knmailviewermanager.h \
+    plugin/knmailplugin/sdk/knmailcontactbutton.h

@@ -31,6 +31,14 @@ namespace MailUtil
         DefaultFolderCount
     };
 
+    enum MailViewerTitleField
+    {
+        FieldFrom,
+        FieldReceive,
+        FieldCarbonCopy,
+        MailViewerTitleFieldCount
+    };
+
     enum FolderModelColumns
     {
         ColumnSender,

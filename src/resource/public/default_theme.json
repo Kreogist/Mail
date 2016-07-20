@@ -67,5 +67,9 @@
         "Parent" : "MainWindow",
         "Window" : "#FFFFFF",
         "WindowText" : "#000000"
+    },
+    "MailViewerLabel" : {
+        "Parent" : "MailViewer",
+        "WindowText" : "#A3A3A3"
     }
 }

@@ -27,12 +27,15 @@
 //Ports.
 #include "knmailemptyhintbase.h"
 #include "knmailfolderviewerbase.h"
+#include "knmailviewerbase.h"
 
 //Plugins.
 // Empty hint.
 #include "plugin/knmailemptyhint/knmailemptyhint.h"
 // Folder viewer.
 #include "plugin/knmailfolderviewer/knmailfolderviewer.h"
+// Mail viewer.
+#include "plugin/knmailviewer/knmailviewer.h"
 
 #include "knmailplugin.h"
 
@@ -109,6 +112,12 @@ inline void KNMailPlugin::initialInfrastructure()
     setLayout(m_mainLayout);
 }
 
+inline KNMailViewerBase *KNMailPlugin::generateViewer()
+{
+    //Generate a viewer.
+    return new KNMailViewer();
+}
+
 void KNMailPlugin::loadEmptyHint(KNMailEmptyHintBase *emptyHint)
 {
     //Add widget to the stacked layout.
@@ -117,6 +126,8 @@ void KNMailPlugin::loadEmptyHint(KNMailEmptyHintBase *emptyHint)
 
 void KNMailPlugin::loadFolderViewer(KNMailFolderViewerBase *folderViewer)
 {
+    //Give a mail viewer to folder viewer.
+    folderViewer->setViewer(generateViewer());
     //Add widget to the stacked layout.
     m_mainLayout->addWidget(folderViewer);
     //Connect with the mail account list.

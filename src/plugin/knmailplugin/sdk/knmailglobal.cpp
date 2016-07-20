@@ -46,6 +46,13 @@ QString KNMailGlobal::defaultFolderName(int index)
     return m_defaultFolderName[index];
 }
 
+QString KNMailGlobal::viewerTitleText(int index)
+{
+    Q_ASSERT(index>-1 && index<MailViewerTitleFieldCount);
+    //Give back the title field name.
+    return m_titleFieldText[index];
+}
+
 QPixmap KNMailGlobal::providerIcon(const QString &providerName)
 {
     return m_providerIcon.value(providerName);
@@ -58,6 +65,10 @@ void KNMailGlobal::retranslate()
     m_defaultFolderName[FolderDrafts]=tr("Drafts");
     m_defaultFolderName[FolderSentItems]=tr("Sent Items");
     m_defaultFolderName[FolderTrash]=tr("Trash");
+    //Update the title field text.
+    m_titleFieldText[FieldFrom]=tr("From");
+    m_titleFieldText[FieldReceive]=tr("To");
+    m_titleFieldText[FieldCarbonCopy]=tr("CC");
 }
 
 KNMailGlobal::KNMailGlobal(QObject *parent) :

@@ -23,8 +23,11 @@
 #include "knmailmodel.h"
 #include "knmailfolderviewertitle.h"
 #include "knmailfoldertreeview.h"
+#include "knmailviewerbase.h"
 
 #include "knmailfolderviewer.h"
+
+#define ViewerLeftSpacing 150
 
 #include <QDebug>
 
@@ -80,10 +83,29 @@ void KNMailFolderViewer::setViewer(KNMailViewerBase *viewer)
         //Ignore the viewer.
         return;
     }
+    //Change owner relationship.
+    m_viewer->setParent(this);
+    //Update the viewer position and size.
+    updateViewerPos();
+}
+
+void KNMailFolderViewer::resizeEvent(QResizeEvent *event)
+{
+    //Resize the folder viewer first.
+    KNMailFolderViewerBase::resizeEvent(event);
+    //Resize the viewer.
+    if(m_viewer && m_viewer->isVisible())
+    {
+        //Update the viewer position and size.
+        updateViewerPos();
+    }
 }
 
 inline void KNMailFolderViewer::updateViewerPos()
 {
     //Update the viewer size.
-    ;
+    m_viewer->setGeometry(ViewerLeftSpacing,
+                          0,
+                          width() - ViewerLeftSpacing,
+                          height());
 }

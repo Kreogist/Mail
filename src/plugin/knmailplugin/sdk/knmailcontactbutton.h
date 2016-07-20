@@ -15,26 +15,25 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILVIEWER_H
-#define KNMAILVIEWER_H
+#ifndef KNMAILCONTACTBUTTON_H
+#define KNMAILCONTACTBUTTON_H
 
-#include "knmailviewerbase.h"
+#include <QWidget>
 
-class QLabel;
 /*!
- * \brief The KNMailViewer class provides a default realize of the mail viewer.
- * This viewer could be popup and view the mail in a new widget.
+ * \brief The KNMailContactButton class provides the contact button widget for
+ * the mail viewer title. It will provides a button for display the contact
+ * operation menu.
  */
-class KNMailViewer : public KNMailViewerBase
+class KNMailContactButton : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailViewer widget.
+     * \brief Construct a KNMailContactButton widget.
      * \param parent The parent widget.
      */
-    explicit KNMailViewer(QWidget *parent = 0);
-    ~KNMailViewer();
+    explicit KNMailContactButton(QWidget *parent = 0);
 
 signals:
 
@@ -42,18 +41,9 @@ public slots:
 
 protected:
     /*!
-     * \brief Reimplemented from KNMailViewerBase::resizeEvent().
+     * \brief Reimplemented from QWidget::paintEvent().
      */
-    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-
-private slots:
-    void retranslate();
-    void onThemeChanged();
-
-private:
-    QString m_subjectText;
-    QLabel *m_subject, *m_receiveTime, *m_senderLabel, *m_receiverLabel,
-           *m_ccLabel;
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 };
 
-#endif // KNMAILVIEWER_H
+#endif // KNMAILCONTACTBUTTON_H
