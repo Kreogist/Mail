@@ -17,6 +17,9 @@
  */
 #include <QAction>
 #include <QSplitter>
+#ifdef Q_OS_MACX
+#include <QApplication>
+#endif
 
 #include "knthememanager.h"
 

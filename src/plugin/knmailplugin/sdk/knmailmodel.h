@@ -62,14 +62,14 @@ public:
     /*!
      * \brief Reimplemented from QAbstractTableModel::data().
      */
-    QVariant data(const QModelIndex &index, int role) const;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
 
     /*!
      * \brief Reimplemented from QAbstractTableModel::headerData().
      */
     QVariant headerData(int section,
                         Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const;
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     /*!
      * \brief Append one item to the end of the model.

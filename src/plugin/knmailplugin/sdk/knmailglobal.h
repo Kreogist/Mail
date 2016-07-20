@@ -19,6 +19,7 @@
 #define KNMAILGLOBAL_H
 
 #include <QHash>
+#include <QPixmap>
 
 #include "knmailutil.h"
 
