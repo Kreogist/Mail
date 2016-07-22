@@ -101,12 +101,6 @@ void KNMailFolderViewer::resizeEvent(QResizeEvent *event)
     }
 }
 
-void KNMailFolderViewer::resizeEvent(QResizeEvent *event)
-{
-    //Resize the widget.
-    KNMailFolderViewerBase::resizeEvent(event);
-}
-
 inline void KNMailFolderViewer::updateViewerPos()
 {
     //Update the viewer size.

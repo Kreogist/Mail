@@ -116,13 +116,13 @@ win32: {
     # Application icon.
     RC_FILE += resource/icon/win_resource.rc \
                resource/icon/mail.ico
-    ICON = resource/icon/mu.ico
+    ICON = resource/icon/mail.ico
 }
 
 macx: {
     # Application icon.
-    RC_FILE += resource/icon/mu.icns
-    ICON = resource/icon/mu.icns
+    RC_FILE += resource/icon/mail.icns
+    ICON = resource/icon/mail.icns
     # Set the info plist.
     QMAKE_INFO_PLIST = resource/platforms/mac/Info.plist
 }
