@@ -38,12 +38,27 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Set the receiver to be display on this button.
+     * \param caption The caption of the contact.
+     * \param address The address of the contact.
+     * \param avatar The avatar image display for the button. Default it will be
+     * a null image.
+     */
+    void setReceiver(const QString &caption,
+                     const QString &address,
+                     const QPixmap &avatar=QPixmap());
 
 protected:
     /*!
      * \brief Reimplemented from QWidget::paintEvent().
      */
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+
+private:
+    int m_targetWidth;
+    QPixmap m_avatar;
+    QString m_caption, m_address, m_contentText, m_targetText;
 };
 
 #endif // KNMAILCONTACTBUTTON_H
