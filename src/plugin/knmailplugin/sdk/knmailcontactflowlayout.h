@@ -33,13 +33,6 @@ class KNMailContactFlowLayout : public QLayout
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailContactFlowLayout layout object to a parent
-     * widget.
-     * \param parent The parent widget pointer.
-     */
-    explicit KNMailContactFlowLayout(QWidget *parent = 0);
-
-    /*!
      * \brief Construct a KNMailContactFlowLayout layout object to the hosted
      * widget with parameters.
      * \param hSpacing The vertical spacing of the widgets.

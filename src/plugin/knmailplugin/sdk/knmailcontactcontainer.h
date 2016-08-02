@@ -20,17 +20,68 @@ Foundation,
 #ifndef KNMAILCONTACTCONTAINER_H
 #define KNMAILCONTACTCONTAINER_H
 
+#include <QList>
+
 #include <QWidget>
 
+class KNMailContactButton;
+class KNMailContactFlowLayout;
+/*!
+ * \brief The KNMailContactContainer class is a widget which will be used to
+ * hold the contact button, it contains the contact button .
+ */
 class KNMailContactContainer : public QWidget
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief Construct a KNMailContactContainer widget.
+     * \param parent The parent widget.
+     */
     explicit KNMailContactContainer(QWidget *parent = 0);
+
+    /*!
+     * \brief Append contact button to the widget.
+     * \param button The contact button.
+     */
+    void addContact(KNMailContactButton *button);
+
+    /*!
+     * \brief Add the E-mail address to the contact list.
+     * \param email The contact address.
+     * \param caption The contact caption.
+     */
+    void addContact(const QString &email, const QString &caption);
+
+    /*!
+     * \brief Reimplemented from QWidget::hasHeightForWidth().
+     */
+    bool hasHeightForWidth() const Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QWidget::heightForWidth().
+     */
+    int heightForWidth(int targetWidth) const Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Update all the contact button palette.
+     * \param pal The contact button palette.
+     */
+    void setContactPalette(const QPalette &pal);
 
 signals:
 
 public slots:
+
+protected:
+    /*!
+     * \brief Reimplemented from QWidget::resizeEvent().
+     */
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
+private:
+    QList<KNMailContactButton *> m_buttons;
+    KNMailContactFlowLayout *m_mainLayout;
 };
 
 #endif // KNMAILCONTACTCONTAINER_H

@@ -15,27 +15,32 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILVIEWER_H
-#define KNMAILVIEWER_H
+#ifndef KNMAILCONTACTLIST_H
+#define KNMAILCONTACTLIST_H
 
-#include "knmailviewerbase.h"
+#include <QScrollArea>
 
-class QLabel;
-class KNMailContactList;
+class KNMailContactContainer;
 /*!
- * \brief The KNMailViewer class provides a default realize of the mail viewer.
- * This viewer could be popup and view the mail in a new widget.
+ * \brief The KNMailContactList class provides the list of contact button. This
+ * is a widget which holds the contact list widget. It will show the scroll bar
+ * for expanded state.
  */
-class KNMailViewer : public KNMailViewerBase
+class KNMailContactList : public QScrollArea
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailViewer widget.
+     * \brief Construct a KNMailContactList widget.
      * \param parent The parent widget.
      */
-    explicit KNMailViewer(QWidget *parent = 0);
-    ~KNMailViewer();
+    explicit KNMailContactList(QWidget *parent = 0);
+
+    /*!
+     * \brief Update all the contact button palette.
+     * \param pal The contact button palette.
+     */
+    void setContactPalette(const QPalette &pal);
 
 signals:
 
@@ -43,19 +48,12 @@ public slots:
 
 protected:
     /*!
-     * \brief Reimplemented from KNMailViewerBase::resizeEvent().
+     * \brief Reimplemented from QScrollArea::resizeEvent().
      */
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
-private slots:
-    void retranslate();
-    void onThemeChanged();
-
 private:
-    QString m_subjectText;
-    QLabel *m_subject, *m_receiveTime, *m_senderLabel, *m_receiverLabel,
-           *m_ccLabel;
-    KNMailContactList *m_senderList, *m_receiverList, *m_ccList;
+    KNMailContactContainer *m_container;
 };
 
-#endif // KNMAILVIEWER_H
+#endif // KNMAILCONTACTLIST_H

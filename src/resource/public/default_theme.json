@@ -71,5 +71,11 @@
     "MailViewerLabel" : {
         "Parent" : "MailViewer",
         "WindowText" : "#A3A3A3"
+    },
+    "MailViewerButton" : {
+        "Parent" : "MailViewer",
+        "Window" : "#303030",
+        "WindowText" : "#00000000",
+        "ButtonText" : "#FFFFFF"
     }
 }

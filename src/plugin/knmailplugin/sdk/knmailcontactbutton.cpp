@@ -19,7 +19,6 @@
 
 #include "knmailcontactbutton.h"
 
-#define ButtonHeight 24
 #define SideSpacing 2
 #define FontSize 12
 #define ButtonRadius 12
@@ -39,7 +38,7 @@ KNMailContactButton::KNMailContactButton(QWidget *parent) :
     setFont(textFont);
 }
 
-void KNMailContactButton::setReceiver(const QString &caption,
+void KNMailContactButton::setContact(const QString &caption,
                                       const QString &address,
                                       const QPixmap &avatar)
 {
@@ -72,19 +71,39 @@ void KNMailContactButton::setReceiver(const QString &caption,
             }
         }
     }
+    //Construct the content text.
+    m_contentText=m_caption + " <" + m_address + ">";
     //We have to ensure that the length
     //After load the avatar, calculate the button size.
-    m_targetWidth=fontMetrics().width(m_caption + " <" + m_address + ">") +
-            ButtonHeight - (SideSpacing << 1) +
+    m_targetWidth=fontMetrics().width(m_contentText) + ButtonHeight +
             (m_avatar.isNull()?0:ButtonHeight);
     //Check the possible width is larger or smaller than this one.
-    if(m_targetWidth > parentWidget()->width())
+    updateWidth();
+    //Update the widget.
+    update();
+}
+
+void KNMailContactButton::updateWidth()
+{
+    //Get the valid width.
+    int availableWidth=parentWidget()->width()-
+            (m_avatar.isNull()?0:ButtonHeight);
+    //Check out the target width is larger than our target width.
+    if(m_targetWidth>availableWidth)
     {
         //Update the button's width.
-        setFixedWidth(m_targetWidth);
+        setFixedWidth(availableWidth);
         //Update the target text.
-
+        m_targetText=fontMetrics().elidedText(m_contentText,
+                                              Qt::ElideRight,
+                                              availableWidth);
+        //Mission complete.
+        return;
     }
+    //Update the button's size to target size.
+    setFixedWidth(m_targetWidth);
+    //Update the target text.
+    m_targetText=m_contentText;
 }
 
 void KNMailContactButton::paintEvent(QPaintEvent *event)
@@ -102,9 +121,16 @@ void KNMailContactButton::paintEvent(QPaintEvent *event)
     painter.setPen(basePen);
     painter.setBrush(pal.color(QPalette::Window));
     //Draw the avatar and the text.
-    painter.drawRoundedRect(rect(), ButtonRadius, ButtonRadius);
+    painter.drawRoundedRect(QRect(2, 0, width()-4, height()),
+                            ButtonRadius,
+                            ButtonRadius);
     //Draw the contents.
-    painter.drawText(QRect(ButtonHeight, 0, width()-ButtonHeight, height()),
+    painter.setPen(pal.color(QPalette::ButtonText));
+    painter.drawText(QRect((m_avatar.isNull()?
+                                ButtonRadius : (ButtonRadius+ButtonHeight)),
+                           0,
+                           width()-ButtonHeight,
+                           height()),
                      Qt::AlignVCenter,
-                     m_caption + " <" + m_address + ">");
+                     m_targetText);
 }

@@ -66,6 +66,7 @@ void KNMailFolderTreeView::onActionThemeChange()
     //Change the palette of the scroll bar.
     customScrollBar()->setPalette(
                 knTheme->getPalette(customScrollBar()->objectName()));
+    //Update the
     //Update the palette.
     onActionMouseInOut(0);
 }

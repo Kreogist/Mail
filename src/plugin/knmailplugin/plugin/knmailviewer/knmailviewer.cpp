@@ -22,6 +22,8 @@
 #include "knthememanager.h"
 #include "knlocalemanager.h"
 
+#include "knmailcontactbutton.h"
+#include "knmailcontactlist.h"
 #include "knmailglobal.h"
 
 #include "knmailviewer.h"
@@ -39,7 +41,10 @@ KNMailViewer::KNMailViewer(QWidget *parent) :
     m_receiveTime(new QLabel(this)),
     m_senderLabel(new QLabel(this)),
     m_receiverLabel(new QLabel(this)),
-    m_ccLabel(new QLabel(this))
+    m_ccLabel(new QLabel(this)),
+    m_senderList(new KNMailContactList(this)),
+    m_receiverList(new KNMailContactList(this)),
+    m_ccList(new KNMailContactList(this))
 {
     setObjectName("MailViewer");
     //Set properties.
@@ -54,9 +59,12 @@ KNMailViewer::KNMailViewer(QWidget *parent) :
     textFont.setPixelSize(TextFontSize);
     m_receiveTime->setFont(textFont);
     // Text hints.
-    m_senderLabel->setAlignment(Qt::AlignRight | Qt::AlignTop);
-    m_receiverLabel->setAlignment(Qt::AlignRight | Qt::AlignTop);
-    m_ccLabel->setAlignment(Qt::AlignRight | Qt::AlignTop);
+    m_senderLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    m_senderLabel->setFixedHeight(ButtonHeight);
+    m_receiverLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    m_receiverLabel->setFixedHeight(ButtonHeight);
+    m_ccLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    m_ccLabel->setFixedHeight(ButtonHeight);
 
     //Initial the main layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -77,14 +85,14 @@ KNMailViewer::KNMailViewer(QWidget *parent) :
     //Initial the sender, receiver and CC lists.
     QFormLayout *contactLayout=new QFormLayout(mainLayout->widget());
     contactLayout->setContentsMargins(0,0,0,0);
-    contactLayout->setSpacing(0);
+    contactLayout->setSpacing(5);
     titleLayout->addLayout(contactLayout);
     //Configure the data.
     contactLayout->setLabelAlignment(Qt::AlignTop | Qt::AlignRight);
     //Add contact widgets.
-    contactLayout->addRow(m_senderLabel);
-    contactLayout->addRow(m_receiverLabel);
-    contactLayout->addRow(m_ccLabel);
+    contactLayout->addRow(m_senderLabel, m_senderList);
+    contactLayout->addRow(m_receiverLabel, m_receiverList);
+    contactLayout->addRow(m_ccLabel, m_ccList);
     //Add the last widgets.
     mainLayout->addStretch();
     //Link the theme manager.
@@ -137,4 +145,6 @@ void KNMailViewer::onThemeChanged()
     m_receiverLabel->setPalette(labelPal);
     m_senderLabel->setPalette(labelPal);
     m_ccLabel->setPalette(labelPal);
+    //Get the button palette.
+    m_receiverList->setContactPalette(knTheme->getPalette("MailViewerButton"));
 }

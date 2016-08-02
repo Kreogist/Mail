@@ -20,13 +20,6 @@ Foundation,
 
 #include "knmailcontactflowlayout.h"
 
-KNMailContactFlowLayout::KNMailContactFlowLayout(QWidget *parent) :
-    QLayout(parent),
-    m_hSpace(-1),
-    m_vSpace(-1)
-{
-}
-
 KNMailContactFlowLayout::KNMailContactFlowLayout(int hSpacing,
                                                  int vSpacing,
                                                  QWidget *parent) :
@@ -52,6 +45,16 @@ void KNMailContactFlowLayout::addItem(QLayoutItem *item)
 {
     //Add item to the item list.
     m_itemList.append(item);
+}
+
+int KNMailContactFlowLayout::horizontalSpacing() const
+{
+    return m_hSpace;
+}
+
+int KNMailContactFlowLayout::verticalSpacing() const
+{
+    return m_vSpace;
 }
 
 Qt::Orientations KNMailContactFlowLayout::expandingDirections() const
@@ -152,8 +155,6 @@ inline int KNMailContactFlowLayout::doLayout(QRect effectiveRect,
     int rectX=effectiveRect.x(),
         rectY=effectiveRect.y(),
         rectRight, lineHeight=0, spaceX, spaceY;
-    //Initial the hidden flag.
-    bool hiddenWidget=false;
     //Check out all the items.
     foreach(QLayoutItem *item, m_itemList)
     {
@@ -211,5 +212,5 @@ inline int KNMailContactFlowLayout::doLayout(QRect effectiveRect,
         lineHeight=qMax(lineHeight, item->sizeHint().height());
     }
     //Give back the size which is out side the layout.
-    return rectY + lineHeight - rect.y();
+    return rectY + lineHeight;
 }

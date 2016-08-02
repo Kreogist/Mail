@@ -20,6 +20,8 @@
 
 #include <QWidget>
 
+#define ButtonHeight 24
+
 /*!
  * \brief The KNMailContactButton class provides the contact button widget for
  * the mail viewer title. It will provides a button for display the contact
@@ -45,9 +47,15 @@ public slots:
      * \param avatar The avatar image display for the button. Default it will be
      * a null image.
      */
-    void setReceiver(const QString &caption,
-                     const QString &address,
-                     const QPixmap &avatar=QPixmap());
+    void setContact(const QString &caption,
+                    const QString &address,
+                    const QPixmap &avatar=QPixmap());
+
+    /*!
+     * \brief Update the width of the button, when the parent size changes, this
+     * function should only be called by the container.
+     */
+    void updateWidth();
 
 protected:
     /*!
