@@ -24,6 +24,7 @@
 #include "knthememanager.h"
 #include "knfontmanager.h"
 #include "kmmailreceivermanager.h"
+#include "kmmailsendermanager.h"
 #include "kmutil.h"
 #include "mailaccount/kmmailaccountmanager.h"
 
@@ -39,6 +40,11 @@ KMGlobal::~KMGlobal()
     m_receiverThread.wait();
     //Recover the receiver manager.
     kmReceiverManager->deleteLater();
+
+
+    m_sendThread.quit();
+    m_sendThread.wait();
+    kmSenderManager->deleteLater();
 }
 
 KMGlobal *KMGlobal::instance()
@@ -83,6 +89,11 @@ void KMGlobal::startReceiverManager()
     m_receiverThread.start();
 }
 
+void KMGlobal::startSenderManager()
+{
+    m_sendThread.start();
+}
+
 KMGlobal::KMGlobal(QObject *parent) :
     QObject(parent),
     m_accountManager(nullptr),
@@ -108,6 +119,9 @@ KMGlobal::KMGlobal(QObject *parent) :
     KMMailReceiverManager::initial();
     //Move the receiver manager to working thread.
     kmReceiverManager->moveToThread(&m_receiverThread);
+
+    KMMailSenderManager::initial();
+    kmSenderManager->moveToThread(&m_sendThread);
 }
 
 inline void KMGlobal::initialDefaultDirPath()

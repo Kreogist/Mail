@@ -140,6 +140,7 @@ public slots:
       * \brief Start receiver manager thread.
       */
      void startReceiverManager();
+     void startSenderManager();
 
 private:
     explicit KMGlobal(QObject *parent = 0);
@@ -155,6 +156,7 @@ private:
     KMMailContentParser *m_contentParser;
     KNConfigure *m_globalConfigure;
     QThread m_receiverThread;
+    QThread m_sendThread;
 };
 
 #endif // KMGLOBAL_H

@@ -19,10 +19,14 @@
 #ifndef KMMAILRECEIVERMANAGER_H
 #define KMMAILRECEIVERMANAGER_H
 
+#include <QList>
+#include <QMutex>
+
 #include <QObject>
 
 #define kmReceiverManager (KMMailReceiverManager::instance())
 
+class KNMailAccount;
 /*!
  * \brief The KMMailReceiverManager class will manage all the receive client.
  * And automatically update all the receiver client.
@@ -40,15 +44,23 @@ public:
     /*!
      * \brief Initial the receiver manager.
      */
-    static void initial();
+    static void initial(QObject *parent);
 
 signals:
+    void requireProcessNext();
 
 public slots:
+    void appendMail(KNMailAccount *accout);
+
+private slots:
+    void onProcessNext();
 
 private:
     explicit KMMailReceiverManager(QObject *parent = 0);
     static KMMailReceiverManager *m_instance;
+    QList<KNMailAccount *> m_mailRecevieList;
+    QMutex m_queueLock;
+    bool m_isWorking = true;
 };
 
 #endif // KMMAILRECEIVERMANAGER_H

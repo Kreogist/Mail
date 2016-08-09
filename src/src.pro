@@ -253,7 +253,8 @@ HEADERS += \
     sdk/mime/kmmimemultipart.h \
     sdk/mime/kmmimepart.h \
     sdk/mime/kmmimemailparser.h \
-    sdk/mime/kmmailparseutil.h
+    sdk/mime/kmmailparseutil.h \
+    sdk/kmmailsendermanager.h
 
 SOURCES += \
     sdk/knsingletonapplication.cpp \
@@ -317,7 +318,8 @@ SOURCES += \
     sdk/mime/kmmimemultipart.cpp \
     sdk/mime/kmmimepart.cpp \
     sdk/mime/kmmimemailparser.cpp \
-    sdk/mime/kmmailparseutil.cpp
+    sdk/mime/kmmailparseutil.cpp \
+    sdk/kmmailsendermanager.cpp
 
 RESOURCES += \
     resource/res.qrc
