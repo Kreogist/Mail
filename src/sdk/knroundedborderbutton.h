@@ -12,33 +12,42 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foundation,
+ * along with this program; if not, write to the Free Software
+Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILVIEWERBASE_H
-#define KNMAILVIEWERBASE_H
 
-#include <QWidget>
+#ifndef KNROUNDEDBORDERBUTTON_H
+#define KNROUNDEDBORDERBUTTON_H
+
+#include <QAbstractButton>
 
 /*!
- * \brief The KNMailViewerBase class provides the basic ports and functions
- * which a mail viewer should be provided. This port widget should be generate
- * by a factor of the viewer for multiple viewers.
+ * \brief The KNRoundedBorderButton class provides a simple button which could
+ * show the text of the button but it will used rounded rect for the button
+ * border.
  */
-class KNMailViewerBase : public QWidget
+class KNRoundedBorderButton : public QAbstractButton
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailViewerBase widget.
+     * \brief Construct a KNRoundedBorderButton widget.
      * \param parent The parent widget.
      */
-    KNMailViewerBase(QWidget *parent = 0) : QWidget(parent){}
+    explicit KNRoundedBorderButton(QWidget *parent = 0);
 
 signals:
 
 public slots:
-//    void setViewer();
+
+protected:
+    /*!
+     * \brief Reimplemented from QAbstractButton::paintEvent().
+     */
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+
+private:
 };
 
-#endif // KNMAILVIEWERBASE_H
+#endif // KNROUNDEDBORDERBUTTON_H

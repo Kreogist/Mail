@@ -76,6 +76,7 @@
         "Parent" : "MailViewer",
         "Window" : "#303030",
         "WindowText" : "#00000000",
+        "Button" : "#303030",
         "ButtonText" : "#FFFFFF"
     }
 }

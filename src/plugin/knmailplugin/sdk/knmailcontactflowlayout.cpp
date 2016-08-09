@@ -25,7 +25,8 @@ KNMailContactFlowLayout::KNMailContactFlowLayout(int hSpacing,
                                                  QWidget *parent) :
     QLayout(parent),
     m_hSpace(hSpacing),
-    m_vSpace(vSpacing)
+    m_vSpace(vSpacing),
+    m_layoutHeight(0)
 {
 }
 
@@ -75,6 +76,14 @@ void KNMailContactFlowLayout::setGeometry(const QRect &rect)
     QLayout::setGeometry(rect);
     //Apply the size to the layout.
     doLayout(rect, true);
+    //Reset the layout height.
+    m_layoutHeight=0;
+    //Save the height for the last item.
+    if(!m_itemList.isEmpty())
+    {
+        //Check the last item position, save it as the layout height.
+        m_layoutHeight=m_itemList.last()->geometry().bottom();
+    }
 }
 
 QSize KNMailContactFlowLayout::sizeHint() const
@@ -213,4 +222,9 @@ inline int KNMailContactFlowLayout::doLayout(QRect effectiveRect,
     }
     //Give back the size which is out side the layout.
     return rectY + lineHeight;
+}
+
+int KNMailContactFlowLayout::layoutHeight() const
+{
+    return m_layoutHeight;
 }

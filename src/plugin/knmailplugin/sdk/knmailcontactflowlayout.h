@@ -109,6 +109,18 @@ public:
      */
     int count() const Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Get the row count of the layout.
+     * \return The current row number of the flow layout.
+     */
+    int rowCount() const;
+
+    /*!
+     * \brief Get the layout last item height.
+     * \return The layout target height.
+     */
+    int layoutHeight() const;
+
 signals:
 
 public slots:
@@ -117,7 +129,7 @@ private:
     inline int smartSpacing(QStyle::PixelMetric pm) const;
     inline int doLayout(QRect effectiveRect, bool apply=false) const;
     QList<QLayoutItem *> m_itemList;
-    int m_hSpace, m_vSpace;
+    int m_hSpace, m_vSpace, m_layoutHeight;
 };
 
 #endif // KNMAILCONTACTFLOWLAYOUT_H

@@ -16,6 +16,8 @@
 Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#include <QBoxLayout>
+
 #include "knmailcontactbutton.h"
 #include "knmailcontactflowlayout.h"
 
@@ -23,7 +25,9 @@ Foundation,
 
 KNMailContactContainer::KNMailContactContainer(QWidget *parent) :
     QWidget(parent),
-    m_mainLayout(new KNMailContactFlowLayout(5, 5, this))
+    m_mainLayout(new KNMailContactFlowLayout(LayoutSpacing,
+                                             LayoutSpacing,
+                                             this))
 {
     //Set main layout.
     setLayout(m_mainLayout);

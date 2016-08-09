@@ -20,6 +20,7 @@
 
 #include <QScrollArea>
 
+class KNRoundedBorderButton;
 class KNMailContactContainer;
 /*!
  * \brief The KNMailContactList class provides the list of contact button. This
@@ -45,6 +46,12 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Set the expand state of the contact list.
+     * \param isExpand To expand the contact list, set this value to true. If
+     * the list is not expandable, then this function won't work.
+     */
+    void setExpandState(bool isExpand);
 
 protected:
     /*!
@@ -53,7 +60,10 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    inline void updateExpandButton();
     KNMailContactContainer *m_container;
+    KNRoundedBorderButton *m_moreButton;
+    bool m_isExpand;
 };
 
 #endif // KNMAILCONTACTLIST_H

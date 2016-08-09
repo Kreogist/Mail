@@ -24,6 +24,8 @@ Foundation,
 
 #include <QWidget>
 
+#define LayoutSpacing 5
+
 class KNMailContactButton;
 class KNMailContactFlowLayout;
 /*!
@@ -49,9 +51,9 @@ public:
     /*!
      * \brief Add the E-mail address to the contact list.
      * \param email The contact address.
-     * \param caption The contact caption.
+     * \param caption The contact caption. The default value is a null string.
      */
-    void addContact(const QString &email, const QString &caption);
+    void addContact(const QString &email, const QString &caption=QString());
 
     /*!
      * \brief Reimplemented from QWidget::hasHeightForWidth().

@@ -12,33 +12,33 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foundation,
+ * along with this program; if not, write to the Free Software
+Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILVIEWERBASE_H
-#define KNMAILVIEWERBASE_H
+
+#ifndef KNMAILWEBVIEWERBASE_H
+#define KNMAILWEBVIEWERBASE_H
 
 #include <QWidget>
 
 /*!
- * \brief The KNMailViewerBase class provides the basic ports and functions
- * which a mail viewer should be provided. This port widget should be generate
- * by a factor of the viewer for multiple viewers.
+ * \brief The KNMailWebViewerBase class provides a widget which is used to show
+ * the web page using different kernel.
  */
-class KNMailViewerBase : public QWidget
+class KNMailWebViewerBase : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailViewerBase widget.
-     * \param parent The parent widget.
+     * \brief KNMailWebViewerBase
+     * \param parent
      */
-    KNMailViewerBase(QWidget *parent = 0) : QWidget(parent){}
+    KNMailWebViewerBase(QWidget *parent = 0) : QWidget(parent){}
 
 signals:
 
 public slots:
-//    void setViewer();
 };
 
-#endif // KNMAILVIEWERBASE_H
+#endif // KNMAILWEBVIEWERBASE_H

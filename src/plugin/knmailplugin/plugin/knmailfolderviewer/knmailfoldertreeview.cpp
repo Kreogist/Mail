@@ -31,6 +31,7 @@ KNMailFolderTreeView::KNMailFolderTreeView(QWidget *parent) :
 {
     setObjectName("MailFolderTreeView");
     //Set properties.
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     knTheme->registerWidget(this);
     customScrollBar()->setObjectName("MailTreeViewScrollBar");
     //Link the theme changed signal.

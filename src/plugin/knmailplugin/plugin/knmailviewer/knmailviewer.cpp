@@ -146,5 +146,8 @@ void KNMailViewer::onThemeChanged()
     m_senderLabel->setPalette(labelPal);
     m_ccLabel->setPalette(labelPal);
     //Get the button palette.
-    m_receiverList->setContactPalette(knTheme->getPalette("MailViewerButton"));
+    const QPalette &buttonPal=knTheme->getPalette("MailViewerButton");
+    m_receiverList->setContactPalette(buttonPal);
+    m_senderList->setContactPalette(buttonPal);
+    m_ccList->setContactPalette(buttonPal);
 }
