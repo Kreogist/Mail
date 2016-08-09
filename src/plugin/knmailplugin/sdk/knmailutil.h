@@ -63,7 +63,6 @@ namespace MailUtil
 
     struct KNMailProtocolConfig
     {
-        QString type;
         QString protocol;
         QString hostName;
         quint16 port;

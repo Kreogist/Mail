@@ -113,6 +113,13 @@ gcc: {
 
 # Platform Specific Configuration.
 win32: {
+    # Check the current version.
+    contains(QMAKE_TARGET.arch, x86_64) {
+        # Using MSVC, 64-bit.
+        CONFIG += webengine-backend
+    } else {
+        # Using MinGW, 32-bit.
+    }
     # Application icon.
     RC_FILE += resource/icon/win_resource.rc \
                resource/icon/mail.ico
@@ -144,6 +151,17 @@ i18n: {
     MAKE_QM_FILES.CONFIG += no_link target_predeps
     # Add MAKE_QM_FILES to the extra compilers.
     QMAKE_EXTRA_COMPILERS += MAKE_QM_FILES
+}
+
+webengine-backend: {
+    # Check wheter there's a backend enable already.
+    contains(DEFINES, BACKEND_ENABLED) {
+        error("Can't enable more than one backend at the same time.")
+    }
+    # Define the Web Engine backend.
+    DEFINES += BACKEND_ENABLED BACKEND_WEBENGINE
+    # Add Qt modules.
+    QT += webenginewidgets
 }
 
 # Add sdk directory to include path.
@@ -206,7 +224,8 @@ SOURCES += \
     plugin/knmailplugin/sdk/knmailcontactflowlayout.cpp \
     plugin/knmailplugin/sdk/knmailcontactcontainer.cpp \
     plugin/knmailplugin/sdk/knmailcontactlist.cpp \
-    sdk/knroundedborderbutton.cpp
+    sdk/knroundedborderbutton.cpp \
+    plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewer.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -267,4 +286,5 @@ HEADERS += \
     plugin/knmailplugin/sdk/knmailcontactcontainer.h \
     plugin/knmailplugin/sdk/knmailcontactlist.h \
     sdk/knroundedborderbutton.h \
-    plugin/knmailplugin/sdk/knmailwebviewerbase.h
+    plugin/knmailplugin/sdk/knmailwebviewerbase.h \
+    plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewer.h

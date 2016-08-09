@@ -22,6 +22,7 @@
 #include "knthememanager.h"
 #include "knlocalemanager.h"
 
+#include "knmailwebviewerbase.h"
 #include "knmailcontactbutton.h"
 #include "knmailcontactlist.h"
 #include "knmailglobal.h"
@@ -34,7 +35,7 @@
 #define TitleFontSize 18
 #define TextFontSize 12
 
-KNMailViewer::KNMailViewer(QWidget *parent) :
+KNMailViewer::KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent) :
     KNMailViewerBase(parent),
     m_subjectText(QString()),
     m_subject(new QLabel(this)),
@@ -94,7 +95,7 @@ KNMailViewer::KNMailViewer(QWidget *parent) :
     contactLayout->addRow(m_receiverLabel, m_receiverList);
     contactLayout->addRow(m_ccLabel, m_ccList);
     //Add the last widgets.
-    mainLayout->addStretch();
+    mainLayout->addWidget(viewer, 1);
     //Link the theme manager.
     connect(knTheme, &KNThemeManager::themeChange,
             this, &KNMailViewer::onThemeChanged);

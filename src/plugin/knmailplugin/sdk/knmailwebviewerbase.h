@@ -25,14 +25,17 @@ Foundation,
 /*!
  * \brief The KNMailWebViewerBase class provides a widget which is used to show
  * the web page using different kernel.
+ * This port is built for different core of Qt. Different environment and
+ * different compiler will use different module to realize the web page
+ * rendering data.
  */
 class KNMailWebViewerBase : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief KNMailWebViewerBase
-     * \param parent
+     * \brief Construct a KNMailWebViewerBase widget.
+     * \param parent The parent widget.
      */
     KNMailWebViewerBase(QWidget *parent = 0) : QWidget(parent){}
 

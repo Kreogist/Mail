@@ -36,6 +36,10 @@
 #include "plugin/knmailfolderviewer/knmailfolderviewer.h"
 // Mail viewer.
 #include "plugin/knmailviewer/knmailviewer.h"
+// Web viewers.
+#ifdef BACKEND_WEBENGINE
+#include "plugin/knmailwebengineviewer/knmailwebengineviewer.h"
+#endif
 
 #include "knmailplugin.h"
 
@@ -115,7 +119,18 @@ inline void KNMailPlugin::initialInfrastructure()
 inline KNMailViewerBase *KNMailPlugin::generateViewer()
 {
     //Generate a viewer.
-    return new KNMailViewer();
+    KNMailViewerBase *viewer=new KNMailViewer(generateWebViewer(nullptr));
+    //Return the viewer.
+    return viewer;
+}
+
+inline KNMailWebViewerBase *KNMailPlugin::generateWebViewer(QWidget *parent)
+{
+#ifdef BACKEND_WEBENGINE
+    return new KNMailWebEngineViewer(parent);
+#else
+    return nullptr;
+#endif
 }
 
 void KNMailPlugin::loadEmptyHint(KNMailEmptyHintBase *emptyHint)

@@ -15,30 +15,21 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILVIEWERBASE_H
-#define KNMAILVIEWERBASE_H
+#include <QtWebEngineWidgets/QWebEngineView>
 
-#include <QWidget>
+#include "knmailwebengineviewer.h"
 
-class KNMailWebViewerBase;
-/*!
- * \brief The KNMailViewerBase class provides the basic ports and functions
- * which a mail viewer should be provided. This port widget should be generate
- * by a factor of the viewer for multiple viewers.
- */
-class KNMailViewerBase : public QWidget
+KNMailWebEngineViewer::KNMailWebEngineViewer(QWidget *parent) :
+    KNMailWebViewerBase(parent),
+    m_browser(new QWebEngineView(this))
 {
-    Q_OBJECT
-public:
-    /*!
-     * \brief Construct a KNMailViewerBase widget.
-     * \param parent The parent widget.
-     */
-    KNMailViewerBase(QWidget *parent = 0) : QWidget(parent){}
+    m_browser->setUrl(QUrl("http://www.google.co.jp"));
+}
 
-signals:
-
-public slots:
-};
-
-#endif // KNMAILVIEWERBASE_H
+void KNMailWebEngineViewer::resizeEvent(QResizeEvent *event)
+{
+    //Update the widget size.
+    KNMailWebViewerBase::resizeEvent(event);
+    //Update the browser size.
+    m_browser->resize(size());
+}

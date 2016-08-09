@@ -15,27 +15,25 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILVIEWER_H
-#define KNMAILVIEWER_H
+#ifndef KNMAILWEBENGINEVIEWER_H
+#define KNMAILWEBENGINEVIEWER_H
 
-#include "knmailviewerbase.h"
+#include "knmailwebviewerbase.h"
 
-class QLabel;
-class KNMailContactList;
+class QWebEngineView;
 /*!
- * \brief The KNMailViewer class provides a default realize of the mail viewer.
- * This viewer could be popup and view the mail in a new widget.
+ * \brief The KNMailWebEngineViewer class provides the web viewer using Qt
+ * WebEngine module.
  */
-class KNMailViewer : public KNMailViewerBase
+class KNMailWebEngineViewer : public KNMailWebViewerBase
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailViewer widget.
+     * \brief Construct a KNMailWebEngineViewer widget.
      * \param parent The parent widget.
      */
-    explicit KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent = 0);
-    ~KNMailViewer();
+    explicit KNMailWebEngineViewer(QWidget *parent = 0);
 
 signals:
 
@@ -43,19 +41,12 @@ public slots:
 
 protected:
     /*!
-     * \brief Reimplemented from KNMailViewerBase::resizeEvent().
+     * \brief Reimplemented from KNMailWebViewerBase::resizeEvent().
      */
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
-private slots:
-    void retranslate();
-    void onThemeChanged();
-
 private:
-    QString m_subjectText;
-    QLabel *m_subject, *m_receiveTime, *m_senderLabel, *m_receiverLabel,
-           *m_ccLabel;
-    KNMailContactList *m_senderList, *m_receiverList, *m_ccList;
+    QWebEngineView *m_browser;
 };
 
-#endif // KNMAILVIEWER_H
+#endif // KNMAILWEBENGINEVIEWER_H
