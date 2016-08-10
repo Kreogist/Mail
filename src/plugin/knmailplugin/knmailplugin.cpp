@@ -40,6 +40,9 @@
 #ifdef BACKEND_WEBENGINE
 #include "plugin/knmailwebengineviewer/knmailwebengineviewer.h"
 #endif
+#ifdef BACKEND_WEBKIT
+#include "plugin/knmailwebkitviewer/knmailwebkitviewer.h"
+#endif
 
 #include "knmailplugin.h"
 
@@ -128,6 +131,8 @@ inline KNMailWebViewerBase *KNMailPlugin::generateWebViewer(QWidget *parent)
 {
 #ifdef BACKEND_WEBENGINE
     return new KNMailWebEngineViewer(parent);
+#elif BACKEND_WEBKIT
+    return new KNMailWebkitViewer(parent);
 #else
     return nullptr;
 #endif

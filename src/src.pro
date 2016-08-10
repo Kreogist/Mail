@@ -119,6 +119,7 @@ win32: {
         CONFIG += webengine-backend
     } else {
         # Using MinGW, 32-bit.
+        CONFIG += webkit-backend
     }
     # Application icon.
     RC_FILE += resource/icon/win_resource.rc \
@@ -139,6 +140,17 @@ linux: {
     DESTDIR = ../bin
     # This options is added for Linux specially.
     INSTALLS += target
+    # Check Qt version.
+    # We could check the version of Qt. If the Qt is later than Qt 5.5, then we
+    # could use Qt WebEngine.
+    lessThan(QT_MINOR_VERSION, 6) {
+        # Use Qt Webkit as the backend.
+        CONFIG += webkit-backend
+    }
+    greaterThan(QT_MINOR_VERSION, 5) {
+        # Use Qt WebEngine as the backend.
+        CONFIG += webengine-backend
+    }
 }
 
 # International Configureations.
@@ -162,6 +174,27 @@ webengine-backend: {
     DEFINES += BACKEND_ENABLED BACKEND_WEBENGINE
     # Add Qt modules.
     QT += webenginewidgets
+    # Add module files.
+    SOURCES += \
+        plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewer.cpp
+    HEADERS += \
+        plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewer.h
+}
+
+webkit-backend: {
+    # Check wheter there's a backend enable already.
+    contains(DEFINES, BACKEND_ENABLED) {
+        error("Can't enable more than one backend at the same time.")
+    }
+    # Define the Web Engine backend.
+    DEFINES += BACKEND_ENABLED BACKEND_WEBKIT
+    # Add Qt modules.
+    QT += webkitwidgets
+    # Add module files.
+    SOURCES += \
+        plugin/knmailplugin/plugin/knmailwebkitviewer/knmailwebkitviewer.cpp
+    HEADERS += \
+        plugin/knmailplugin/plugin/knmailwebkitviewer/knmailwebkitviewer.h
 }
 
 # Add sdk directory to include path.
@@ -225,7 +258,7 @@ SOURCES += \
     plugin/knmailplugin/sdk/knmailcontactcontainer.cpp \
     plugin/knmailplugin/sdk/knmailcontactlist.cpp \
     sdk/knroundedborderbutton.cpp \
-    plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewer.cpp
+    sdk/knclickablelabel.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -287,4 +320,4 @@ HEADERS += \
     plugin/knmailplugin/sdk/knmailcontactlist.h \
     sdk/knroundedborderbutton.h \
     plugin/knmailplugin/sdk/knmailwebviewerbase.h \
-    plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewer.h
+    sdk/knclickablelabel.h

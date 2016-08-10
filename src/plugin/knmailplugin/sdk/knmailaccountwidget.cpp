@@ -72,7 +72,7 @@ KNMailAccountWidget::KNMailAccountWidget(KNMailAccount *account,
     setFont(labelFont);
     //Configure the time line.
     m_expandAnime->setUpdateInterval(33);
-    m_expandAnime->setEasingCurve(QEasingCurve::OutCubic);
+    m_expandAnime->setEasingCurve(QEasingCurve::Linear);
     connect(m_expandAnime, &QTimeLine::frameChanged,
             this, &KNMailAccountWidget::onActionResizePanel);
 }

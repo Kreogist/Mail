@@ -18,8 +18,12 @@
 #ifndef KNMAILFOLDERVIEWER_H
 #define KNMAILFOLDERVIEWER_H
 
+#include <QModelIndex>
+
 #include "knmailfolderviewerbase.h"
 
+class QTimeLine;
+class KNClickableLabel;
 class KNMailModel;
 class KNMailFolderViewerTitle;
 class KNMailFolderTreeView;
@@ -57,12 +61,19 @@ protected:
      */
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
+private slots:
+    void onSelectionChange(const QModelIndex &current);
+
 private:
-    inline void updateViewerPos();
+    inline void updateViewerSize();
+    inline void updateShadowDarkness(const qreal &alpha);
+    inline void startAnimeViewer(int endFrame);
     KNMailFolderViewerTitle *m_title;
     KNMailFolderTreeView *m_folderView;
-    QWidget *m_shadowLayer;
+    KNClickableLabel *m_shadowLayer;
     KNMailViewerBase *m_viewer;
+    QTimeLine *m_viewerAnime;
+    bool m_isAnimeShown;
 };
 
 #endif // KNMAILFOLDERVIEWER_H
