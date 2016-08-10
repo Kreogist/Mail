@@ -130,12 +130,21 @@ void KNMailFolderViewer::setViewer(KNMailViewerBase *viewer)
         //Ignore the viewer.
         return;
     }
+    //Link the viewer.
+    connect(m_viewer, &KNMailViewerBase::requirePopup,
+            this, &KNMailFolderViewer::hideViewer);
     //Change owner relationship.
     m_viewer->setParent(this);
     //Hide the viewer at default.
     m_viewer->hide();
     //Update the viewer position and size.
     updateViewerSize();
+}
+
+void KNMailFolderViewer::hideViewer()
+{
+    //Start the hiddien animation.
+    startAnimeViewer(width());
 }
 
 void KNMailFolderViewer::resizeEvent(QResizeEvent *event)

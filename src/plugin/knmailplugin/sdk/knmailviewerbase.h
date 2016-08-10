@@ -37,8 +37,26 @@ public:
     KNMailViewerBase(QWidget *parent = 0) : QWidget(parent){}
 
 signals:
+    /*!
+     * \brief Require to pop up the mail in a new window, only one viewer should
+     *  emit this signal.
+     * \param mailPath The mail path.
+     */
+    void requirePopup(const QString &mailPath);
 
 public slots:
+    /*!
+     * \brief Set the viewer to be a pop up window.
+     * \param isPopup To make the window a pop up window, set this function to
+     * be true.
+     */
+    virtual void setViewerPopup(bool isPopup)=0;
+
+    /*!
+     * \brief Set the popup button to be shown or not on the panel.
+     * \param isEnabled To show the button, set to true.
+     */
+    virtual void setPopupButtonEnabled(bool isEnabled)=0;
 };
 
 #endif // KNMAILVIEWERBASE_H

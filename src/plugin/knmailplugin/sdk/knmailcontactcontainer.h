@@ -74,6 +74,10 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Remove all the buttons in the container.
+     */
+    void clear();
 
 protected:
     /*!
@@ -83,6 +87,7 @@ protected:
 
 private:
     QList<KNMailContactButton *> m_buttons;
+    QPalette m_buttonPalette;
     KNMailContactFlowLayout *m_mainLayout;
 };
 

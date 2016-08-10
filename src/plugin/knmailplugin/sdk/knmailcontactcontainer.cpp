@@ -35,6 +35,8 @@ KNMailContactContainer::KNMailContactContainer(QWidget *parent) :
 
 void KNMailContactContainer::addContact(KNMailContactButton *button)
 {
+    //Update the button's palette.
+    button->setPalette(m_buttonPalette);
     //Add button to main layout.
     m_mainLayout->addWidget(button);
     //Add button to list.
@@ -66,11 +68,23 @@ int KNMailContactContainer::heightForWidth(int targetWidth) const
 
 void KNMailContactContainer::setContactPalette(const QPalette &pal)
 {
+    //Save the new palette.
+    m_buttonPalette=pal;
     //Update the button in the list.
     for(auto i : m_buttons)
     {
         //Update the button.
-        i->setPalette(pal);
+        i->setPalette(m_buttonPalette);
+    }
+}
+
+void KNMailContactContainer::clear()
+{
+    //Delete all in the list.
+    for(auto i : m_buttons)
+    {
+        //Do delete later.
+        i->deleteLater();
     }
 }
 

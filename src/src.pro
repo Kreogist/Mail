@@ -133,6 +133,8 @@ macx: {
     ICON = resource/icon/mail.icns
     # Set the info plist.
     QMAKE_INFO_PLIST = resource/platforms/mac/Info.plist
+    # Mac OS X is pretty a simple platform, compiled with the latest version.
+    CONFIG += webengine-backend
 }
 
 linux: {

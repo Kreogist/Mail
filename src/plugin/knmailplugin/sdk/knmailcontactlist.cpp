@@ -50,22 +50,18 @@ KNMailContactList::KNMailContactList(QWidget *parent) :
             [=]{setExpandState(!m_isExpand);});
     //Update more button.
     updateExpandButton();
+}
 
-    //Add container.
-    m_container->addContact("123456@126.com", "Tojo Saki");
-    m_container->addContact("1234567890@gmail.com", "Freddie");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("cccccccccc@163.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("u1234567@anu.edu.au.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
+void KNMailContactList::addContact(KNMailContactButton *button)
+{
+    //Add the container data to the list.
+    m_container->addContact(button);
+}
 
+void KNMailContactList::addContact(const QString &email, const QString &caption)
+{
+    //Add the data to contianer.
+    m_container->addContact(email, caption);
 }
 
 void KNMailContactList::setContactPalette(const QPalette &pal)
@@ -180,4 +176,9 @@ void KNMailContactList::setExpandState(bool isExpand)
     }
     //Update button.
     updateExpandButton();
+}
+
+void KNMailContactList::clear()
+{
+    m_container->clear();
 }

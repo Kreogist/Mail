@@ -53,6 +53,9 @@ signals:
 
 public slots:
 
+private slots:
+    void onPopupMail(const QString &mailPath);
+
 private:
     inline void initialInfrastructure();
     inline KNMailViewerBase *generateViewer();

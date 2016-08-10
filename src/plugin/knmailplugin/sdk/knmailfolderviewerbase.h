@@ -53,6 +53,12 @@ public slots:
      * \param viewer The mail viewer widget.
      */
     virtual void setViewer(KNMailViewerBase *viewer)=0;
+
+    /*!
+     * \brief Hide the shown viewer, if the widget is already hidden, it will do
+     * nothing.
+     */
+    virtual void hideViewer()=0;
 };
 
 #endif // KNMAILFOLDERVIEWERBASE_H

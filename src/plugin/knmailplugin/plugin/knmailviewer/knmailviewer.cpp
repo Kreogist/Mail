@@ -21,6 +21,7 @@
 
 #include "knthememanager.h"
 #include "knlocalemanager.h"
+#include "knopacityanimebutton.h"
 
 #include "knmailwebviewerbase.h"
 #include "knmailcontactbutton.h"
@@ -45,7 +46,8 @@ KNMailViewer::KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent) :
     m_ccLabel(new QLabel(this)),
     m_senderList(new KNMailContactList(this)),
     m_receiverList(new KNMailContactList(this)),
-    m_ccList(new KNMailContactList(this))
+    m_ccList(new KNMailContactList(this)),
+    m_popup(new KNOpacityAnimeButton(this))
 {
     setObjectName("MailViewer");
     //Set properties.
@@ -66,6 +68,12 @@ KNMailViewer::KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent) :
     m_receiverLabel->setFixedHeight(ButtonHeight);
     m_ccLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     m_ccLabel->setFixedHeight(ButtonHeight);
+    //Configure the animation.
+    m_popup->setFixedSize(16, 16);
+    m_popup->setIcon(QIcon("://public/popup.png"));
+    //Link the popup signals.
+    connect(m_popup, &KNOpacityAnimeButton::clicked,
+            [=]{emit requirePopup(QString());});
 
     //Initial the main layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -80,8 +88,16 @@ KNMailViewer::KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent) :
                                     TitleHMargin, TitleVMargin);
     titleLayout->setSpacing(TitleSpacing);
     mainLayout->addLayout(titleLayout);
-    //Add widget to the layout.
-    titleLayout->addWidget(m_subject);
+    //Build the subject layout.
+    QBoxLayout *subjectLayout=new QBoxLayout(QBoxLayout::LeftToRight,
+                                             mainLayout->widget());
+    subjectLayout->setContentsMargins(0,0,0,0);
+    subjectLayout->setSpacing(0);
+    //Add widgets to subject layout.
+    subjectLayout->addWidget(m_subject, 1);
+    subjectLayout->addWidget(m_popup);
+    //Add layouts and widgets to the layout.
+    titleLayout->addLayout(subjectLayout);
     titleLayout->addWidget(m_receiveTime);
     //Initial the sender, receiver and CC lists.
     QFormLayout *contactLayout=new QFormLayout(mainLayout->widget());
@@ -108,6 +124,22 @@ KNMailViewer::KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent) :
     //Debug.
     m_subjectText="Welcome to TechLauncher for Semester 2, 2016";
     m_receiveTime->setText("July 18, 2016 13:00:00");
+    m_senderList->addContact("saki.tojo@ll-anime.com", "Tojo Saki");
+    m_receiverList->addContact("honoka.kousaka@ll-anime.com", "Kousaka Honoka");
+    m_receiverList->addContact("kotori.minami@ll-anime.com", "Minami Kotori");
+    m_receiverList->addContact("umi.sonoda@ll-anime.com", "Sonoda Umi");
+    m_receiverList->addContact("umi.sonoda@ll-anime.com", "Sonoda Umi");
+    m_receiverList->addContact("umi.sonoda@ll-anime.com", "Sonoda Umi");
+    m_receiverList->addContact("umi.sonoda@ll-anime.com", "Sonoda Umi");
+    m_ccList->addContact("eri.ayase@ll-anime.com", "Ayase Eri");
+    m_ccList->addContact("nozomi.tojo@ll-anime.com", "Tojo Nozomi");
+    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
+    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
+    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
+    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
+    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
+    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
+    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
 }
 
 KNMailViewer::~KNMailViewer()
@@ -116,6 +148,27 @@ KNMailViewer::~KNMailViewer()
     disconnect(knTheme, 0, this, 0);
     //Remove the translation signals.
     disconnect(knI18n, 0, this, 0);
+}
+
+void KNMailViewer::setViewerPopup(bool isPopup)
+{
+    //Check the popup state.
+    if(isPopup)
+    {
+        //Set the window flag of current widget.
+        setWindowFlags(Qt::Window);
+        //Complete.
+        return;
+    }
+    //Or else make this a widget.
+    setWindowFlags(Qt::Widget);
+}
+
+void KNMailViewer::setPopupButtonEnabled(bool isEnabled)
+{
+    //Update the popup state.
+    m_popup->setVisible(isEnabled);
+    m_popup->setEnabled(isEnabled);
 }
 
 void KNMailViewer::resizeEvent(QResizeEvent *event)

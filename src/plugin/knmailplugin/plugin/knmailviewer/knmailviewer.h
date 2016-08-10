@@ -21,6 +21,7 @@
 #include "knmailviewerbase.h"
 
 class QLabel;
+class KNOpacityAnimeButton;
 class KNMailContactList;
 /*!
  * \brief The KNMailViewer class provides a default realize of the mail viewer.
@@ -40,6 +41,15 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Reimplemented from KNMailViewerBase::setViewerPopup().
+     */
+    void setViewerPopup(bool isPopup) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from KNMailViewerBase::setPopupButtonEnabled().
+     */
+    void setPopupButtonEnabled(bool isEnabled) Q_DECL_OVERRIDE;
 
 protected:
     /*!
@@ -56,6 +66,7 @@ private:
     QLabel *m_subject, *m_receiveTime, *m_senderLabel, *m_receiverLabel,
            *m_ccLabel;
     KNMailContactList *m_senderList, *m_receiverList, *m_ccList;
+    KNOpacityAnimeButton *m_popup;
 };
 
 #endif // KNMAILVIEWER_H

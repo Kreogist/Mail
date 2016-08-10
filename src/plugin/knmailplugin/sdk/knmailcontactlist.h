@@ -20,6 +20,7 @@
 
 #include <QScrollArea>
 
+class KNMailContactButton;
 class KNRoundedBorderButton;
 class KNMailContactContainer;
 /*!
@@ -38,6 +39,19 @@ public:
     explicit KNMailContactList(QWidget *parent = 0);
 
     /*!
+     * \brief Append contact button to the widget.
+     * \param button The contact button.
+     */
+    void addContact(KNMailContactButton *button);
+
+    /*!
+     * \brief Add the E-mail address to the contact list.
+     * \param email The contact address.
+     * \param caption The contact caption. The default value is a null string.
+     */
+    void addContact(const QString &email, const QString &caption=QString());
+
+    /*!
      * \brief Update all the contact button palette.
      * \param pal The contact button palette.
      */
@@ -52,6 +66,11 @@ public slots:
      * the list is not expandable, then this function won't work.
      */
     void setExpandState(bool isExpand);
+
+    /*!
+     * \brief Remove all the buttons in the container.
+     */
+    void clear();
 
 protected:
     /*!
