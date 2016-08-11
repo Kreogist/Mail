@@ -116,11 +116,11 @@ KMGlobal::KMGlobal(QObject *parent) :
     //Initial the infrastructure.
     initialInfrastrcture();
     //Initial the receiver manager.
-    KMMailReceiverManager::initial();
+    KMMailReceiverManager::initial(this);
     //Move the receiver manager to working thread.
     kmReceiverManager->moveToThread(&m_receiverThread);
 
-    KMMailSenderManager::initial();
+    KMMailSenderManager::initial(this);
     kmSenderManager->moveToThread(&m_sendThread);
 }
 

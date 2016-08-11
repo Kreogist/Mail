@@ -1,6 +1,8 @@
 #include "kmmailsendermanager.h"
 
-KMMailSenderManager *KMMailSenderManager::instance()
+KMMailSenderManager *KMMailSenderManager::m_instance=nullptr;
+
+KMMailSenderManager *KMMailSenderManager::  instance()
 {
     //Give back the instance.
     return m_instance;
@@ -18,9 +20,9 @@ void KMMailSenderManager::initial(QObject *parent)
 
 void KMMailSenderManager::appendMailSendList(KNMailAccount *account, KMMimePart *content)
 {
-    sendPack *Pack = new sendPack;
-    Pack->account = account;
-    Pack->content = content;
+    sendPack pack;
+    pack.account = account;
+    pack.content = content;
     m_sendList.append(pack);
 
     emit requireSend();
@@ -41,5 +43,5 @@ void KMMailSenderManager::onSendNext()
 KMMailSenderManager::KMMailSenderManager(QObject *parent) : QObject(parent)
 {
     connect(this, &KMMailSenderManager::requireSend,
-            this, &KMMailSenderManager::onSendNext,Qt::QueuedConnection)
+            this, &KMMailSenderManager::onSendNext,Qt::QueuedConnection);
 }

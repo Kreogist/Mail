@@ -36,7 +36,7 @@ void KMMailReceiverManager::initial(QObject *parent)
     }
 }
 
-void KMMailReceiverManager::appendMail(KNMailAccount *accout)
+void KMMailReceiverManager::appendMail(KNMailAccount *account)
 {
     //Lock the queue.
     m_queueLock.lock();
@@ -47,7 +47,7 @@ void KMMailReceiverManager::appendMail(KNMailAccount *accout)
     if(accountIndex==-1)
     {
         //Append account list.
-        m_mailRecevieList.append(accout);
+        m_mailRecevieList.append(account);
     }
     else
     {
