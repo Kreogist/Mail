@@ -51,6 +51,11 @@ public slots:
      */
     void setPopupButtonEnabled(bool isEnabled) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMailViewerBase::loadMail().
+     */
+    void loadMail(const QString &mailPath) Q_DECL_OVERRIDE;
+
 protected:
     /*!
      * \brief Reimplemented from KNMailViewerBase::resizeEvent().

@@ -171,6 +171,11 @@ void KNMailViewer::setPopupButtonEnabled(bool isEnabled)
     m_popup->setEnabled(isEnabled);
 }
 
+void KNMailViewer::loadMail(const QString &mailPath)
+{
+    ;
+}
+
 void KNMailViewer::resizeEvent(QResizeEvent *event)
 {
     //Resize the viewer first.

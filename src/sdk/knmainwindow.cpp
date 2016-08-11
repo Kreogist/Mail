@@ -35,6 +35,7 @@ KNMainWindow::KNMainWindow(QWidget *parent) :
     setAutoFillBackground(true);
     setCentralWidget(m_container);
     setContentsMargins(0,0,0,0);
+    setMinimumSize(853, 480);
     setWindowIcon(QIcon("://icon/mu.png"));
     //Configure the splitter.
     m_container->setHandleWidth(0);

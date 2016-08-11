@@ -57,6 +57,12 @@ public slots:
      * \param isEnabled To show the button, set to true.
      */
     virtual void setPopupButtonEnabled(bool isEnabled)=0;
+
+    /*!
+     * \brief Load a mail from a file.
+     * \param mailPath The mail file path.
+     */
+    virtual void loadMail(const QString &mailPath)=0;
 };
 
 #endif // KNMAILVIEWERBASE_H

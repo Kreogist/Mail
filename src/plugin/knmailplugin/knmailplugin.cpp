@@ -116,6 +116,8 @@ void KNMailPlugin::onPopupMail(const QString &mailPath)
     //Update the viewer state.
     viewer->setViewerPopup(true);
     viewer->setPopupButtonEnabled(false);
+    //Set the mime viewer.
+    viewer->setMinimumSize(853, 480);
     //! FIXME: Add apply mail path here.
     //Show the viewer.
     viewer->show();

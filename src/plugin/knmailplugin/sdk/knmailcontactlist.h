@@ -78,6 +78,11 @@ protected:
      */
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from QScrollArea::showEvent().
+     */
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+
 private:
     inline void updateExpandButton();
     KNMailContactContainer *m_container;

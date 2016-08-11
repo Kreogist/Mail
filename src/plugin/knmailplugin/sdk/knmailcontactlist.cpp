@@ -130,6 +130,14 @@ void KNMailContactList::resizeEvent(QResizeEvent *event)
     }
 }
 
+void KNMailContactList::showEvent(QShowEvent *event)
+{
+    //Show the widget.
+    QScrollArea::showEvent(event);
+    //Check item height.
+    m_moreButton->move(width()-m_moreButton->width(), 0);
+}
+
 void KNMailContactList::updateExpandButton()
 {
     //Check the expand state.
