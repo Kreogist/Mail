@@ -35,21 +35,21 @@ public:
      * \brief Construct a KNMailViewer widget.
      * \param parent The parent widget.
      */
-    explicit KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent = 0);
+    explicit KNMailViewer(QWidget *parent = 0);
     ~KNMailViewer();
 
 signals:
 
 public slots:
     /*!
+     * \brief Reimplemented from KNMailViewerBase::setWebViewer().
+     */
+    void setWebViewer(KNMailWebViewerBase *viewer) Q_DECL_OVERRIDE;
+
+    /*!
      * \brief Reimplemented from KNMailViewerBase::setViewerPopup().
      */
     void setViewerPopup(bool isPopup) Q_DECL_OVERRIDE;
-
-    /*!
-     * \brief Reimplemented from KNMailViewerBase::setPopupButtonEnabled().
-     */
-    void setPopupButtonEnabled(bool isEnabled) Q_DECL_OVERRIDE;
 
     /*!
      * \brief Reimplemented from KNMailViewerBase::loadMail().
@@ -62,16 +62,22 @@ protected:
      */
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMailViewerBase::closeEvent().
+     */
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
+
 private slots:
     void retranslate();
     void onThemeChanged();
 
 private:
-    QString m_subjectText;
+    QString m_subjectText, m_filePath;
     QLabel *m_subject, *m_receiveTime, *m_senderLabel, *m_receiverLabel,
            *m_ccLabel;
     KNMailContactList *m_senderList, *m_receiverList, *m_ccList;
     KNOpacityAnimeButton *m_popup;
+    KNMailWebViewerBase *m_viewer;
 };
 
 #endif // KNMAILVIEWER_H

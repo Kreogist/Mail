@@ -36,9 +36,10 @@
 #define TitleFontSize 18
 #define TextFontSize 12
 
-KNMailViewer::KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent) :
+KNMailViewer::KNMailViewer(QWidget *parent) :
     KNMailViewerBase(parent),
     m_subjectText(QString()),
+    m_filePath(QString()),
     m_subject(new QLabel(this)),
     m_receiveTime(new QLabel(this)),
     m_senderLabel(new QLabel(this)),
@@ -47,7 +48,8 @@ KNMailViewer::KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent) :
     m_senderList(new KNMailContactList(this)),
     m_receiverList(new KNMailContactList(this)),
     m_ccList(new KNMailContactList(this)),
-    m_popup(new KNOpacityAnimeButton(this))
+    m_popup(new KNOpacityAnimeButton(this)),
+    m_viewer(nullptr)
 {
     setObjectName("MailViewer");
     //Set properties.
@@ -73,7 +75,7 @@ KNMailViewer::KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent) :
     m_popup->setIcon(QIcon("://public/popup.png"));
     //Link the popup signals.
     connect(m_popup, &KNOpacityAnimeButton::clicked,
-            [=]{emit requirePopup(QString());});
+            [=]{emit requirePopup(m_filePath);});
 
     //Initial the main layout.
     QBoxLayout *mainLayout=new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -110,8 +112,6 @@ KNMailViewer::KNMailViewer(KNMailWebViewerBase *viewer, QWidget *parent) :
     contactLayout->addRow(m_senderLabel, m_senderList);
     contactLayout->addRow(m_receiverLabel, m_receiverList);
     contactLayout->addRow(m_ccLabel, m_ccList);
-    //Add the last widgets.
-    mainLayout->addWidget(viewer, 1);
     //Link the theme manager.
     connect(knTheme, &KNThemeManager::themeChange,
             this, &KNMailViewer::onThemeChanged);
@@ -150,8 +150,30 @@ KNMailViewer::~KNMailViewer()
     disconnect(knI18n, 0, this, 0);
 }
 
+void KNMailViewer::setWebViewer(KNMailWebViewerBase *viewer)
+{
+    //Check the viewer.
+    if(viewer==nullptr)
+    {
+        return;
+    }
+    //Save the pointer.
+    m_viewer=viewer;
+    //Change the relationship.
+    m_viewer->setParent(this);
+    //Translate the layout pointer to box layout.
+    QBoxLayout *mainLayout=static_cast<QBoxLayout *>(layout());
+    //Add widget to main layout.
+    mainLayout->addWidget(m_viewer, 1);
+    //Update the widget.
+    update();
+}
+
 void KNMailViewer::setViewerPopup(bool isPopup)
 {
+    //Update the popup state.
+    m_popup->setVisible(!isPopup);
+    m_popup->setEnabled(!isPopup);
     //Check the popup state.
     if(isPopup)
     {
@@ -164,16 +186,14 @@ void KNMailViewer::setViewerPopup(bool isPopup)
     setWindowFlags(Qt::Widget);
 }
 
-void KNMailViewer::setPopupButtonEnabled(bool isEnabled)
-{
-    //Update the popup state.
-    m_popup->setVisible(isEnabled);
-    m_popup->setEnabled(isEnabled);
-}
-
 void KNMailViewer::loadMail(const QString &mailPath)
 {
-    ;
+    //Check the file path first.
+    //! FIXME: Add checking codes here.
+    //Save the file path.
+    m_filePath=mailPath;
+    //Parse the mail file into a mime part.
+    //! FIXEME Add parse code here.
 }
 
 void KNMailViewer::resizeEvent(QResizeEvent *event)
@@ -184,6 +204,20 @@ void KNMailViewer::resizeEvent(QResizeEvent *event)
     m_subject->setText(m_subject->fontMetrics().elidedText(m_subjectText,
                                                            Qt::ElideRight,
                                                            m_subject->width()));
+}
+
+void KNMailViewer::closeEvent(QCloseEvent *event)
+{
+    //Emit the close signal if the popup button is hidden.
+    if(!m_popup->isVisible())
+    {
+        //This means it is a popup viewer.
+        emit requireClose(m_filePath);
+        //Delete this widget later.
+        deleteLater();
+    }
+    //Close the window.
+    KNMailViewerBase::closeEvent(event);
 }
 
 void KNMailViewer::retranslate()

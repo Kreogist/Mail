@@ -110,7 +110,8 @@ KNMimePart *KNMailParser::parseMail(const QByteArray &content)
     }
     //All the left parts will be treat as a single mime part.
     KNMimePart *mimeContent=new KNMimePart();
-    //Give ;
+    //Give the header to mime content;
+    mimeContent->setHeaderList(headerList);
     return mimeContent;
 }
 

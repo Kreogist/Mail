@@ -23,11 +23,14 @@
 //Mail plugin sdks.
 #include "knmailglobal.h"
 #include "knmailaccountlist.h"
+#include "knmailpopupmanager.h"
 
 //Ports.
 #include "knmailemptyhintbase.h"
 #include "knmailfolderviewerbase.h"
 #include "knmailviewerbase.h"
+#include "knmailviewergeneratorbase.h"
+#include "knmailwebviewergeneratorbase.h"
 
 //Plugins.
 // Empty hint.
@@ -36,9 +39,11 @@
 #include "plugin/knmailfolderviewer/knmailfolderviewer.h"
 // Mail viewer.
 #include "plugin/knmailviewer/knmailviewer.h"
+#include "plugin/knmailviewer/knmailviewergenerator.h"
 // Web viewers.
 #ifdef BACKEND_WEBENGINE
 #include "plugin/knmailwebengineviewer/knmailwebengineviewer.h"
+#include "plugin/knmailwebengineviewer/knmailwebengineviewergenerator.h"
 #endif
 #ifdef BACKEND_WEBKIT
 #include "plugin/knmailwebkitviewer/knmailwebkitviewer.h"
@@ -68,6 +73,12 @@ QWidget *KNMailPlugin::accountPanel()
 void KNMailPlugin::loadPlugins()
 {
     //Load all the plugins in order.
+    //Load the web content generator.
+#ifdef BACKEND_WEBENGINE
+    loadWebViewerGenerator(new KNMailWebEngineViewerGenerator);
+#endif
+    //Load the mail viewer generator.
+    loadMailViewerGenerator(new KNMailViewerGenerator);
     //Load the empty hint.
     loadEmptyHint(new KNMailEmptyHint);
     //Load the folder viewer.
@@ -107,22 +118,6 @@ void KNMailPlugin::loadPlugins()
     knMailAccountManager->appendAccount(account);
 }
 
-void KNMailPlugin::onPopupMail(const QString &mailPath)
-{
-    //Generate the viewer.
-    KNMailViewerBase *viewer=generateViewer();
-    //Set the viewer parent.
-    viewer->setParent(this);
-    //Update the viewer state.
-    viewer->setViewerPopup(true);
-    viewer->setPopupButtonEnabled(false);
-    //Set the mime viewer.
-    viewer->setMinimumSize(853, 480);
-    //! FIXME: Add apply mail path here.
-    //Show the viewer.
-    viewer->show();
-}
-
 inline void KNMailPlugin::initialInfrastructure()
 {
     //Initial the mail plugin global.
@@ -135,25 +130,6 @@ inline void KNMailPlugin::initialInfrastructure()
     setLayout(m_mainLayout);
 }
 
-inline KNMailViewerBase *KNMailPlugin::generateViewer()
-{
-    //Generate a viewer.
-    KNMailViewerBase *viewer=new KNMailViewer(generateWebViewer(nullptr));
-    //Return the viewer.
-    return viewer;
-}
-
-inline KNMailWebViewerBase *KNMailPlugin::generateWebViewer(QWidget *parent)
-{
-#ifdef BACKEND_WEBENGINE
-    return new KNMailWebEngineViewer(parent);
-#elif BACKEND_WEBKIT
-    return new KNMailWebkitViewer(parent);
-#else
-    return nullptr;
-#endif
-}
-
 void KNMailPlugin::loadEmptyHint(KNMailEmptyHintBase *emptyHint)
 {
     //Add widget to the stacked layout.
@@ -163,10 +139,10 @@ void KNMailPlugin::loadEmptyHint(KNMailEmptyHintBase *emptyHint)
 void KNMailPlugin::loadFolderViewer(KNMailFolderViewerBase *folderViewer)
 {
     //Generate the mail viewer.
-    KNMailViewerBase *mailViewer=generateViewer();
+    KNMailViewerBase *mailViewer=knMailGlobal->generateViewer(folderViewer);
     //Link the mail viewer to this plugin.
     connect(mailViewer, &KNMailViewerBase::requirePopup,
-            this, &KNMailPlugin::onPopupMail);
+            knMailPopupManager, &KNMailPopupManager::popupMail);
     //Give the mail viewer to folder viewer.
     folderViewer->setViewer(mailViewer);
     //Add widget to the stacked layout.
@@ -174,4 +150,17 @@ void KNMailPlugin::loadFolderViewer(KNMailFolderViewerBase *folderViewer)
     //Connect with the mail account list.
     connect(m_leftBarContainer, &KNMailAccountList::requireShowFolder,
             folderViewer, &KNMailFolderViewerBase::setFolderModel);
+}
+
+void KNMailPlugin::loadWebViewerGenerator(
+        KNMailWebViewerGeneratorBase *generator)
+{
+    //Set the generator to mail global.
+    knMailGlobal->setWebViewerGenerator(generator);
+}
+
+void KNMailPlugin::loadMailViewerGenerator(KNMailViewerGeneratorBase *generator)
+{
+    //Set the generator to the mail global.
+    knMailGlobal->setViewerGenerator(generator, this);
 }

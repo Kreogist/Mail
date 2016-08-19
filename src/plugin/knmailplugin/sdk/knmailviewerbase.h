@@ -44,19 +44,26 @@ signals:
      */
     void requirePopup(const QString &mailPath);
 
+    /*!
+     * \brief When the window is closing, this signal will be emit to remove the
+     * window from the popup list.
+     * \param mailPath The mail file path.
+     */
+    void requireClose(const QString &mailPath);
+
 public slots:
+    /*!
+     * \brief Set the web content viewer to the mail viewer.
+     * \param The web viewer widget viewer pointer.
+     */
+    virtual void setWebViewer(KNMailWebViewerBase *viewer)=0;
+
     /*!
      * \brief Set the viewer to be a pop up window.
      * \param isPopup To make the window a pop up window, set this function to
      * be true.
      */
     virtual void setViewerPopup(bool isPopup)=0;
-
-    /*!
-     * \brief Set the popup button to be shown or not on the panel.
-     * \param isEnabled To show the button, set to true.
-     */
-    virtual void setPopupButtonEnabled(bool isEnabled)=0;
 
     /*!
      * \brief Load a mail from a file.
