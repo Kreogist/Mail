@@ -43,6 +43,9 @@ KNMailContactList::KNMailContactList(QWidget *parent) :
     setMaximumHeight(ButtonHeight);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setWidget(m_container);
+    //Configure the container.
+    connect(m_container, &KNMailContactContainer::lineCountChange,
+            this, &KNMailContactList::onLayoutLineCountChanged);
     //Configure the button.
     m_moreButton->setFixedSize(ButtonHeight, ButtonHeight);
     m_moreButton->hide();
@@ -56,12 +59,16 @@ void KNMailContactList::addContact(KNMailContactButton *button)
 {
     //Add the container data to the list.
     m_container->addContact(button);
+    //Update the state.
+    updateExpandButton();
 }
 
 void KNMailContactList::addContact(const QString &email, const QString &caption)
 {
     //Add the data to contianer.
     m_container->addContact(email, caption);
+    //Update the state.
+    updateExpandButton();
 }
 
 void KNMailContactList::setContactPalette(const QPalette &pal)
@@ -138,8 +145,18 @@ void KNMailContactList::showEvent(QShowEvent *event)
     m_moreButton->move(width()-m_moreButton->width(), 0);
 }
 
+void KNMailContactList::onLayoutLineCountChanged(int lineCount)
+{
+    //Update visibility.
+    m_moreButton->setVisible(lineCount>1);
+    //Update position.
+    updateExpandButton();
+}
+
 void KNMailContactList::updateExpandButton()
 {
+    //Update the more button position.
+    m_moreButton->move(width()-m_moreButton->width(), 0);
     //Check the expand state.
     if(m_isExpand)
     {
@@ -151,8 +168,6 @@ void KNMailContactList::updateExpandButton()
         //Process the fold state.
         m_moreButton->setText("...");
     }
-    //Update the more button position.
-    m_moreButton->move(width()-m_moreButton->width(), 0);
 }
 
 void KNMailContactList::setExpandState(bool isExpand)

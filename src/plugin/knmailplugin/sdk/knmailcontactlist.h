@@ -83,6 +83,9 @@ protected:
      */
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
+private slots:
+    void onLayoutLineCountChanged(int lineCount);
+
 private:
     inline void updateExpandButton();
     KNMailContactContainer *m_container;

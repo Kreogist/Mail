@@ -20,13 +20,17 @@ Foundation,
 
 #include "knmailcontactflowlayout.h"
 
+#include <QDebug>
+
 KNMailContactFlowLayout::KNMailContactFlowLayout(int hSpacing,
                                                  int vSpacing,
                                                  QWidget *parent) :
     QLayout(parent),
     m_hSpace(hSpacing),
     m_vSpace(vSpacing),
-    m_layoutHeight(0)
+    m_layoutHeight(0),
+    m_layoutLine(0),
+    m_lineCount(0)
 {
 }
 
@@ -74,8 +78,18 @@ void KNMailContactFlowLayout::setGeometry(const QRect &rect)
 {
     //Set the layout of the geometry.
     QLayout::setGeometry(rect);
+    //Generate the line count.
+    int lineCount;
     //Apply the size to the layout.
-    doLayout(rect, true);
+    doLayout(rect, true, &lineCount);
+    //Check the line count.
+    if(m_lineCount!=lineCount)
+    {
+        //Update the line count.
+        m_lineCount=lineCount;
+        //Emit the line count change signal.
+        emit lineCountChange(m_lineCount);
+    }
     //Reset the layout height.
     m_layoutHeight=0;
     //Save the height for the last item.
@@ -158,12 +172,13 @@ inline int KNMailContactFlowLayout::smartSpacing(QStyle::PixelMetric pm) const
 }
 
 inline int KNMailContactFlowLayout::doLayout(QRect effectiveRect,
-                                             bool apply) const
+                                             bool apply,
+                                             int *lineCount) const
 {
     //Initial the rect parameters.
     int rectX=effectiveRect.x(),
         rectY=effectiveRect.y(),
-        rectRight, lineHeight=0, spaceX, spaceY;
+        rectRight, lineHeight=0, spaceX, spaceY, innerLineCount=0;
     //Check out all the items.
     foreach(QLayoutItem *item, m_itemList)
     {
@@ -208,6 +223,8 @@ inline int KNMailContactFlowLayout::doLayout(QRect effectiveRect,
             rectRight=rectX+item->sizeHint().width();
             //Reset the line height.
             lineHeight=0;
+            //Add line count for apply mode.
+            ++innerLineCount;
         }
         //If this function is set to apply the change, then move the item.
         if(apply)
@@ -219,6 +236,12 @@ inline int KNMailContactFlowLayout::doLayout(QRect effectiveRect,
         rectX=rectRight+spaceX;
         //Update the line height.
         lineHeight=qMax(lineHeight, item->sizeHint().height());
+    }
+    //Check the line count is change or not.
+    if(apply && lineCount!=nullptr)
+    {
+        //Save the line count.
+        (*lineCount)=innerLineCount;
     }
     //Give back the size which is out side the layout.
     return rectY + lineHeight;

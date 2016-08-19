@@ -125,7 +125,7 @@ KNMailViewer::KNMailViewer(QWidget *parent) :
     m_subjectText="Welcome to TechLauncher for Semester 2, 2016";
     m_receiveTime->setText("July 18, 2016 13:00:00");
     m_senderList->addContact("saki.tojo@ll-anime.com", "Tojo Saki");
-    m_receiverList->addContact("honoka.kousaka@ll-anime.com", "Kousaka Honoka");
+    m_receiverList->addContact("honoka.kousaka.longer.honoka@ll-anime.com", "Kousaka Honoka");
     m_receiverList->addContact("kotori.minami@ll-anime.com", "Minami Kotori");
     m_receiverList->addContact("umi.sonoda@ll-anime.com", "Sonoda Umi");
     m_receiverList->addContact("umi.sonoda@ll-anime.com", "Sonoda Umi");

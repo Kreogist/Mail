@@ -72,6 +72,11 @@ public:
     void setContactPalette(const QPalette &pal);
 
 signals:
+    /*!
+     * \brief When the flow line count changed, this signal will be emitted.
+     * \param lineCount The line count.
+     */
+    void lineCountChange(int lineCount);
 
 public slots:
     /*!

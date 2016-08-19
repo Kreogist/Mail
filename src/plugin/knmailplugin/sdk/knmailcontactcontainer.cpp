@@ -29,6 +29,9 @@ KNMailContactContainer::KNMailContactContainer(QWidget *parent) :
                                              LayoutSpacing,
                                              this))
 {
+    //Link the layout signal.
+    connect(m_mainLayout, &KNMailContactFlowLayout::lineCountChange,
+            this, &KNMailContactContainer::lineCountChange);
     //Set main layout.
     setLayout(m_mainLayout);
 }
