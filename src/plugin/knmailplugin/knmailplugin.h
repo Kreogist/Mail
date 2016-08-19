@@ -26,6 +26,8 @@ class KNMailAccountList;
 class KNMailEmptyHintBase;
 class KNMailFolderViewerBase;
 class KNMailWebViewerBase;
+class KNMailViewerGeneratorBase;
+class KNMailWebViewerGeneratorBase;
 /*!
  * \brief The KNMailPlugin class is a default implementation of the mail plugin.
  */
@@ -53,12 +55,14 @@ signals:
 
 public slots:
 
+private slots:
+
 private:
     inline void initialInfrastructure();
-    inline KNMailViewerBase *generateViewer();
-    inline KNMailWebViewerBase *generateWebViewer(QWidget *parent);
     void loadEmptyHint(KNMailEmptyHintBase *emptyHint);
     void loadFolderViewer(KNMailFolderViewerBase *folderViewer);
+    void loadWebViewerGenerator(KNMailWebViewerGeneratorBase *generator);
+    void loadMailViewerGenerator(KNMailViewerGeneratorBase *generator);
     KNMailAccountList *m_leftBarContainer;
     QStackedLayout *m_mainLayout;
 };

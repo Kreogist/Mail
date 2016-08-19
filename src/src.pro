@@ -133,6 +133,8 @@ macx: {
     ICON = resource/icon/mail.icns
     # Set the info plist.
     QMAKE_INFO_PLIST = resource/platforms/mac/Info.plist
+    # Mac OS X is pretty a simple platform, compiled with the latest version.
+    CONFIG += webengine-backend
 }
 
 linux: {
@@ -176,9 +178,11 @@ webengine-backend: {
     QT += webenginewidgets
     # Add module files.
     SOURCES += \
-        plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewer.cpp
+        plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewer.cpp \
+        plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewergenerator.cpp
     HEADERS += \
-        plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewer.h
+        plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewer.h \
+        plugin/knmailplugin/plugin/knmailwebengineviewer/knmailwebengineviewergenerator.h
 }
 
 webkit-backend: {
@@ -259,7 +263,12 @@ SOURCES += \
     plugin/knmailplugin/sdk/knmailcontactlist.cpp \
     sdk/knroundedborderbutton.cpp \
     sdk/knclickablelabel.cpp \
-    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeviewdelegate.cpp
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeviewdelegate.cpp \
+    plugin/knmailplugin/sdk/knmailparser.cpp \
+    plugin/knmailplugin/sdk/knmimepart.cpp \
+    plugin/knmailplugin/sdk/knmimemultipart.cpp \
+    plugin/knmailplugin/sdk/knmailpopupmanager.cpp \
+    plugin/knmailplugin/plugin/knmailviewer/knmailviewergenerator.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -322,4 +331,11 @@ HEADERS += \
     sdk/knroundedborderbutton.h \
     plugin/knmailplugin/sdk/knmailwebviewerbase.h \
     sdk/knclickablelabel.h \
-    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeviewdelegate.h
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeviewdelegate.h \
+    plugin/knmailplugin/sdk/knmailparser.h \
+    plugin/knmailplugin/sdk/knmimepart.h \
+    plugin/knmailplugin/sdk/knmimemultipart.h \
+    plugin/knmailplugin/sdk/knmailpopupmanager.h \
+    plugin/knmailplugin/sdk/knmailviewergeneratorbase.h \
+    plugin/knmailplugin/plugin/knmailviewer/knmailviewergenerator.h \
+    plugin/knmailplugin/sdk/knmailwebviewergeneratorbase.h

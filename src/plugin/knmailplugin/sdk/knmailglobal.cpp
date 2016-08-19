@@ -18,11 +18,37 @@
 #include "knlocalemanager.h"
 
 #include "knmailaccount.h"
+#include "knmailpopupmanager.h"
 #include "knmailaccountmanager.h"
+#include "knmailviewergeneratorbase.h"
+#include "knmailviewerbase.h"
+#include "knmailwebviewergeneratorbase.h"
 
 #include "knmailglobal.h"
 
+#include <QDebug>
+
 KNMailGlobal *KNMailGlobal::m_instance=nullptr;
+
+KNMailGlobal::~KNMailGlobal()
+{
+    //Check the mail viewer generator pointer.
+    if(m_viewerGenerator)
+    {
+        //Recover the memory.
+        delete m_viewerGenerator;
+        //Reset the pointer.
+        m_viewerGenerator=nullptr;
+    }
+    //Check the web content generator poitner.
+    if(m_webViewerGenerator)
+    {
+        //Recover the memory.
+        delete m_webViewerGenerator;
+        //Reset the pointer.
+        m_webViewerGenerator=nullptr;
+    }
+}
 
 KNMailGlobal *KNMailGlobal::instance()
 {
@@ -58,6 +84,44 @@ QPixmap KNMailGlobal::providerIcon(const QString &providerName)
     return m_providerIcon.value(providerName);
 }
 
+KNMailViewerBase *KNMailGlobal::generateViewer(QWidget *parent)
+{
+    //Check generator factory pointer.
+    if(m_viewerGenerator==nullptr)
+    {
+        //NULL for not set factory.
+        return nullptr;
+    }
+    //Generate the viewer.
+    KNMailViewerBase *mailViewer=m_viewerGenerator->generateViewer(
+                parent==nullptr?
+                    m_viewerParent:
+                    parent);
+    //Add an web viewer.
+    mailViewer->setWebViewer(generateWebViewer(mailViewer));
+    //Return the viewer.
+    return mailViewer;
+}
+
+KNMailViewerBase *KNMailGlobal::generatePopupViewer(QWidget *parent)
+{
+    //Check generator factory pointer.
+    if(m_viewerGenerator==nullptr)
+    {
+        //NULL for not set factory.
+        return nullptr;
+    }
+    //Generate the popup viewer.
+    KNMailViewerBase *mailViewer=m_viewerGenerator->generatePopupViewer(
+                parent==nullptr?
+                    m_viewerParent:
+                    parent);
+    //Add an web viewer.
+    mailViewer->setWebViewer(generateWebViewer(mailViewer));
+    //Return the viewer.
+    return mailViewer;
+}
+
 void KNMailGlobal::retranslate()
 {
     //Update the default folder name.
@@ -72,10 +136,14 @@ void KNMailGlobal::retranslate()
 }
 
 KNMailGlobal::KNMailGlobal(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_viewerGenerator(nullptr),
+    m_webViewerGenerator(nullptr),
+    m_viewerParent(nullptr)
 {
     //Initial the infrastructures.
     KNMailAccountManager::initial(this);
+    KNMailPopupManager::initial(this);
 
     //Initial the provider icons.
     m_providerIcon.insert("netease",
@@ -86,4 +154,29 @@ KNMailGlobal::KNMailGlobal(QObject *parent) :
     //Link retranslate.
     knI18n->link(this, &KNMailGlobal::retranslate);
     retranslate();
+}
+
+void KNMailGlobal::setWebViewerGenerator(
+        KNMailWebViewerGeneratorBase *webViewerGenerator)
+{
+    m_webViewerGenerator = webViewerGenerator;
+}
+
+void KNMailGlobal::setViewerGenerator(
+        KNMailViewerGeneratorBase *viewerGenerator,
+        QWidget *viewerParent)
+{
+    //Save the generator and parent.
+    m_viewerGenerator = viewerGenerator;
+    m_viewerParent=viewerParent;
+}
+
+KNMailWebViewerBase *KNMailGlobal::generateWebViewer(QWidget *parent)
+{
+    //Check the generator.
+    return m_webViewerGenerator==nullptr?
+                //Return NULL for not set the generator.
+                nullptr:
+                //Generate the web viewer.
+                m_webViewerGenerator->generateWebViewer(parent);
 }

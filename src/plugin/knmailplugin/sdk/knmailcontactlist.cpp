@@ -43,6 +43,9 @@ KNMailContactList::KNMailContactList(QWidget *parent) :
     setMaximumHeight(ButtonHeight);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setWidget(m_container);
+    //Configure the container.
+    connect(m_container, &KNMailContactContainer::lineCountChange,
+            this, &KNMailContactList::onLayoutLineCountChanged);
     //Configure the button.
     m_moreButton->setFixedSize(ButtonHeight, ButtonHeight);
     m_moreButton->hide();
@@ -50,22 +53,22 @@ KNMailContactList::KNMailContactList(QWidget *parent) :
             [=]{setExpandState(!m_isExpand);});
     //Update more button.
     updateExpandButton();
+}
 
-    //Add container.
-    m_container->addContact("123456@126.com", "Tojo Saki");
-    m_container->addContact("1234567890@gmail.com", "Freddie");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("cccccccccc@163.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("u1234567@anu.edu.au.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
-    m_container->addContact("aa@gmail.com");
+void KNMailContactList::addContact(KNMailContactButton *button)
+{
+    //Add the container data to the list.
+    m_container->addContact(button);
+    //Update the state.
+    updateExpandButton();
+}
 
+void KNMailContactList::addContact(const QString &email, const QString &caption)
+{
+    //Add the data to contianer.
+    m_container->addContact(email, caption);
+    //Update the state.
+    updateExpandButton();
 }
 
 void KNMailContactList::setContactPalette(const QPalette &pal)
@@ -134,8 +137,26 @@ void KNMailContactList::resizeEvent(QResizeEvent *event)
     }
 }
 
+void KNMailContactList::showEvent(QShowEvent *event)
+{
+    //Show the widget.
+    QScrollArea::showEvent(event);
+    //Check item height.
+    m_moreButton->move(width()-m_moreButton->width(), 0);
+}
+
+void KNMailContactList::onLayoutLineCountChanged(int lineCount)
+{
+    //Update visibility.
+    m_moreButton->setVisible(lineCount>1);
+    //Update position.
+    updateExpandButton();
+}
+
 void KNMailContactList::updateExpandButton()
 {
+    //Update the more button position.
+    m_moreButton->move(width()-m_moreButton->width(), 0);
     //Check the expand state.
     if(m_isExpand)
     {
@@ -147,8 +168,6 @@ void KNMailContactList::updateExpandButton()
         //Process the fold state.
         m_moreButton->setText("...");
     }
-    //Update the more button position.
-    m_moreButton->move(width()-m_moreButton->width(), 0);
 }
 
 void KNMailContactList::setExpandState(bool isExpand)
@@ -180,4 +199,9 @@ void KNMailContactList::setExpandState(bool isExpand)
     }
     //Update button.
     updateExpandButton();
+}
+
+void KNMailContactList::clear()
+{
+    m_container->clear();
 }

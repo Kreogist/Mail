@@ -96,7 +96,9 @@ void KNMailContactButton::updateWidth()
         //Update the target text.
         m_targetText=fontMetrics().elidedText(m_contentText,
                                               Qt::ElideRight,
-                                              availableWidth);
+                                              availableWidth -
+                                              (ButtonRadius<<1) -
+                                              (SideSpacing));
         //Mission complete.
         return;
     }

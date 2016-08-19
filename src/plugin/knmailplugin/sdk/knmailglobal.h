@@ -33,6 +33,10 @@ using namespace MailUtil;
  */
 #define knMailGlobal (KNMailGlobal::instance())
 
+class KNMailViewerBase;
+class KNMailWebViewerBase;
+class KNMailViewerGeneratorBase;
+class KNMailWebViewerGeneratorBase;
 /*!
  * \brief The KNMailGlobal class provides some public or share data between the
  * mail plugin inside. For public structures or shared functions, it will all be
@@ -42,6 +46,8 @@ class KNMailGlobal : public QObject
 {
     Q_OBJECT
 public:
+    ~KNMailGlobal();
+
     /*!
      * \brief Get the mail global class instance.
      * \return The global instance of the KNMailGlobal.
@@ -78,6 +84,47 @@ public:
      */
     QPixmap providerIcon(const QString &providerName);
 
+    /*!
+     * \brief Generate an mail viewer widget via the viewer generator.
+     * \param parent The parent widget. Default is NULL. When it is NULL, the
+     * parent will be the default parent.
+     * \return The generated mail viewer pointer. If the viewer generator is not
+     *  set, this function will always return nullptr.
+     */
+    KNMailViewerBase *generateViewer(QWidget *parent=nullptr);
+
+    /*!
+     * \brief Generate a popup mail viewer widget via the viewer generator.
+     * \param parent The parent widget. Default is NULL. When it is NULL, the
+     * parent of viewer will be the default parent.
+     * \return The viewer pointer. If the viewer generator is not set, this
+     * function will always return nullptr.
+     */
+    KNMailViewerBase *generatePopupViewer(QWidget *parent=nullptr);
+
+    /*!
+     * \brief Set the viewer generator factory pointer.
+     * \param viewerGenerator The viewer generator pointer.
+     * \param viewerParent The default parent of the generated viewer.
+     */
+    void setViewerGenerator(KNMailViewerGeneratorBase *viewerGenerator,
+                            QWidget *viewerParent);
+
+    /*!
+     * \brief Generate a web viewer widget via web viewer generator factory
+     * pointer.
+     * \param parent The parent widget.
+     * \return The web viewer pointer.
+     */
+    KNMailWebViewerBase *generateWebViewer(QWidget *parent);
+
+    /*!
+     * \brief Set the web viewer generator object.
+     * \param webViewerGenerator The web viewer generator object.
+     */
+    void setWebViewerGenerator(
+            KNMailWebViewerGeneratorBase *webViewerGenerator);
+
 signals:
 
 public slots:
@@ -94,6 +141,9 @@ private:
     QString m_defaultFolderName[DefaultFolderCount],
             m_titleFieldText[MailViewerTitleFieldCount];
     QHash<QString, QPixmap> m_providerIcon;
+    KNMailViewerGeneratorBase *m_viewerGenerator;
+    KNMailWebViewerGeneratorBase *m_webViewerGenerator;
+    QWidget *m_viewerParent;
 };
 
 #endif // KNMAILGLOBAL_H

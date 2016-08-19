@@ -72,8 +72,17 @@ public:
     void setContactPalette(const QPalette &pal);
 
 signals:
+    /*!
+     * \brief When the flow line count changed, this signal will be emitted.
+     * \param lineCount The line count.
+     */
+    void lineCountChange(int lineCount);
 
 public slots:
+    /*!
+     * \brief Remove all the buttons in the container.
+     */
+    void clear();
 
 protected:
     /*!
@@ -83,6 +92,7 @@ protected:
 
 private:
     QList<KNMailContactButton *> m_buttons;
+    QPalette m_buttonPalette;
     KNMailContactFlowLayout *m_mainLayout;
 };
 

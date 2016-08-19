@@ -8,6 +8,7 @@
         <file>public/left_arrow.png</file>
         <file>public/right_arrow.png</file>
         <file>public/top_arrow.png</file>
+        <file>public/popup.png</file>
     </qresource>
     <qresource prefix="/plugin">
         <file>mail/providers/netease.png</file>

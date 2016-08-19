@@ -122,14 +122,19 @@ public:
     int layoutHeight() const;
 
 signals:
+    /*!
+     * \brief When the flow line count changed, this signal will be emitted.
+     * \param lineCount The line count.
+     */
+    void lineCountChange(int lineCount);
 
 public slots:
 
 private:
     inline int smartSpacing(QStyle::PixelMetric pm) const;
-    inline int doLayout(QRect effectiveRect, bool apply=false) const;
+    inline int doLayout(QRect effectiveRect, bool apply=false, int *lineCount=nullptr) const;
     QList<QLayoutItem *> m_itemList;
-    int m_hSpace, m_vSpace, m_layoutHeight;
+    int m_hSpace, m_vSpace, m_layoutHeight, m_layoutLine, m_lineCount;
 };
 
 #endif // KNMAILCONTACTFLOWLAYOUT_H

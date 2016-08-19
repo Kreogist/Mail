@@ -37,8 +37,39 @@ public:
     KNMailViewerBase(QWidget *parent = 0) : QWidget(parent){}
 
 signals:
+    /*!
+     * \brief Require to pop up the mail in a new window, only one viewer should
+     *  emit this signal.
+     * \param mailPath The mail path.
+     */
+    void requirePopup(const QString &mailPath);
+
+    /*!
+     * \brief When the window is closing, this signal will be emit to remove the
+     * window from the popup list.
+     * \param mailPath The mail file path.
+     */
+    void requireClose(const QString &mailPath);
 
 public slots:
+    /*!
+     * \brief Set the web content viewer to the mail viewer.
+     * \param The web viewer widget viewer pointer.
+     */
+    virtual void setWebViewer(KNMailWebViewerBase *viewer)=0;
+
+    /*!
+     * \brief Set the viewer to be a pop up window.
+     * \param isPopup To make the window a pop up window, set this function to
+     * be true.
+     */
+    virtual void setViewerPopup(bool isPopup)=0;
+
+    /*!
+     * \brief Load a mail from a file.
+     * \param mailPath The mail file path.
+     */
+    virtual void loadMail(const QString &mailPath)=0;
 };
 
 #endif // KNMAILVIEWERBASE_H

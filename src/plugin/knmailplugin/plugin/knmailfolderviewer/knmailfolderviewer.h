@@ -55,6 +55,11 @@ public slots:
      */
     void setViewer(KNMailViewerBase *viewer) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMailFolderViewerBase::hideViewer().
+     */
+    void hideViewer() Q_DECL_OVERRIDE;
+
 protected:
     /*!
      * \brief Reimplemented from KNMailFolderViewerBase::resizeEvent().
