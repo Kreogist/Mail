@@ -49,7 +49,7 @@ public:
      * \brief Set all the properties at once.
      * \param propertyList The property list map.
      */
-    void setHeaderList(const QMap<QString, QString> &headerList);
+    void setMimeHeaderList(const QMap<QString, QString> &headerList);
 
     /*!
      * \brief Set one mime property via the field name.

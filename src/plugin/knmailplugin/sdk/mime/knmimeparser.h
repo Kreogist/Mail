@@ -17,8 +17,8 @@ Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef KNMAILPARSER_H
-#define KNMAILPARSER_H
+#ifndef KNMIMEPARSER_H
+#define KNMIMEPARSER_H
 
 #include <QByteArray>
 #include <QString>
@@ -28,16 +28,34 @@ class KNMimePart;
  * \brief The KNMailParser class provides the function which could translate a
  * content into a mime format data. This class cannot be constructed.
  */
-class KNMailParser
+class KNMimeParser
 {
 public:
-    static KNMimePart *parseMail(const QByteArray &content);
-    static KNMimePart *parseMail(const QString &mailPath);
+    /*!
+     * \brief Parse MIME from raw byte content lines.
+     * \param contents The content list. Each item is one line of content.
+     * \return The parse mime part pointer.
+     */
+    static KNMimePart *parseMime(const QList<QByteArray> &contents);
+
+    /*!
+     * \brief Parse MIME from raw byte content.
+     * \param content The content array.
+     * \return The parse mime part pointer.
+     */
+    static KNMimePart *parseMime(const QByteArray &content);
+
+    /*!
+     * \brief Parse MIME from a specific file.
+     * \param filePath The mime file path.
+     * \return The parse mime part pointer.
+     */
+    static KNMimePart *parseMime(const QString &filePath);
 
 private:
-    KNMailParser();
-    KNMailParser(const KNMailParser &);
-    KNMailParser(KNMailParser &&);
+    KNMimeParser();
+    KNMimeParser(const KNMimeParser &);
+    KNMimeParser(KNMimeParser &&);
 };
 
-#endif // KNMAILPARSER_H
+#endif // KNMIMEPARSER_H

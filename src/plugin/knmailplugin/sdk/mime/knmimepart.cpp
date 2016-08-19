@@ -33,7 +33,7 @@ QMap<QString, QString> KNMimePart::headerList() const
     return m_propertyList;
 }
 
-void KNMimePart::setHeaderList(const QMap<QString, QString> &propertyList)
+void KNMimePart::setMimeHeaderList(const QMap<QString, QString> &propertyList)
 {
     m_propertyList = propertyList;
 }

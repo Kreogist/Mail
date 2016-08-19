@@ -264,11 +264,11 @@ SOURCES += \
     sdk/knroundedborderbutton.cpp \
     sdk/knclickablelabel.cpp \
     plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeviewdelegate.cpp \
-    plugin/knmailplugin/sdk/knmailparser.cpp \
-    plugin/knmailplugin/sdk/knmimepart.cpp \
-    plugin/knmailplugin/sdk/knmimemultipart.cpp \
     plugin/knmailplugin/sdk/knmailpopupmanager.cpp \
-    plugin/knmailplugin/plugin/knmailviewer/knmailviewergenerator.cpp
+    plugin/knmailplugin/plugin/knmailviewer/knmailviewergenerator.cpp \
+    plugin/knmailplugin/sdk/mime/knmimemultipart.cpp \
+    plugin/knmailplugin/sdk/mime/knmimeparser.cpp \
+    plugin/knmailplugin/sdk/mime/knmimepart.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -332,10 +332,10 @@ HEADERS += \
     plugin/knmailplugin/sdk/knmailwebviewerbase.h \
     sdk/knclickablelabel.h \
     plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeviewdelegate.h \
-    plugin/knmailplugin/sdk/knmailparser.h \
-    plugin/knmailplugin/sdk/knmimepart.h \
-    plugin/knmailplugin/sdk/knmimemultipart.h \
     plugin/knmailplugin/sdk/knmailpopupmanager.h \
     plugin/knmailplugin/sdk/knmailviewergeneratorbase.h \
     plugin/knmailplugin/plugin/knmailviewer/knmailviewergenerator.h \
-    plugin/knmailplugin/sdk/knmailwebviewergeneratorbase.h
+    plugin/knmailplugin/sdk/knmailwebviewergeneratorbase.h \
+    plugin/knmailplugin/sdk/mime/knmimemultipart.h \
+    plugin/knmailplugin/sdk/mime/knmimeparser.h \
+    plugin/knmailplugin/sdk/mime/knmimepart.h
