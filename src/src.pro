@@ -258,7 +258,8 @@ SOURCES += \
     plugin/knmailplugin/sdk/knmailcontactcontainer.cpp \
     plugin/knmailplugin/sdk/knmailcontactlist.cpp \
     sdk/knroundedborderbutton.cpp \
-    sdk/knclickablelabel.cpp
+    sdk/knclickablelabel.cpp \
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeviewdelegate.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -320,4 +321,5 @@ HEADERS += \
     plugin/knmailplugin/sdk/knmailcontactlist.h \
     sdk/knroundedborderbutton.h \
     plugin/knmailplugin/sdk/knmailwebviewerbase.h \
-    sdk/knclickablelabel.h
+    sdk/knclickablelabel.h \
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfoldertreeviewdelegate.h

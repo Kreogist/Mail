@@ -20,6 +20,8 @@
 
 #include "knthememanager.h"
 
+#include "knmailfoldertreeviewdelegate.h"
+
 #include "knmailfoldertreeview.h"
 
 #define ScrollBarShow (150)
@@ -38,6 +40,9 @@ KNMailFolderTreeView::KNMailFolderTreeView(QWidget *parent) :
     connect(knTheme, &KNThemeManager::themeChange,
             this, &KNMailFolderTreeView::onActionThemeChange);
     onActionThemeChange();
+
+    //Set the item delegate.
+    setItemDelegate(new KNMailFolderTreeViewDelegate(this));
 
     //Configure the animation.
     m_mouseAnime->setEasingCurve(QEasingCurve::OutCubic);
