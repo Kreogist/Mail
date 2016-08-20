@@ -70,7 +70,7 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
                 headerValue=QString();
             }
             //Split the current line.
-            int colonPosition=line.indexOf(': ');
+            int colonPosition=line.indexOf(": ");
             //Check the line contains colon or not. (-1 for not found)
             if(colonPosition<0)
             {
@@ -177,13 +177,13 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
                     //Check whether the boundary is the last line of content.
                     //The last boundary will add "--"  at the end of the
                     //boundary.
-                    if(boundary.simplified()<contents.at(i).size())
+                    if(boundary.simplified().size()<contents.at(i).size())
                     {
                         //Mission complete.
                         break;
                     }
                     //Save the current position as the last position.
-                    lastPosition=i;
+                    lastBoundary=i;
                 }
             }
             //Give back the mime content.

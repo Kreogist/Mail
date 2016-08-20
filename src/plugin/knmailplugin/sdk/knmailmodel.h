@@ -117,6 +117,13 @@ public slots:
      */
     void setFolderPath(const QString &folderPath);
 
+    /*!
+     * \brief Parse the mail item at a specific range.
+     * \param start The start position.
+     * \param end The end position.
+     */
+    void loadItem(int start, int end);
+
 private:
     QList<KNMailListItem> m_itemList;
     QString m_folderPath, m_folderName;

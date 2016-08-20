@@ -20,7 +20,11 @@
 #include "knmailaccount.h"
 
 KNMailAccount::KNMailAccount(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_username(QString()),
+    m_password(QString()),
+    m_displayName(QString()),
+    m_provider(QString())
 {
     //Construct all the mail models.
     for(int i=0; i<DefaultFolderCount; ++i)
@@ -50,6 +54,26 @@ KNMailProtocolConfig KNMailAccount::receiveConfig() const
 void KNMailAccount::setReceiveConfig(const KNMailProtocolConfig &receiveConfig)
 {
     m_receiveConfig = receiveConfig;
+}
+
+QString KNMailAccount::receiveProtocolName() const
+{
+    return m_receiveProtocolName;
+}
+
+void KNMailAccount::setReceiveProtocolName(const QString &receiveProtocolName)
+{
+    m_receiveProtocolName = receiveProtocolName;
+}
+
+QString KNMailAccount::sendProtocolName() const
+{
+    return m_sendProtocolName;
+}
+
+void KNMailAccount::setSendProtocolName(const QString &sendProtocolName)
+{
+    m_sendProtocolName = sendProtocolName;
 }
 
 QString KNMailAccount::provider() const

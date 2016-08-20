@@ -107,9 +107,36 @@ public:
      */
     KNMailModel *folder(int index);
 
+    /*!
+     * \brief Get the sending protocol name. For most of the client, it should
+     * be SMTP.
+     * \return Sending protocol name, in upper case letter.
+     */
+    QString sendProtocolName() const;
+
+    /*!
+     * \brief Get the receiving protocol name. For most of the client, it should
+     * be POP3 or IMAP.
+     * \return Receiving protocol name, in upper case letter.
+     */
+    QString receiveProtocolName() const;
+
+
 signals:
 
 public slots:
+    /*!
+     * \brief Set the sending protocol name
+     * \param sendProtocolName The sending protocol name.
+     */
+    void setSendProtocolName(const QString &sendProtocolName);
+
+    /*!
+     * \brief Set the receiving protocol name.
+     * \param receiveProtocolName The receiving protocol name.
+     */
+    void setReceiveProtocolName(const QString &receiveProtocolName);
+
     /*!
      * \brief Set the provider name.
      * \param provider The E-mail account provider name.
@@ -152,7 +179,8 @@ private slots:
 private:
     QList<KNMailModel *> m_customFolders;
     KNMailProtocolConfig m_sendConfig, m_receiveConfig;
-    QString m_username, m_password, m_displayName, m_provider;
+    QString m_sendProtocolName, m_receiveProtocolName, m_username, m_password,
+            m_displayName, m_provider;
     KNMailModel *m_defaultFolders[DefaultFolderCount];
 };
 

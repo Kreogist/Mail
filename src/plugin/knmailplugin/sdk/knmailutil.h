@@ -48,6 +48,22 @@ namespace MailUtil
         FolderModelColumnCount
     };
 
+    enum MailProtocolSocket
+    {
+        SocketTcp,
+        SocketTls,
+        SocketSsl
+    };
+
+    enum MailProtocolError
+    {
+        ConnectionTimeout,
+        ResponseTimeout,
+        SendDataTimeout,
+        LoginUsernameError,
+        LoginPasswordError,
+    };
+
     struct KNMailListItem
     {
         //Meta data.
@@ -59,11 +75,19 @@ namespace MailUtil
         QString breifContext;
         //File information.
         QString fileName;
+        int index;
+        //Flags.
+        bool loaded;
+        KNMailListItem() :
+            index(-1),
+            loaded(false)
+        {
+        }
     };
 
     struct KNMailProtocolConfig
     {
-        QString protocol;
+        MailProtocolSocket socketType;
         QString hostName;
         quint16 port;
     };

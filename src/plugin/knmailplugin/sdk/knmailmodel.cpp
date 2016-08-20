@@ -156,6 +156,15 @@ void KNMailModel::setFolderPath(const QString &folderPath)
     m_folderPath = folderPath;
 }
 
+void KNMailModel::loadItem(int start, int end)
+{
+    //Check the item start and end position.
+    for(int i=start; i<end; ++i)
+    {
+        ;
+    }
+}
+
 int KNMailModel::defaultFolderIndex() const
 {
     return m_defaultFolderIndex;

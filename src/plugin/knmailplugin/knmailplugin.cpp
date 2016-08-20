@@ -31,6 +31,7 @@
 #include "knmailviewerbase.h"
 #include "knmailviewergeneratorbase.h"
 #include "knmailwebviewergeneratorbase.h"
+#include "knmailprotocol.h"
 
 //Plugins.
 // Empty hint.
@@ -48,6 +49,8 @@
 #ifdef BACKEND_WEBKIT
 #include "plugin/knmailwebkitviewer/knmailwebkitviewer.h"
 #endif
+// Protocols.
+#include "plugin/knmailpop3protocol/knmailpop3protocol.h"
 
 #include "knmailplugin.h"
 
@@ -106,16 +109,26 @@ void KNMailPlugin::loadPlugins()
     }
 
     account=new KNMailAccount(this);
-    account->setDisplayName("Haolei Ye");
-    account->setUsername("abc@anu.edu.au");
-    account->setProvider("netease");
-    knMailAccountManager->appendAccount(account);
-
-    account=new KNMailAccount(this);
     account->setDisplayName("JinShuai Ma");
     account->setUsername("def@anu.edu.au");
     account->setProvider("netease");
     knMailAccountManager->appendAccount(account);
+
+    account=new KNMailAccount(this);
+    account->setDisplayName("Haolei Ye");
+    account->setUsername("asdf@gmail.com");
+    account->setProvider("netease");
+    knMailAccountManager->appendAccount(account);
+
+    KNMailPop3Protocol *popProtocol=new KNMailPop3Protocol(this);
+    KNMailProtocolConfig config;
+    config.hostName="pop.gmail.com";
+    config.port=995;
+    config.socketType=SocketSsl;
+    account->setReceiveConfig(config);
+    popProtocol->setAccount(account);
+    qDebug()<<popProtocol->connectToHost()<<popProtocol->lastError();
+    qDebug()<<popProtocol->login()<<popProtocol->lastError();
 }
 
 inline void KNMailPlugin::initialInfrastructure()
