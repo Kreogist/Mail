@@ -23,41 +23,23 @@
 #include "knmailpop3protocol.h"
 
 KNMailPop3Protocol::KNMailPop3Protocol(QObject *parent) :
-    KNMailReceiverProtocol(parent),
-    m_breakFlag(false)
+    KNMailReceiverProtocol(parent)
 {
 }
 
 bool KNMailPop3Protocol::connectToHost()
 {
-    //Check the socket pointer.
-    if(socket()==nullptr)
+    //Get the receive config.
+    const KNMailProtocolConfig &config=account()->receiveConfig();
+    //Connect to host server.
+    if(!startConnection(config))
     {
-        //Set the configuration first.
+        //Can't connect to server.
+        setLastError(ConnectionFailed);
         return false;
     }
-    //Get the pop socket.
-    QTcpSocket *popSocket=socket();
-    const KNMailProtocolConfig &config=account()->receiveConfig();
-    //Check the connection type, it will use different connect commands.
-    switch(config.socketType)
-    {
-    case SocketTcp:
-    case SocketTls:
-        //Connection is simple, use plain type connection.
-        popSocket->connectToHost(config.hostName, config.port);
-        break;
-    case SocketSsl:
-    {
-        //Recast the socket as SSL socket,
-        QSslSocket *sslSocket=static_cast<QSslSocket *>(popSocket);
-        sslSocket->setProtocol(QSsl::TlsV1_0OrLater);
-        sslSocket->connectToHostEncrypted(config.hostName, config.port);
-        break;
-    }
-    }
     //Wait for the socket response.
-    if(!popSocket->waitForConnected(connectionTimeout()))
+    if(!waitForConnection())
     {
         //Set the last error to be connection time out.
         setLastError(ConnectionTimeout);
@@ -65,36 +47,13 @@ bool KNMailPop3Protocol::connectToHost()
         return false;
     }
     //Wait for response from server.
-    if(!popSocket->waitForReadyRead(responseTimeout()))
-    {
-        //Failed to read response.
-        setLastError(ResponseTimeout);
-        //Mission complete.
-        return false;
-    }
-    //Read all lines.
-    QString lineCache;
-    while(popSocket->canReadLine())
-    {
-        //Read the line.
-        lineCache=popSocket->readLine();
-        //Check out the repsonse text.
-        if(lineCache.startsWith("+OK"))
-        {
-            //Connection success.
-            return true;
-        }
-    }
-    //No line mentioned +OK, means error happens.
-    return false;
+    return waitAndCheckResponse();
 }
 
 bool KNMailPop3Protocol::login()
 {
-    //Get the socket.
-    QTcpSocket *popSocket=socket();
     //Check the state of pop socket.
-    if(popSocket->state()!=QAbstractSocket::ConnectedState &&
+    if(socket()->state()!=QAbstractSocket::ConnectedState &&
             //Socket is not online, try to re-connect.
             (!connectToHost()))
     {
@@ -144,12 +103,13 @@ bool KNMailPop3Protocol::login()
 
 inline bool KNMailPop3Protocol::waitAndCheckResponse()
 {
-    //We have to try 3 times.
+    //We have to try several times.
     int tries=5;
+    //Do tries times loop.
     while(tries--)
     {
         //Wait for response.
-        QString popResponse;
+        QByteArray popResponse;
         if(waitForResponse(&popResponse))
         {
             //Check the response.

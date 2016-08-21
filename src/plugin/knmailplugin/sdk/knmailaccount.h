@@ -121,6 +121,12 @@ public:
      */
     QString receiveProtocolName() const;
 
+    /*!
+     * \brief Get all the custom folders. This will be used for update all the
+     * folder information.
+     * \return The custom folder list.
+     */
+    QList<KNMailModel *> customFolders() const;
 
 signals:
 
@@ -173,6 +179,12 @@ public slots:
      * \param receiveConfig The receiving configuration.
      */
     void setReceiveConfig(const KNMailProtocolConfig &receiveConfig);
+
+    /*!
+     * \brief Set the new folder list.
+     * \param customFolders Updated custom folder.
+     */
+    void setCustomFolders(const QList<KNMailModel *> &customFolders);
 
 private slots:
 

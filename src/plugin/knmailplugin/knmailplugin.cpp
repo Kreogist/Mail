@@ -51,6 +51,7 @@
 #endif
 // Protocols.
 #include "plugin/knmailpop3protocol/knmailpop3protocol.h"
+#include "plugin/knmailimapprotocol/knmailimapprotocol.h"
 
 #include "knmailplugin.h"
 
@@ -89,6 +90,13 @@ void KNMailPlugin::loadPlugins()
 
     //Debug
     m_mainLayout->setCurrentIndex(1);
+
+    KNMailAccount *superaccount=new KNMailAccount(this);
+    superaccount->setDisplayName("Haolei Ye");
+    superaccount->setUsername("tomguts@126.com");
+    superaccount->setProvider("netease");
+    knMailAccountManager->appendAccount(superaccount);
+
     KNMailAccount *account=new KNMailAccount(this);
     account->setDisplayName("Han Wang");
     account->setUsername("abc@anu.edu.au");
@@ -114,21 +122,16 @@ void KNMailPlugin::loadPlugins()
     account->setProvider("netease");
     knMailAccountManager->appendAccount(account);
 
-    account=new KNMailAccount(this);
-    account->setDisplayName("Haolei Ye");
-    account->setUsername("asdf@gmail.com");
-    account->setProvider("netease");
-    knMailAccountManager->appendAccount(account);
-
-    KNMailPop3Protocol *popProtocol=new KNMailPop3Protocol(this);
+    KNMailImapProtocol *popProtocol=new KNMailImapProtocol(this);
     KNMailProtocolConfig config;
-    config.hostName="pop.gmail.com";
-    config.port=995;
+    config.hostName="imap.126.com";
+    config.port=993;
     config.socketType=SocketSsl;
-    account->setReceiveConfig(config);
-    popProtocol->setAccount(account);
-    qDebug()<<popProtocol->connectToHost()<<popProtocol->lastError();
-    qDebug()<<popProtocol->login()<<popProtocol->lastError();
+    superaccount->setReceiveConfig(config);
+    popProtocol->setAccount(superaccount);
+    qDebug()<<popProtocol->connectToHost();
+    qDebug()<<popProtocol->login();
+    qDebug()<<popProtocol->updateFolderStatus();
 }
 
 inline void KNMailPlugin::initialInfrastructure()

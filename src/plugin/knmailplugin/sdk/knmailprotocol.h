@@ -131,6 +131,21 @@ protected:
     void setLastError(int errorCode);
 
     /*!
+     * \brief Start socket communication with the server. It will change the
+     * communication type according to the protocol type.
+     * \param config Protocol connection config.
+     * \return If the socket is null, return false. Or else, if it start
+     * connection, then return true.
+     */
+    bool startConnection(const KNMailProtocolConfig &config);
+
+    /*!
+     * \brief Wait for socket to get the response of connection from the server.
+     * \return If connected to server successfully, then return true.
+     */
+    bool waitForConnection();
+
+    /*!
      * \brief Update the protocol config to fit the new account information.
      */
     virtual void updateProtocolConfig()=0;
@@ -150,21 +165,32 @@ protected:
     bool sendMessage(const QString &message);
 
     /*!
-     * \brief Wait for socket to get the response.
+     * \brief Wait for socket to get the response. This function combine the
+     * result into a single string.
      * \param responseText The cache to output the response data.
      * \return If the socket response the data. It will return true.
      */
-    bool waitForResponse(QString *responseText = nullptr);
+    bool waitForResponse(QByteArray *responseText = nullptr);
+
+    /*!
+     * \brief Wait for socket to get the response. However, this function won't
+     * combine the response to one string, it will save the response in a string
+     * list.
+     * \param responseText The cache to save the response data.
+     * \return If the socket response the data. It will return true.
+     */
+    bool waitForResponse(QList<QByteArray> *responseText);
 
 private:
+    inline bool waitForReadyRead();
 #ifdef Q_OS_WIN
-    QEventLoop m_waitWriteLoop, m_waitReadLoop;
+    QEventLoop m_waitWriteLoop, m_waitReadLoop, m_waitConnectLoop;
 #endif
     QTcpSocket *m_socket;
     KNMailAccount *m_account;
     int m_lastError, m_connectionTimeout, m_responseTimeout, m_sendTimeout;
 #ifdef Q_OS_WIN
-    bool m_dataWritten;
+    bool m_dataWritten, m_dataReadyRead, m_socketConnected;
 #endif
 };
 

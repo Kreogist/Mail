@@ -15,26 +15,26 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILPOP3PROTOCOL_H
-#define KNMAILPOP3PROTOCOL_H
+#ifndef KNMAILIMAPPROTOCOL_H
+#define KNMAILIMAPPROTOCOL_H
 
 #include "knmailreceiverprotocol.h"
 
 /*!
- * \brief The KNMailPop3Protocol class provides the ability to communicate with
- * the server using POP3 protocol.\n
- * This protocol is built as throwaway class. Set the protocol configure and the
- * user account information, it could use as the communication protocol.
+ * \brief The KNMailImapProtocol class provides the ability to communicate with
+ * the server using IMAP protocol.\n
+ * Each IMAP protocol should complete only one operation, it is not built for
+ * continously tracking with server.
  */
-class KNMailPop3Protocol : public KNMailReceiverProtocol
+class KNMailImapProtocol : public KNMailReceiverProtocol
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailPop3Protocol class.
+     * \brief Construct a KNMailImapProtocol object.
      * \param parent The parent object.
      */
-    explicit KNMailPop3Protocol(QObject *parent = 0);
+    explicit KNMailImapProtocol(QObject *parent = 0);
 
 signals:
 
@@ -49,10 +49,23 @@ public slots:
      */
     bool login() Q_DECL_OVERRIDE;
 
-protected:
+    /*!
+     * \brief Reimplemented from KNMailProtocol::updateFolderStatus().
+     */
+    bool updateFolderStatus() Q_DECL_OVERRIDE;
 
 private:
-    inline bool waitAndCheckResponse();
+    inline bool waitAndCheckResponse(QList<QByteArray> *responseCache=nullptr);
+    inline bool sendImapMessage(const QString &message)
+    {
+        //Update header.
+        m_header="A"+QString::number(m_idCode++);
+        //Send the message.
+        return sendMessage(m_header+" "+message);
+    }
+    QString m_header;
+    quint64 m_idCode;
+    bool m_loginState;
 };
 
-#endif // KNMAILPOP3PROTOCOL_H
+#endif // KNMAILIMAPPROTOCOL_H

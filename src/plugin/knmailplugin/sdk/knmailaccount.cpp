@@ -56,6 +56,16 @@ void KNMailAccount::setReceiveConfig(const KNMailProtocolConfig &receiveConfig)
     m_receiveConfig = receiveConfig;
 }
 
+void KNMailAccount::setCustomFolders(const QList<KNMailModel *> &customFolders)
+{
+    m_customFolders = customFolders;
+}
+
+QList<KNMailModel *> KNMailAccount::customFolders() const
+{
+    return m_customFolders;
+}
+
 QString KNMailAccount::receiveProtocolName() const
 {
     return m_receiveProtocolName;

@@ -90,12 +90,6 @@ public:
     QString folderName() const;
 
     /*!
-     * \brief Set the folder display name.
-     * \param folderName The folder display name.
-     */
-    void setFolderName(const QString &folderName);
-
-    /*!
      * \brief Get the default folder index of the model describe. If the index
      * is -1, it will be treated as a custom folder.
      * \return The folder index, default is -1.
@@ -118,11 +112,10 @@ public slots:
     void setFolderPath(const QString &folderPath);
 
     /*!
-     * \brief Parse the mail item at a specific range.
-     * \param start The start position.
-     * \param end The end position.
+     * \brief Set the folder display name.
+     * \param folderName The folder display name.
      */
-    void loadItem(int start, int end);
+    void setFolderName(const QString &folderName);
 
 private:
     QList<KNMailListItem> m_itemList;

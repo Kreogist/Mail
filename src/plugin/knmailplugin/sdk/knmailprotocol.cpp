@@ -31,8 +31,13 @@ KNMailProtocol::KNMailProtocol(QObject *parent) :
     m_lastError(-1),
     m_connectionTimeout(5000),
     m_responseTimeout(5000),
-    m_sendTimeout(30000),
-    m_dataWritten(false)
+    m_sendTimeout(30000)
+#ifdef Q_OS_WIN
+    ,
+    m_dataWritten(false),
+    m_dataReadyRead(false),
+    m_socketConnected(false)
+#endif
 {
 }
 
@@ -52,8 +57,71 @@ QTcpSocket *KNMailProtocol::socket() const
 
 void KNMailProtocol::setLastError(int errorCode)
 {
-    qDebug()<<"Error changed to"<<errorCode;
     m_lastError=errorCode;
+}
+
+bool KNMailProtocol::startConnection(const KNMailProtocolConfig &config)
+{
+    //Check the socket pointer.
+    if(m_socket==nullptr)
+    {
+        //Set the configuration first.
+        return false;
+    }
+    //Check the connection type, it will use different connect commands.
+    switch(config.socketType)
+    {
+    case SocketTcp:
+    case SocketTls:
+        //Connection is simple, use plain type connection.
+        m_socket->connectToHost(config.hostName, config.port);
+        break;
+    case SocketSsl:
+    {
+        //Recast the socket as SSL socket,
+        QSslSocket *sslSocket=static_cast<QSslSocket *>(m_socket);
+        //Update the protocol to a later version.
+        sslSocket->setProtocol(QSsl::TlsV1_0OrLater);
+        //Update the
+        sslSocket->connectToHostEncrypted(config.hostName, config.port);
+        break;
+    }
+    default:
+        return false;
+    }
+    return true;
+}
+
+bool KNMailProtocol::waitForConnection()
+{
+    //Check the connected state.
+    if(m_socket->state()==QAbstractSocket::ConnectedState)
+    {
+        //Already connected.
+        return true;
+    }
+#ifdef Q_OS_WIN
+    //Reset the flag.
+    m_socketConnected=false;
+    //Timeout timer.
+    QTimer::singleShot(m_connectionTimeout,
+                       &m_waitConnectLoop, &QEventLoop::quit);
+    //Start to execute.
+    m_waitConnectLoop.exec();
+    //Check the flag.
+    return m_socketConnected;
+#else
+    //Wait for the client read read.
+    if(!m_socket->waitForConnected(m_connectionTimeout))
+    {
+        //Save the last error.
+        setLastError(ResponseTimeout);
+        //Fail to wait for ready read.
+        return false;
+    }
+    //Complete.
+    return true;
+#endif
 }
 
 void KNMailProtocol::setSocketType(MailProtocolSocket type)
@@ -84,10 +152,28 @@ void KNMailProtocol::setSocketType(MailProtocolSocket type)
 #ifdef Q_OS_WIN
     //Link the socket for Windows platform.
     connect(m_socket, &QTcpSocket::bytesWritten,
-            [=](const qint64 &bytes)
-    {qDebug()<<"Send"<<bytes<<"bytes.";m_dataWritten=true;m_waitWriteLoop.quit();});
+            [=]
+            {
+                //Update written flags.
+                m_dataWritten=true;
+                m_waitWriteLoop.quit();
+            });
     connect(m_socket, &QTcpSocket::readyRead,
-            &m_waitReadLoop, &QEventLoop::quit);
+            [=]
+            {
+                //Update the ready read flags.
+                m_dataReadyRead=true;
+                //End the waiting loop.
+                m_waitReadLoop.quit();
+            });
+    connect(m_socket, &QTcpSocket::connected,
+            [=]
+            {
+                //Update the connected flag.
+                m_socketConnected=true;
+                //End the waiting loop.
+                m_waitConnectLoop.quit();
+            });
 #endif
 }
 
@@ -96,7 +182,6 @@ bool KNMailProtocol::sendMessage(const QString &message)
     //Check socket first.
     if(m_socket==nullptr)
     {
-        qDebug()<<"Send Message Error: no socket error.";
         //No socket, no send message.
         return false;
     }
@@ -120,46 +205,29 @@ bool KNMailProtocol::sendMessage(const QString &message)
 #else
     if(m_socket->waitForBytesWritten(m_sendTimeout))
     {
-        qDebug()<<"Send"<< message.size() <<"bytes.";
         //All the data has been written.
         return true;
     }
 #endif
-    qDebug()<<"Error!";
     //Send data time out error.
     setLastError(SendDataTimeout);
     //Failed to write data.
     return false;
 }
 
-bool KNMailProtocol::waitForResponse(QString *responseText)
+bool KNMailProtocol::waitForResponse(QByteArray *responseText)
 {
-#ifdef Q_OS_WIN
-    //Check the socket state.
-    if(!m_socket->canReadLine())
+    //Wait for ready to get response.
+    if(!waitForReadyRead())
     {
-        //Timeout timer.
-        QTimer::singleShot(m_responseTimeout,
-                           &m_waitReadLoop, &QEventLoop::quit);
-        //Start to execute.
-        m_waitReadLoop.exec();
-    }
-#else
-    //Wait for the client read read.
-    if(!m_socket->waitForReadyRead(m_responseTimeout))
-    {
-        //Save the last error.
-        setLastError(ResponseTimeout);
-        //Fail to wait for ready read.
+        //Failed to start read the response.
         return false;
     }
-#endif
-    qDebug()<<"Start reading response.";
     //Read until there's no line to read.
     while(m_socket->canReadLine())
     {
         //Save the server response.
-        QString lineCache=m_socket->readLine();
+        QByteArray lineCache=m_socket->readLine();
         qDebug()<<lineCache;
         //Check the response text pointer.
         if(responseText)
@@ -170,6 +238,68 @@ bool KNMailProtocol::waitForResponse(QString *responseText)
     }
     //Mission complete.
     return true;
+}
+
+bool KNMailProtocol::waitForResponse(QList<QByteArray> *responseText)
+{
+    //Wait for ready to get response.
+    if(!waitForReadyRead())
+    {
+        //Failed to start read the response.
+        return false;
+    }
+    //Read until there's no line to read.
+    while(m_socket->canReadLine())
+    {
+        //Save the server response.
+        QByteArray lineCache=m_socket->readLine();
+        qDebug()<<lineCache;
+        //Check the response text pointer.
+        if(responseText)
+        {
+            //Append data to the cache.
+            responseText->append(lineCache);
+        }
+    }
+    //Mission complete.
+    return true;
+}
+
+inline bool KNMailProtocol::waitForReadyRead()
+{
+#ifdef Q_OS_WIN
+    //Check the socket state.
+    if(!m_socket->canReadLine())
+    {
+        //Reset the flag.
+        m_dataReadyRead=false;
+        //Timeout timer.
+        QTimer::singleShot(m_responseTimeout,
+                           &m_waitReadLoop, &QEventLoop::quit);
+        //Start to execute.
+        m_waitReadLoop.exec();
+        //Check the flag.
+        if(!m_dataReadyRead)
+        {
+            //Save the last error.
+            setLastError(ResponseTimeout);
+        }
+        //The flag will be the result.
+        return m_dataReadyRead;
+    }
+    return true;
+#else
+    //Wait for the client read read.
+    if(!m_socket->waitForReadyRead(m_responseTimeout))
+    {
+        //Save the last error.
+        setLastError(ResponseTimeout);
+        //Fail to wait for ready read.
+        return false;
+    }
+    //Got the result.
+    return true;
+#endif
 }
 
 KNMailAccount *KNMailProtocol::account() const

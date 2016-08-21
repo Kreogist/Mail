@@ -127,7 +127,8 @@ void KNMailGlobal::retranslate()
     //Update the default folder name.
     m_defaultFolderName[FolderInbox]=tr("Inbox");
     m_defaultFolderName[FolderDrafts]=tr("Drafts");
-    m_defaultFolderName[FolderSentItems]=tr("Sent Items");
+    m_defaultFolderName[FolderSentItems]=tr("Sent");
+    m_defaultFolderName[FolderJunk]=tr("Junk");
     m_defaultFolderName[FolderTrash]=tr("Trash");
     //Update the title field text.
     m_titleFieldText[FieldFrom]=tr("From");

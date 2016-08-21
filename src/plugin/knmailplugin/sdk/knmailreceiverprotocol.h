@@ -40,6 +40,12 @@ protected:
      * \brief Reimplemented from KNMailProtocol::updateProtocolConfig().
      */
     void updateProtocolConfig() Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Update all the folder status of the account.
+     * \return If the protocol update the status successfully, then return true.
+     */
+    virtual bool updateFolderStatus()=0;
 };
 
 #endif // KNMAILRECEIVERPROTOCOL_H

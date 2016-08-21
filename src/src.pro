@@ -271,7 +271,8 @@ SOURCES += \
     plugin/knmailplugin/sdk/mime/knmimepart.cpp \
     plugin/knmailplugin/plugin/knmailpop3protocol/knmailpop3protocol.cpp \
     plugin/knmailplugin/sdk/knmailprotocol.cpp \
-    plugin/knmailplugin/sdk/knmailreceiverprotocol.cpp
+    plugin/knmailplugin/sdk/knmailreceiverprotocol.cpp \
+    plugin/knmailplugin/plugin/knmailimapprotocol/knmailimapprotocol.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -344,4 +345,5 @@ HEADERS += \
     plugin/knmailplugin/sdk/mime/knmimepart.h \
     plugin/knmailplugin/sdk/knmailprotocol.h \
     plugin/knmailplugin/plugin/knmailpop3protocol/knmailpop3protocol.h \
-    plugin/knmailplugin/sdk/knmailreceiverprotocol.h
+    plugin/knmailplugin/sdk/knmailreceiverprotocol.h \
+    plugin/knmailplugin/plugin/knmailimapprotocol/knmailimapprotocol.h

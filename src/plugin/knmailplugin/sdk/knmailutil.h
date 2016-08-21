@@ -27,6 +27,7 @@ namespace MailUtil
         FolderInbox,
         FolderDrafts,
         FolderSentItems,
+        FolderJunk,
         FolderTrash,
         DefaultFolderCount
     };
@@ -57,11 +58,12 @@ namespace MailUtil
 
     enum MailProtocolError
     {
+        ConnectionFailed,
         ConnectionTimeout,
         ResponseTimeout,
         SendDataTimeout,
         LoginUsernameError,
-        LoginPasswordError,
+        LoginPasswordError
     };
 
     struct KNMailListItem
@@ -100,6 +102,12 @@ namespace MailUtil
 class KNMailUtil
 {
 public:
+    /*!
+     * \brief Translate a string from UTF-7 encoding.
+     * \param data The UTF-7 data.
+     * \return Translated UTF-8 format string.
+     */
+    static QString fromUtf7(const QByteArray &data);
 
 private:
     KNMailUtil();
