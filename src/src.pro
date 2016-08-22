@@ -141,7 +141,7 @@ linux: {
     # Set the destination directory for the Linux special.
     DESTDIR = ../bin
     # This options is added for Linux specially.
-    INSTALLS += target
+    #INSTALLS += target
     # Check Qt version.
     # We could check the version of Qt. If the Qt is later than Qt 5.5, then we
     # could use Qt WebEngine.
@@ -196,9 +196,11 @@ webkit-backend: {
     QT += webkitwidgets
     # Add module files.
     SOURCES += \
-        plugin/knmailplugin/plugin/knmailwebkitviewer/knmailwebkitviewer.cpp
+        plugin/knmailplugin/plugin/knmailwebkitviewer/knmailwebkitviewer.cpp \
+        plugin/knmailplugin/plugin/knmailwebkitviewer/knmailwebkitviewergenerator.cpp
     HEADERS += \
-        plugin/knmailplugin/plugin/knmailwebkitviewer/knmailwebkitviewer.h
+        plugin/knmailplugin/plugin/knmailwebkitviewer/knmailwebkitviewer.h \
+        plugin/knmailplugin/plugin/knmailwebkitviewer/knmailwebkitviewergenerator.h
 }
 
 # Add sdk directory to include path.

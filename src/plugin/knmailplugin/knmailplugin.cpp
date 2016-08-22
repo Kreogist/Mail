@@ -48,6 +48,7 @@
 #endif
 #ifdef BACKEND_WEBKIT
 #include "plugin/knmailwebkitviewer/knmailwebkitviewer.h"
+#include "plugin/knmailwebkitviewer/knmailwebkitviewergenerator.h"
 #endif
 // Protocols.
 #include "plugin/knmailpop3protocol/knmailpop3protocol.h"
@@ -80,6 +81,9 @@ void KNMailPlugin::loadPlugins()
     //Load the web content generator.
 #ifdef BACKEND_WEBENGINE
     loadWebViewerGenerator(new KNMailWebEngineViewerGenerator);
+#endif
+#ifdef BACKEND_WEBKIT
+    loadWebViewerGenerator(new KNMailWebkitViewerGenerator);
 #endif
     //Load the mail viewer generator.
     loadMailViewerGenerator(new KNMailViewerGenerator);
