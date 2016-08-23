@@ -86,21 +86,17 @@ public:
 
     /*!
      * \brief Generate an mail viewer widget via the viewer generator.
-     * \param parent The parent widget. Default is NULL. When it is NULL, the
-     * parent will be the default parent.
      * \return The generated mail viewer pointer. If the viewer generator is not
      *  set, this function will always return nullptr.
      */
-    KNMailViewerBase *generateViewer(QWidget *parent=nullptr);
+    KNMailViewerBase *generateViewer();
 
     /*!
      * \brief Generate a popup mail viewer widget via the viewer generator.
-     * \param parent The parent widget. Default is NULL. When it is NULL, the
-     * parent of viewer will be the default parent.
      * \return The viewer pointer. If the viewer generator is not set, this
      * function will always return nullptr.
      */
-    KNMailViewerBase *generatePopupViewer(QWidget *parent=nullptr);
+    KNMailViewerBase *generatePopupViewer();
 
     /*!
      * \brief Set the viewer generator factory pointer.

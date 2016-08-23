@@ -22,6 +22,8 @@ Foundation,
 
 #include "knmailpopupmanager.h"
 
+#include <QDebug>
+
 KNMailPopupManager *KNMailPopupManager::m_instance=nullptr;
 
 void KNMailPopupManager::initial(QObject *parent)
@@ -83,6 +85,16 @@ void KNMailPopupManager::popupMail(const QString &filePath)
     viewerWindow->raise();
     viewerWindow->activateWindow();
     viewerWindow->show();
+}
+
+void KNMailPopupManager::closeAllMail()
+{
+    //Close all the window.
+    for(auto i : m_pathWindowList)
+    {
+        //Close the window.
+        delete i;
+    }
 }
 
 void KNMailPopupManager::removeWindow(const QString &filePath)

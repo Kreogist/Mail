@@ -81,6 +81,14 @@ void KNMainWindow::setMainWidget(QWidget *widget)
     m_container->setStretchFactor(1, 1);
 }
 
+void KNMainWindow::closeEvent(QCloseEvent *event)
+{
+    //Do original event.
+    QMainWindow::closeEvent(event);
+    //Emit the about to close signal.
+    emit aboutToClose();
+}
+
 void KNMainWindow::onActionFullScreen()
 {
     //Check out the full screen state.

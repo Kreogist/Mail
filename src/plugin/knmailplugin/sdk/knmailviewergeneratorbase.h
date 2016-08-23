@@ -39,17 +39,15 @@ public:
 
     /*!
      * \brief Generate an mail viewer widget.
-     * \param parent The parent widget.
      * \return The generated mail viewer pointer.
      */
-    virtual KNMailViewerBase *generateViewer(QWidget *parent)=0;
+    virtual KNMailViewerBase *generateViewer()=0;
 
     /*!
      * \brief Generate a popup mail viewer widget.
-     * \param parent The parent widget.
      * \return The viewer pointer.
      */
-    virtual KNMailViewerBase *generatePopupViewer(QWidget *parent)=0;
+    virtual KNMailViewerBase *generatePopupViewer()=0;
 };
 
 #endif // KNMAILVIEWERGENERATORBASE_H

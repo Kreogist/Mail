@@ -39,12 +39,13 @@ public:
     /*!
      * \brief Reimplemented from KNMailViewerGeneratorBase::generateViewer().
      */
-    KNMailViewerBase *generateViewer(QWidget *parent) Q_DECL_OVERRIDE;
+    KNMailViewerBase *generateViewer() Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from KNMailViewerGeneratorBase::generatePopupViewer().
+     * \brief Reimplemented from
+     * KNMailViewerGeneratorBase::generatePopupViewer().
      */
-    KNMailViewerBase *generatePopupViewer(QWidget *parent) Q_DECL_OVERRIDE;
+    KNMailViewerBase *generatePopupViewer() Q_DECL_OVERRIDE;
 };
 
 #endif // KNMAILVIEWERGENERATOR_H

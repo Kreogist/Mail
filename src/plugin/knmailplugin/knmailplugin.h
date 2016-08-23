@@ -55,6 +55,8 @@ signals:
 
 public slots:
 
+protected:
+
 private slots:
 
 private:

@@ -84,38 +84,20 @@ QPixmap KNMailGlobal::providerIcon(const QString &providerName)
     return m_providerIcon.value(providerName);
 }
 
-KNMailViewerBase *KNMailGlobal::generateViewer(QWidget *parent)
+KNMailViewerBase *KNMailGlobal::generateViewer()
 {
-    //Check generator factory pointer.
-    if(m_viewerGenerator==nullptr)
-    {
-        //NULL for not set factory.
-        return nullptr;
-    }
     //Generate the viewer.
-    KNMailViewerBase *mailViewer=m_viewerGenerator->generateViewer(
-                parent==nullptr?
-                    m_viewerParent:
-                    parent);
+    KNMailViewerBase *mailViewer=m_viewerGenerator->generateViewer();
     //Add an web viewer.
     mailViewer->setWebViewer(generateWebViewer(mailViewer));
     //Return the viewer.
     return mailViewer;
 }
 
-KNMailViewerBase *KNMailGlobal::generatePopupViewer(QWidget *parent)
+KNMailViewerBase *KNMailGlobal::generatePopupViewer()
 {
-    //Check generator factory pointer.
-    if(m_viewerGenerator==nullptr)
-    {
-        //NULL for not set factory.
-        return nullptr;
-    }
     //Generate the popup viewer.
-    KNMailViewerBase *mailViewer=m_viewerGenerator->generatePopupViewer(
-                parent==nullptr?
-                    m_viewerParent:
-                    parent);
+    KNMailViewerBase *mailViewer=m_viewerGenerator->generatePopupViewer();
     //Add an web viewer.
     mailViewer->setWebViewer(generateWebViewer(mailViewer));
     //Return the viewer.

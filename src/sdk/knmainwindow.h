@@ -57,8 +57,18 @@ public:
     void setMainWidget(QWidget *widget);
 
 signals:
+    /*!
+     * \brief This signal is emitted when the main window is going to close.
+     */
+    void aboutToClose();
 
 public slots:
+
+protected:
+    /*!
+     * \brief Reimplemented from QMainWindow::closeEvent().
+     */
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
     void onActionFullScreen();

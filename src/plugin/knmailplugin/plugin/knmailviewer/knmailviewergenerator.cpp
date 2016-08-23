@@ -21,16 +21,16 @@ Foundation,
 
 #include "knmailviewergenerator.h"
 
-KNMailViewerBase *KNMailViewerGenerator::generateViewer(QWidget *parent)
+KNMailViewerBase *KNMailViewerGenerator::generateViewer()
 {
     //Generate the viewer.
-    return new KNMailViewer(parent);
+    return new KNMailViewer();
 }
 
-KNMailViewerBase *KNMailViewerGenerator::generatePopupViewer(QWidget *parent)
+KNMailViewerBase *KNMailViewerGenerator::generatePopupViewer()
 {
     //Generate the viewer.
-    KNMailViewer *viewer=new KNMailViewer(parent);
+    KNMailViewer *viewer=new KNMailViewer();
     //Configure the viewer.
     viewer->setViewerPopup(true);
     //Set the mime viewer.

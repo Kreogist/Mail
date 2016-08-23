@@ -19,6 +19,8 @@
 
 //Dependencies.
 #include "knthememanager.h"
+#include "knglobal.h"
+#include "knmainwindow.h"
 
 //Mail plugin sdks.
 #include "knmailglobal.h"
@@ -70,6 +72,9 @@ KNMailPlugin::KNMailPlugin(QWidget *parent) :
 {
     //Initial the basic infrastructure.
     initialInfrastructure();
+    //Link the signal with main window.
+    connect(knGlobal->mainWindow(), &KNMainWindow::aboutToClose,
+            knMailPopupManager, &KNMailPopupManager::closeAllMail);
 }
 
 QWidget *KNMailPlugin::accountPanel()
@@ -136,9 +141,9 @@ void KNMailPlugin::loadPlugins()
     config.socketType=SocketSsl;
     superaccount->setReceiveConfig(config);
     popProtocol->setAccount(superaccount);
-    qDebug()<<popProtocol->connectToHost()<<popProtocol->lastError();
-    qDebug()<<popProtocol->login()<<popProtocol->lastError();
-    qDebug()<<popProtocol->updateFolderStatus()<<popProtocol->lastError();
+//    qDebug()<<popProtocol->connectToHost()<<popProtocol->lastError();
+//    qDebug()<<popProtocol->login()<<popProtocol->lastError();
+//    qDebug()<<popProtocol->updateFolderStatus()<<popProtocol->lastError();
 
     KNMailCompose *cp=new KNMailCompose(this);
     cp->show();
@@ -165,7 +170,7 @@ void KNMailPlugin::loadEmptyHint(KNMailEmptyHintBase *emptyHint)
 void KNMailPlugin::loadFolderViewer(KNMailFolderViewerBase *folderViewer)
 {
     //Generate the mail viewer.
-    KNMailViewerBase *mailViewer=knMailGlobal->generateViewer(folderViewer);
+    KNMailViewerBase *mailViewer=knMailGlobal->generateViewer();
     //Link the mail viewer to this plugin.
     connect(mailViewer, &KNMailViewerBase::requirePopup,
             knMailPopupManager, &KNMailPopupManager::popupMail);

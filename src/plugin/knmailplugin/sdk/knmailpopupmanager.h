@@ -75,6 +75,11 @@ public slots:
      */
     void popupMail(const QString &filePath);
 
+    /*!
+     * \brief Close all mail viewer.
+     */
+    void closeAllMail();
+
 private slots:
     void removeWindow(const QString &filePath);
 

@@ -178,7 +178,7 @@ void KNMailViewer::setViewerPopup(bool isPopup)
     if(isPopup)
     {
         //Set the window flag of current widget.
-        setWindowFlags(Qt::Window);
+        setWindowFlags(Qt::Dialog);
         //Complete.
         return;
     }
