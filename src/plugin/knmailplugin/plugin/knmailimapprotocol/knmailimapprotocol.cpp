@@ -71,9 +71,11 @@ bool KNMailImapProtocol::login()
     //Reset the last error.
     setLastError(-1);
     //! FIXME: Replace this with a better authentication.
+    //Get the config.
+    const KNMailProtocolConfig &config=mailAccount->receiveConfig();
     //Send login command.
-    sendImapMessage("LOGIN "+mailAccount->username() + " " +
-                    "\""+mailAccount->password()+"\"");
+    sendImapMessage("LOGIN "+ config.loginFormat.arg(mailAccount->username(),
+                                                     mailAccount->password()));
     //Wait for response.
     if(!waitAndCheckResponse())
     {

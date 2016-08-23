@@ -50,6 +50,8 @@
 #include "plugin/knmailwebkitviewer/knmailwebkitviewer.h"
 #include "plugin/knmailwebkitviewer/knmailwebkitviewergenerator.h"
 #endif
+// Composer.
+#include "plugin/knmailcompose/knmailcompose.h"
 // Protocols.
 #include "plugin/knmailpop3protocol/knmailpop3protocol.h"
 #include "plugin/knmailimapprotocol/knmailimapprotocol.h"
@@ -128,14 +130,18 @@ void KNMailPlugin::loadPlugins()
 
     KNMailImapProtocol *popProtocol=new KNMailImapProtocol(this);
     KNMailProtocolConfig config;
+    config.loginFormat="%1 \"%2\"";
     config.hostName="imap.126.com";
     config.port=993;
     config.socketType=SocketSsl;
     superaccount->setReceiveConfig(config);
     popProtocol->setAccount(superaccount);
-    qDebug()<<popProtocol->connectToHost();
-    qDebug()<<popProtocol->login();
-    qDebug()<<popProtocol->updateFolderStatus();
+    qDebug()<<popProtocol->connectToHost()<<popProtocol->lastError();
+    qDebug()<<popProtocol->login()<<popProtocol->lastError();
+    qDebug()<<popProtocol->updateFolderStatus()<<popProtocol->lastError();
+
+    KNMailCompose *cp=new KNMailCompose(this);
+    cp->show();
 }
 
 inline void KNMailPlugin::initialInfrastructure()

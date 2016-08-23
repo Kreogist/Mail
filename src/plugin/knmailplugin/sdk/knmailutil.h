@@ -89,9 +89,10 @@ namespace MailUtil
 
     struct KNMailProtocolConfig
     {
-        MailProtocolSocket socketType;
+        QString loginFormat;
         QString hostName;
         quint16 port;
+        MailProtocolSocket socketType;
     };
 }
 

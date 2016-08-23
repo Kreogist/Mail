@@ -12,32 +12,39 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foundation,
+ * along with this program; if not, write to the Free Software
+Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILCOMPOSEBASE_H
-#define KNMAILCOMPOSEBASE_H
+
+#ifndef KNMAILCOMPOSE_H
+#define KNMAILCOMPOSE_H
 
 #include <QWidget>
 
 /*!
- * \brief The KNMailComposeBase class provides the basic information about the
- * compose widget window. This widget will be used for composing the mime mail
- * and translate it into mime format.
+ * \brief The KNMailCompose class provides the official composing panel. It will
+ * use all the SDKs to build the composing window.
  */
-class KNMailComposeBase : public QWidget
+class KNMailCompose : public QWidget
 {
     Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailComposeBase widget.
-     * \param parent The parent widget.
+     * \brief Construct a KNMailCompose widget.
+     * \param parent The parent widget pointer.
      */
-    KNMailComposeBase(QWidget *parent = 0) : QWidget(parent){}
+    explicit KNMailCompose(QWidget *parent = 0);
 
 signals:
 
 public slots:
+
+private slots:
+    void onThemeChanged();
+
+private:
+    ;
 };
 
-#endif // KNMAILCOMPOSEBASE_H
+#endif // KNMAILCOMPOSE_H
