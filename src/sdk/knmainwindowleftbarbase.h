@@ -49,6 +49,13 @@ public:
                                   int stretch = 0,
                                   Qt::Alignment alignment = 0) = 0;
 
+    /*!
+     * \brief Add spacing to left bar. This is used for make some spacing
+     * between the widgets.
+     * \param size The spacing size.
+     */
+    virtual void addLeftBarSpacing(int size) = 0;
+
 signals:
 
 public slots:

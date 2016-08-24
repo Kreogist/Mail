@@ -110,5 +110,7 @@ void KNPluginManager::loadMailPlugin(KNMailPluginBase *mailPlugin)
     //Set the main window widget to main window.
     mainWindow->setMainWidget(mailPlugin);
     //Add the sidebar to left bar.
+    m_leftBar->addLeftBarWidget(mailPlugin->composeButton());
+    m_leftBar->addLeftBarSpacing(7);
     m_leftBar->addLeftBarWidget(mailPlugin->accountPanel(), 1);
 }

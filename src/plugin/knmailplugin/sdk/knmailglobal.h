@@ -33,9 +33,11 @@ using namespace MailUtil;
  */
 #define knMailGlobal (KNMailGlobal::instance())
 
+class KNMailComposeBase;
 class KNMailViewerBase;
 class KNMailWebViewerBase;
 class KNMailViewerGeneratorBase;
+class KNMailComposeGeneratorBase;
 class KNMailWebViewerGeneratorBase;
 /*!
  * \brief The KNMailGlobal class provides some public or share data between the
@@ -101,10 +103,8 @@ public:
     /*!
      * \brief Set the viewer generator factory pointer.
      * \param viewerGenerator The viewer generator pointer.
-     * \param viewerParent The default parent of the generated viewer.
      */
-    void setViewerGenerator(KNMailViewerGeneratorBase *viewerGenerator,
-                            QWidget *viewerParent);
+    void setViewerGenerator(KNMailViewerGeneratorBase *viewerGenerator);
 
     /*!
      * \brief Generate a web viewer widget via web viewer generator factory
@@ -120,6 +120,24 @@ public:
      */
     void setWebViewerGenerator(
             KNMailWebViewerGeneratorBase *webViewerGenerator);
+
+    /*!
+     * \brief Generate a mail composer widget via composer generator pointer.
+     * \return The composer widget.
+     */
+    KNMailComposeBase *generateComposer();
+
+    /*!
+     * \brief Set the composer generator object.
+     * \param composerGenerator The composer generator object.
+     */
+    void setComposerGenerator(KNMailComposeGeneratorBase *composerGenerator);
+
+    /*!
+     * \brief Get the no subject text.
+     * \return The translated subject text.
+     */
+    QString noSubjectText() const;
 
 signals:
 
@@ -137,9 +155,10 @@ private:
     QString m_defaultFolderName[DefaultFolderCount],
             m_titleFieldText[MailViewerTitleFieldCount];
     QHash<QString, QPixmap> m_providerIcon;
+    QString m_noSubject;
     KNMailViewerGeneratorBase *m_viewerGenerator;
     KNMailWebViewerGeneratorBase *m_webViewerGenerator;
-    QWidget *m_viewerParent;
+    KNMailComposeGeneratorBase *m_composerGenerator;
 };
 
 #endif // KNMAILGLOBAL_H

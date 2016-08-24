@@ -278,7 +278,9 @@ SOURCES += \
     plugin/knmailplugin/sdk/knmailrotatebutton.cpp \
     plugin/knmailplugin/plugin/knmailcompose/knmailcomposeedit.cpp \
     sdk/knopacitypressedbutton.cpp \
-    sdk/knquotedprintable.cpp
+    sdk/knquotedprintable.cpp \
+    plugin/knmailplugin/plugin/knmailcompose/knmailcomposegenerator.cpp \
+    plugin/knmailplugin/sdk/knmailcomposermanager.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -356,4 +358,7 @@ HEADERS += \
     plugin/knmailplugin/sdk/knmailrotatebutton.h \
     plugin/knmailplugin/plugin/knmailcompose/knmailcomposeedit.h \
     sdk/knopacitypressedbutton.h \
-    sdk/knquotedprintable.h
+    sdk/knquotedprintable.h \
+    plugin/knmailplugin/sdk/knmailcomposegeneratorbase.h \
+    plugin/knmailplugin/plugin/knmailcompose/knmailcomposegenerator.h \
+    plugin/knmailplugin/sdk/knmailcomposermanager.h

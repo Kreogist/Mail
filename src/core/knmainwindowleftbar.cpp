@@ -33,7 +33,7 @@ KNMainWindowLeftBar::KNMainWindowLeftBar(QWidget *parent) :
     //Set properties.
     setContentsMargins(0, 0, 0, 0);
     //Configure the layout.
-    m_mainLayout->setContentsMargins(0, 0, 0, 0);
+    m_mainLayout->setContentsMargins(7, 0, 7, 0);
     m_mainLayout->setSpacing(0);
     setLayout(m_mainLayout);
     //Configure the shadow.
@@ -48,6 +48,12 @@ void KNMainWindowLeftBar::addLeftBarWidget(QWidget *widget,
     m_mainLayout->addWidget(widget, stretch, alignment);
     //Move up the shadow.
     m_rightShadow->raise();
+}
+
+void KNMainWindowLeftBar::addLeftBarSpacing(int size)
+{
+    //Add spacing to layout.
+    m_mainLayout->addSpacing(size);
 }
 
 void KNMainWindowLeftBar::resizeEvent(QResizeEvent *event)

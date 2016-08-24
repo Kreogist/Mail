@@ -7,6 +7,11 @@
         "Window" : "#000000",
         "WindowText" : "#FFFFFF"
     },
+    "MailComposeButton" : {
+        "Parent" : "MainWindow",
+        "Button" : "#202020",
+        "ButtonText" : "#A0A0A0"
+    },
     "MailCompose" : {
         "Parent" : "MainWindow",
         "Window" : "#FFFFFF",

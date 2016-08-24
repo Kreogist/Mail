@@ -24,13 +24,14 @@
 #include "knlocalemanager.h"
 #include "knthememanager.h"
 
+#include "knmailglobal.h"
 #include "knmailcomposeedit.h"
 #include "knmailrotatebutton.h"
 
 #include "knmailcompose.h"
 
 KNMailCompose::KNMailCompose(QWidget *parent) :
-    QWidget(parent),
+    KNMailComposeBase(parent),
     m_mainLayout(new QBoxLayout(QBoxLayout::TopToBottom, this)),
     m_subject(new KNUnderLineLineEdit(this)),
     m_textEditor(new KNMailComposeEdit(this)),
@@ -52,6 +53,15 @@ KNMailCompose::KNMailCompose(QWidget *parent) :
     QFont titleFont=m_subject->font();
     titleFont.setPixelSize(20);
     m_subject->setFont(titleFont);
+    //Link the subject.
+    connect(m_subject, &KNUnderLineLineEdit::textChanged,
+            [=](const QString &subjectText)
+    {
+        //Update the title.
+        setWindowTitle(subjectText.isEmpty()?
+                           knMailGlobal->noSubjectText():
+                           subjectText);
+    });
     //Configure the text editor.
     m_textEditor->setFrameStyle(QFrame::NoFrame);
 
@@ -92,6 +102,14 @@ KNMailCompose::KNMailCompose(QWidget *parent) :
     retranslate();
 }
 
+void KNMailCompose::closeEvent(QCloseEvent *event)
+{
+    //Do original event.
+    KNMailComposeBase::closeEvent(event);
+    //Emit the signal.
+    emit aboutToClose();
+}
+
 void KNMailCompose::retranslate()
 {
     //Update the place holder text.
@@ -102,6 +120,12 @@ void KNMailCompose::retranslate()
     m_ccLabel->setText(tr("C.C."));
     m_bccLabel->setText(tr("B.C.C."));
     m_attachment->setText(tr("Attachment"));
+    //Update the title.
+    if(m_subject->text().isEmpty())
+    {
+        //Update the title.
+        setWindowTitle(knMailGlobal->noSubjectText());
+    }
 }
 
 void KNMailCompose::onThemeChanged()

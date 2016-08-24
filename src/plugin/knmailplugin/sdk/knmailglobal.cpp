@@ -17,12 +17,14 @@
  */
 #include "knlocalemanager.h"
 
+#include "knmailcomposegeneratorbase.h"
 #include "knmailaccount.h"
 #include "knmailpopupmanager.h"
 #include "knmailaccountmanager.h"
 #include "knmailviewergeneratorbase.h"
 #include "knmailviewerbase.h"
 #include "knmailwebviewergeneratorbase.h"
+#include "knmailcomposermanager.h"
 
 #include "knmailglobal.h"
 
@@ -40,13 +42,21 @@ KNMailGlobal::~KNMailGlobal()
         //Reset the pointer.
         m_viewerGenerator=nullptr;
     }
-    //Check the web content generator poitner.
+    //Check the web content generator pointer.
     if(m_webViewerGenerator)
     {
         //Recover the memory.
         delete m_webViewerGenerator;
         //Reset the pointer.
         m_webViewerGenerator=nullptr;
+    }
+    //Check the composer generator pointer.
+    if(m_viewerGenerator)
+    {
+        //Recover the memory.
+        delete m_viewerGenerator;
+        //Reset the pointer.
+        m_viewerGenerator=nullptr;
     }
 }
 
@@ -116,17 +126,20 @@ void KNMailGlobal::retranslate()
     m_titleFieldText[FieldFrom]=tr("From");
     m_titleFieldText[FieldReceive]=tr("To");
     m_titleFieldText[FieldCarbonCopy]=tr("CC");
+    //Update the subject.
+    m_noSubject=tr("No subject");
 }
 
 KNMailGlobal::KNMailGlobal(QObject *parent) :
     QObject(parent),
     m_viewerGenerator(nullptr),
     m_webViewerGenerator(nullptr),
-    m_viewerParent(nullptr)
+    m_composerGenerator(nullptr)
 {
     //Initial the infrastructures.
     KNMailAccountManager::initial(this);
     KNMailPopupManager::initial(this);
+    KNMailComposerManager::initial(this);
 
     //Initial the provider icons.
     m_providerIcon.insert("netease",
@@ -139,19 +152,33 @@ KNMailGlobal::KNMailGlobal(QObject *parent) :
     retranslate();
 }
 
+QString KNMailGlobal::noSubjectText() const
+{
+    return m_noSubject;
+}
+
+void KNMailGlobal::setComposerGenerator(
+        KNMailComposeGeneratorBase *composerGenerator)
+{
+    m_composerGenerator = composerGenerator;
+}
+
 void KNMailGlobal::setWebViewerGenerator(
         KNMailWebViewerGeneratorBase *webViewerGenerator)
 {
     m_webViewerGenerator = webViewerGenerator;
 }
 
+KNMailComposeBase *KNMailGlobal::generateComposer()
+{
+    return m_composerGenerator->generateComposer();
+}
+
 void KNMailGlobal::setViewerGenerator(
-        KNMailViewerGeneratorBase *viewerGenerator,
-        QWidget *viewerParent)
+        KNMailViewerGeneratorBase *viewerGenerator)
 {
     //Save the generator and parent.
     m_viewerGenerator = viewerGenerator;
-    m_viewerParent=viewerParent;
 }
 
 KNMailWebViewerBase *KNMailGlobal::generateWebViewer(QWidget *parent)

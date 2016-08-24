@@ -16,9 +16,11 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QStackedLayout>
+#include <QPushButton>
 
 //Dependencies.
 #include "knthememanager.h"
+#include "knlocalemanager.h"
 #include "knglobal.h"
 #include "knmainwindow.h"
 
@@ -26,14 +28,18 @@
 #include "knmailglobal.h"
 #include "knmailaccountlist.h"
 #include "knmailpopupmanager.h"
+#include "knmailcomposermanager.h"
 
 //Ports.
 #include "knmailemptyhintbase.h"
 #include "knmailfolderviewerbase.h"
+#include "knmailcomposegeneratorbase.h"
+#include "knmailcomposebase.h"
 #include "knmailviewerbase.h"
 #include "knmailviewergeneratorbase.h"
 #include "knmailwebviewergeneratorbase.h"
 #include "knmailprotocol.h"
+#include "knmailcomposebase.h"
 
 //Plugins.
 // Empty hint.
@@ -54,6 +60,7 @@
 #endif
 // Composer.
 #include "plugin/knmailcompose/knmailcompose.h"
+#include "plugin/knmailcompose/knmailcomposegenerator.h"
 // Protocols.
 #include "plugin/knmailpop3protocol/knmailpop3protocol.h"
 #include "plugin/knmailimapprotocol/knmailimapprotocol.h"
@@ -68,6 +75,7 @@
 KNMailPlugin::KNMailPlugin(QWidget *parent) :
     KNMailPluginBase(parent),
     m_leftBarContainer(nullptr),
+    m_composeButton(new QPushButton(this)),
     m_mainLayout(new QStackedLayout(this))
 {
     //Initial the basic infrastructure.
@@ -75,6 +83,10 @@ KNMailPlugin::KNMailPlugin(QWidget *parent) :
     //Link the signal with main window.
     connect(knGlobal->mainWindow(), &KNMainWindow::aboutToClose,
             knMailPopupManager, &KNMailPopupManager::closeAllMail);
+    //Link the retranslator.
+    connect(knI18n, &KNLocaleManager::languageChange,
+            this, &KNMailPlugin::retranslate);
+    retranslate();
 }
 
 QWidget *KNMailPlugin::accountPanel()
@@ -94,6 +106,8 @@ void KNMailPlugin::loadPlugins()
 #endif
     //Load the mail viewer generator.
     loadMailViewerGenerator(new KNMailViewerGenerator);
+    //Load the composer generator.
+    loadComposerGenerator(new KNMailComposeGenerator);
     //Load the empty hint.
     loadEmptyHint(new KNMailEmptyHint);
     //Load the folder viewer.
@@ -144,9 +158,6 @@ void KNMailPlugin::loadPlugins()
     qDebug()<<popProtocol->connectToHost()<<popProtocol->lastError();
     qDebug()<<popProtocol->login()<<popProtocol->lastError();
     qDebug()<<popProtocol->updateFolderStatus()<<popProtocol->lastError();
-
-    KNMailCompose *cp=new KNMailCompose(this);
-    cp->show();
 }
 
 inline void KNMailPlugin::initialInfrastructure()
@@ -159,6 +170,14 @@ inline void KNMailPlugin::initialInfrastructure()
     //Configure the layout.
     m_mainLayout->setContentsMargins(0,0,0,0);
     setLayout(m_mainLayout);
+    //Configure the button.
+    m_composeButton->setObjectName("MailComposeButton");
+    knTheme->registerWidget(m_composeButton);
+    m_composeButton->setFixedHeight(28);
+    m_composeButton->setIcon(QIcon("://public/create.png"));
+    //Link the compose button to generator.
+    connect(m_composeButton, &QPushButton::released,
+            this, &KNMailPlugin::onActionComposePressed);
 }
 
 void KNMailPlugin::loadEmptyHint(KNMailEmptyHintBase *emptyHint)
@@ -193,5 +212,35 @@ void KNMailPlugin::loadWebViewerGenerator(
 void KNMailPlugin::loadMailViewerGenerator(KNMailViewerGeneratorBase *generator)
 {
     //Set the generator to the mail global.
-    knMailGlobal->setViewerGenerator(generator, this);
+    knMailGlobal->setViewerGenerator(generator);
+}
+
+void KNMailPlugin::loadComposerGenerator(KNMailComposeGeneratorBase *generator)
+{
+    //Set the generator.
+    knMailGlobal->setComposerGenerator(generator);
+}
+
+QWidget *KNMailPlugin::composeButton() const
+{
+    return m_composeButton;
+}
+
+void KNMailPlugin::retranslate()
+{
+    //Update the compose button.
+    m_composeButton->setText(" "+tr("Compose"));
+}
+
+void KNMailPlugin::onActionComposePressed()
+{
+    //Generate a new composer.
+    KNMailComposeBase *composer=knMailGlobal->generateComposer();
+    //Add to manager.
+    knMailComposerManager->append(composer);
+    //Show the composer.
+    composer->show();
+    //Raise the composer.
+    composer->raise();
+    composer->activateWindow();
 }

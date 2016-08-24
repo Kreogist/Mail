@@ -47,6 +47,12 @@ public:
      */
     virtual void loadPlugins() = 0;
 
+    /*!
+     * \brief Get the compose button widget pointer.
+     * \return The compose button widget pointer.
+     */
+    virtual QWidget *composeButton() const=0;
+
 signals:
 
 public slots:

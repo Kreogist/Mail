@@ -43,6 +43,11 @@ public:
                           int stretch = 0,
                           Qt::Alignment alignment = 0) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMainWindowLeftBarBase::addLeftBarSpacing().
+     */
+    void addLeftBarSpacing(int size) Q_DECL_OVERRIDE;
+
 signals:
 
 public slots:

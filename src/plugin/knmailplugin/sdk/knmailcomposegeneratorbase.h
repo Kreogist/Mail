@@ -12,37 +12,32 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foundation,
+ * along with this program; if not, write to the Free Software
+Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILCOMPOSEBASE_H
-#define KNMAILCOMPOSEBASE_H
 
-#include <QWidget>
+#ifndef KNMAILCOMPOSEGENERATORBASE_H
+#define KNMAILCOMPOSEGENERATORBASE_H
 
+class KNMailComposeBase;
 /*!
- * \brief The KNMailComposeBase class provides the basic information about the
- * compose widget window. This widget will be used for composing the mime mail
- * and translate it into mime format.
+ * \brief The KNMailComposeGeneratorBase class provides the port for the
+ * composer generator. It should be provided by each compose widget.
  */
-class KNMailComposeBase : public QWidget
+class KNMailComposeGeneratorBase
 {
-    Q_OBJECT
 public:
     /*!
-     * \brief Construct a KNMailComposeBase widget.
-     * \param parent The parent widget.
+     * \brief Construct a KNMailComposeGeneratorBase widget.
      */
-    KNMailComposeBase(QWidget *parent = 0) : QWidget(parent){}
+    KNMailComposeGeneratorBase(){}
 
-signals:
     /*!
-     * \brief When the composer is right before close, this signal will be
-     * emitted.
+     * \brief Generate a composer window.
+     * \return The composer widget pointer.
      */
-    void aboutToClose();
-
-public slots:
+    virtual KNMailComposeBase *generateComposer()=0;
 };
 
-#endif // KNMAILCOMPOSEBASE_H
+#endif // KNMAILCOMPOSEGENERATORBASE_H

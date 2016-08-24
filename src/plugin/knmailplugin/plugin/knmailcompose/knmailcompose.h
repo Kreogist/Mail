@@ -20,7 +20,7 @@ Foundation,
 #ifndef KNMAILCOMPOSE_H
 #define KNMAILCOMPOSE_H
 
-#include <QWidget>
+#include "knmailcomposebase.h"
 
 class QComboBox;
 class QLabel;
@@ -31,7 +31,7 @@ class KNUnderLineLineEdit;
  * \brief The KNMailCompose class provides the official composing panel. It will
  * use all the SDKs to build the composing window.
  */
-class KNMailCompose : public QWidget
+class KNMailCompose : public KNMailComposeBase
 {
     Q_OBJECT
 public:
@@ -44,6 +44,12 @@ public:
 signals:
 
 public slots:
+
+protected:
+    /*!
+     * \brief Reimplemented from KNMailComposeBase::closeEvent().
+     */
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
     void retranslate();

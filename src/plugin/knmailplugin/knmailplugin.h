@@ -20,6 +20,7 @@
 
 #include "knmailpluginbase.h"
 
+class QPushButton;
 class QStackedLayout;
 class KNMailViewerBase;
 class KNMailAccountList;
@@ -28,6 +29,7 @@ class KNMailFolderViewerBase;
 class KNMailWebViewerBase;
 class KNMailViewerGeneratorBase;
 class KNMailWebViewerGeneratorBase;
+class KNMailComposeGeneratorBase;
 /*!
  * \brief The KNMailPlugin class is a default implementation of the mail plugin.
  */
@@ -51,6 +53,11 @@ public:
      */
     void loadPlugins() Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMailPluginBase::composeButton().
+     */
+    QWidget *composeButton() const Q_DECL_OVERRIDE;
+
 signals:
 
 public slots:
@@ -58,6 +65,8 @@ public slots:
 protected:
 
 private slots:
+    void retranslate();
+    void onActionComposePressed();
 
 private:
     inline void initialInfrastructure();
@@ -65,7 +74,9 @@ private:
     void loadFolderViewer(KNMailFolderViewerBase *folderViewer);
     void loadWebViewerGenerator(KNMailWebViewerGeneratorBase *generator);
     void loadMailViewerGenerator(KNMailViewerGeneratorBase *generator);
+    void loadComposerGenerator(KNMailComposeGeneratorBase *generator);
     KNMailAccountList *m_leftBarContainer;
+    QPushButton *m_composeButton;
     QStackedLayout *m_mainLayout;
 };
 

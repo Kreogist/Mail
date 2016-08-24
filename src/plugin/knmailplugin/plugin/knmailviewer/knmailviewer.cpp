@@ -235,6 +235,7 @@ void KNMailViewer::loadMail(const QString &mailPath)
     //Parse the subject.
     m_subjectText=
             KNMailUtil::parseEncoding(m_mailContent->mimeHeader("subject"));
+    setWindowTitle(m_subjectText);
     //Prepare the sender.
     QString contactName,
             contactAddress=parseMailAddress(m_mailContent->mimeHeader("from"),
@@ -374,6 +375,11 @@ void KNMailViewer::closeEvent(QCloseEvent *event)
 
 void KNMailViewer::retranslate()
 {
+    //Check the result.
+    if(m_subjectText.isEmpty())
+    {
+        setWindowTitle(knMailGlobal->noSubjectText());
+    }
     //Update the text,
     m_receiverLabel->setText(knMailGlobal->viewerTitleText(FieldReceive));
     m_senderLabel->setText(knMailGlobal->viewerTitleText(FieldFrom));
