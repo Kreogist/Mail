@@ -17,15 +17,15 @@
  */
 #include <QPainter>
 
-#include "knmailaccountbutton.h"
+#include "knmailrotatebutton.h"
 
-KNMailAccountButton::KNMailAccountButton(QWidget *parent) :
+KNMailRotateButton::KNMailRotateButton(QWidget *parent) :
     KNOpacityButton(parent),
     m_rotate(0)
 {
 }
 
-void KNMailAccountButton::paintEvent(QPaintEvent *event)
+void KNMailRotateButton::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     //Ignore painting request when disabled or the icon is null.
@@ -48,12 +48,12 @@ void KNMailAccountButton::paintEvent(QPaintEvent *event)
     painter.drawPixmap(0,0,width(),height(),icon().pixmap(size()));
 }
 
-qreal KNMailAccountButton::rotate() const
+qreal KNMailRotateButton::rotate() const
 {
     return m_rotate;
 }
 
-void KNMailAccountButton::setRotate(const qreal &rotate)
+void KNMailRotateButton::setRotate(const qreal &rotate)
 {
     //Save the rotateion.
     m_rotate = rotate;

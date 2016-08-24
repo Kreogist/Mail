@@ -20,7 +20,7 @@
 #include <QMouseEvent>
 
 #include "knmailaccount.h"
-#include "knmailaccountbutton.h"
+#include "knmailrotatebutton.h"
 #include "knmailaccountwidget.h"
 #include "knmailglobal.h"
 
@@ -52,7 +52,7 @@ KNMailAccountWidget::KNMailAccountWidget(KNMailAccount *account,
     for(int i=0; i<MailAccountButtonCount; ++i)
     {
         //Initial the button.
-        m_button[i]=new KNMailAccountButton(this);
+        m_button[i]=new KNMailRotateButton(this);
         //Resize the button.
         m_button[i]->setFixedSize(ButtonSize, ButtonSize);
     }
@@ -64,7 +64,7 @@ KNMailAccountWidget::KNMailAccountWidget(KNMailAccount *account,
     m_button[ButtonExpand]->setIcon(
                 QIcon(":/plugin/mail/account/account_expand.png"));
     //Link the button.
-    connect(m_button[ButtonExpand], &KNMailAccountButton::clicked,
+    connect(m_button[ButtonExpand], &KNMailRotateButton::clicked,
             this, &KNMailAccountWidget::expandPanel);
     //Update the font size.
     QFont labelFont=font();

@@ -247,7 +247,6 @@ SOURCES += \
     sdk/account/knaccountavatarbutton.cpp \
     sdk/account/knaccountloginpanel.cpp \
     sdk/knunderlinelineedit.cpp \
-    plugin/knmailplugin/sdk/knmailaccountbutton.cpp \
     sdk/knopacityanimebutton.cpp \
     sdk/knopacitybutton.cpp \
     sdk/knsideshadowwidget.cpp \
@@ -275,7 +274,9 @@ SOURCES += \
     plugin/knmailplugin/sdk/knmailprotocol.cpp \
     plugin/knmailplugin/sdk/knmailreceiverprotocol.cpp \
     plugin/knmailplugin/plugin/knmailimapprotocol/knmailimapprotocol.cpp \
-    plugin/knmailplugin/plugin/knmailcompose/knmailcompose.cpp
+    plugin/knmailplugin/plugin/knmailcompose/knmailcompose.cpp \
+    plugin/knmailplugin/sdk/knmailrotatebutton.cpp \
+    plugin/knmailplugin/plugin/knmailcompose/knmailcomposeedit.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -315,7 +316,6 @@ HEADERS += \
     sdk/account/knaccountloginpanel.h \
     sdk/account/knaccountpanel.h \
     sdk/knunderlinelineedit.h \
-    plugin/knmailplugin/sdk/knmailaccountbutton.h \
     sdk/knopacityanimebutton.h \
     sdk/knopacitybutton.h \
     sdk/knsideshadowwidget.h \
@@ -350,4 +350,6 @@ HEADERS += \
     plugin/knmailplugin/plugin/knmailpop3protocol/knmailpop3protocol.h \
     plugin/knmailplugin/sdk/knmailreceiverprotocol.h \
     plugin/knmailplugin/plugin/knmailimapprotocol/knmailimapprotocol.h \
-    plugin/knmailplugin/plugin/knmailcompose/knmailcompose.h
+    plugin/knmailplugin/plugin/knmailcompose/knmailcompose.h \
+    plugin/knmailplugin/sdk/knmailrotatebutton.h \
+    plugin/knmailplugin/plugin/knmailcompose/knmailcomposeedit.h

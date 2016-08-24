@@ -28,7 +28,7 @@
 class QTimeLine;
 class KNMailModel;
 class KNMailAccount;
-class KNMailAccountButton;
+class KNMailRotateButton;
 /*!
  * \brief The KNMailAccountWidget class provides a view of mail account. It will
  * emit the model change signal for switching the model.\n
@@ -144,7 +144,7 @@ private:
     inline void updateFoldParameters();
     inline void startHeightAnime(int targetHeight);
     static QLinearGradient m_shadowGradient;
-    KNMailAccountButton *m_button[MailAccountButtonCount];
+    KNMailRotateButton *m_button[MailAccountButtonCount];
     qreal m_animeProgress;
     QTimeLine *m_expandAnime;
     KNMailAccount *m_account;

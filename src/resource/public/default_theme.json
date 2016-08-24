@@ -10,7 +10,8 @@
     "MailCompose" : {
         "Parent" : "MainWindow",
         "Window" : "#FFFFFF",
-        "WindowText" : "#000000"
+        "WindowText" : "#000000",
+        "Highlight" : "#C0C0C0"
     },
     "MainWindowLeftBar" : {
         "Parent" : "MainWindow",

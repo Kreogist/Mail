@@ -15,17 +15,17 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
-#ifndef KNMAILACCOUNTBUTTON_H
-#define KNMAILACCOUNTBUTTON_H
+#ifndef KNMAILROTATETBUTTON_H
+#define KNMAILROTATETBUTTON_H
 
 #include "knopacitybutton.h"
 
 /*!
- * \brief The KNMailAccountButton class provides the button widget of the mail
+ * \brief The KNMailRotateButton class provides the button widget of the mail
  * account title bar. It will provides the button function as the normal opacity
  * animation button, but also provide the rotate function.
  */
-class KNMailAccountButton : public KNOpacityButton
+class KNMailRotateButton : public KNOpacityButton
 {
     Q_OBJECT
 public:
@@ -33,7 +33,7 @@ public:
      * \brief Construct a KNMailAccountButton widget with given parent widget.
      * \param parent The parent widget pointer.
      */
-    explicit KNMailAccountButton(QWidget *parent = 0);
+    explicit KNMailRotateButton(QWidget *parent = 0);
 
     /*!
      * \brief Get the current rotate of the button.
