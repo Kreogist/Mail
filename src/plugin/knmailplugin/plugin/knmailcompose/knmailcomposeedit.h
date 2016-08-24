@@ -25,6 +25,7 @@ Foundation,
 class QFontComboBox;
 class QComboBox;
 class QTimeLine;
+class KNOpacityPressedButton;
 /*!
  * \brief The KNMailComposeEdit class provides a widget which allows user to
  * edit an mail. It provides the function to translate the content to multipart
@@ -63,8 +64,18 @@ protected:
 private slots:
 
 private:
+    enum ControlButtons
+    {
+        ButtonBold,
+        ButtonItalic,
+        ButtonUnderline,
+        ControlButtonCount
+    };
+
+    inline void setBlockStatus(bool enabled);
     inline void startAnime(int endFrame);
     inline void updateToolBarGeometry();
+    KNOpacityPressedButton *m_statusButton[ControlButtonCount];
     QWidget *m_toolBar;
     QFontComboBox *m_fontBox;
     QComboBox *m_fontSizeBox;

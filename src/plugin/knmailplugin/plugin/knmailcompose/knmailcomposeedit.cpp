@@ -18,14 +18,18 @@ Foundation,
  */
 #include <QBoxLayout>
 #include <QTimeLine>
+#include <QLineEdit>
 #include <QFontComboBox>
 #include <QAbstractItemView>
 #include <QComboBox>
+
+#include "knopacitypressedbutton.h"
 
 #include "knmailcomposeedit.h"
 
 #include <QDebug>
 
+#define ButtonSize 16
 #define ToolBarHeight 20
 
 KNMailComposeEdit::KNMailComposeEdit(QWidget *parent) :
@@ -42,6 +46,27 @@ KNMailComposeEdit::KNMailComposeEdit(QWidget *parent) :
     m_shownHeight=ToolBarHeight;
     m_toolBar->setFixedHeight(ToolBarHeight);
     m_toolBar->setFocusProxy(this);
+    //Update the text font.
+    QFont defaultTextFont=font();
+    defaultTextFont.setPointSize(9);
+    setFont(defaultTextFont);
+    //Construct the button.
+    for(int i=0; i<ControlButtonCount; ++i)
+    {
+        //Construct the button.
+        m_statusButton[i]=new KNOpacityPressedButton(this);
+        //Update the button status.
+        m_statusButton[i]->setFixedSize(ButtonSize, ButtonSize);
+        m_statusButton[i]->setCheckable(true);
+        m_statusButton[i]->setOpacity(0.3);
+    }
+    //Set the icon.
+    m_statusButton[ButtonBold]->setIcon(
+                QIcon(":/plugin/mail/composer/bold.png"));
+    m_statusButton[ButtonItalic]->setIcon(
+                QIcon(":/plugin/mail/composer/italic.png"));
+    m_statusButton[ButtonUnderline]->setIcon(
+                QIcon(":/plugin/mail/composer/underline.png"));
 
     //Set layout to toolbar.
     QBoxLayout *toolBarLayout=new QBoxLayout(QBoxLayout::LeftToRight,
@@ -76,6 +101,38 @@ KNMailComposeEdit::KNMailComposeEdit(QWidget *parent) :
         //Check the font text size.
         setFontPointSize(fontSize);
     });
+    // Bold button.
+    connect(m_statusButton[ButtonBold], &KNOpacityPressedButton::clicked,
+            [=](bool has){setFontWeight(has?QFont::Bold:QFont::Normal);});
+    // Italic button.
+    connect(m_statusButton[ButtonItalic], &KNOpacityPressedButton::clicked,
+            [=](bool has){setFontItalic(has);});
+    // Underline button.
+    connect(m_statusButton[ButtonUnderline], &KNOpacityPressedButton::clicked,
+            [=](bool has){setFontUnderline(has);});
+    //Add the status update.
+    connect(this, &KNMailComposeEdit::cursorPositionChanged,
+            [=]{
+        //Get the current font.
+        QFont textFont=currentFont();
+        //Block the status widgets.
+        setBlockStatus(true);
+        //Update the font status.
+        m_fontBox->lineEdit()->setText(textFont.family());
+        m_fontSizeBox->lineEdit()->setText(
+                    QString::number(textFont.pointSize()));
+        m_statusButton[ButtonBold]->setChecked(fontWeight()==QFont::Bold);
+        m_statusButton[ButtonItalic]->setChecked(fontItalic());
+        m_statusButton[ButtonUnderline]->setChecked(fontUnderline());
+        //Enable the status widget.
+        setBlockStatus(false);
+    });
+    //Add button to layout.
+    for(int i=0; i<ControlButtonCount; ++i)
+    {
+        //Add widget.
+        toolBarLayout->addWidget(m_statusButton[i]);
+    }
     toolBarLayout->addStretch();
     //Configure the animation.
     m_toolBarAnime->setUpdateInterval(33);
@@ -114,6 +171,15 @@ void KNMailComposeEdit::focusOutEvent(QFocusEvent *event)
 //    startAnime(0);
     //Do original event.
     QTextEdit::focusOutEvent(event);
+}
+
+void KNMailComposeEdit::setBlockStatus(bool enabled)
+{
+    m_fontBox->blockSignals(enabled);
+    m_fontSizeBox->blockSignals(enabled);
+    m_statusButton[ButtonBold]->blockSignals(enabled);
+    m_statusButton[ButtonItalic]->blockSignals(enabled);
+    m_statusButton[ButtonUnderline]->blockSignals(enabled);
 }
 
 void KNMailComposeEdit::startAnime(int endFrame)

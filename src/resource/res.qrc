@@ -16,5 +16,8 @@
         <file>mail/account/account_expand.png</file>
         <file>mail/account/account_config.png</file>
         <file>mail/account/account_update.png</file>
+        <file>mail/composer/bold.png</file>
+        <file>mail/composer/italic.png</file>
+        <file>mail/composer/underline.png</file>
     </qresource>
 </RCC>
