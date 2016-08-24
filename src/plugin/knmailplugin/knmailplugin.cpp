@@ -104,7 +104,7 @@ void KNMailPlugin::loadPlugins()
 
     KNMailAccount *superaccount=new KNMailAccount(this);
     superaccount->setDisplayName("Haolei Ye");
-    superaccount->setUsername("tomguts@126.com");
+    superaccount->setUsername("myiosappleid@icloud.com");
     superaccount->setProvider("netease");
     knMailAccountManager->appendAccount(superaccount);
 
@@ -135,15 +135,15 @@ void KNMailPlugin::loadPlugins()
 
     KNMailImapProtocol *popProtocol=new KNMailImapProtocol(this);
     KNMailProtocolConfig config;
-    config.loginFormat="%1 \"%2\"";
-    config.hostName="imap.126.com";
+    config.loginFormat="%1 %2";
+    config.hostName="imap.mail.me.com";
     config.port=993;
     config.socketType=SocketSsl;
     superaccount->setReceiveConfig(config);
     popProtocol->setAccount(superaccount);
-//    qDebug()<<popProtocol->connectToHost()<<popProtocol->lastError();
-//    qDebug()<<popProtocol->login()<<popProtocol->lastError();
-//    qDebug()<<popProtocol->updateFolderStatus()<<popProtocol->lastError();
+    qDebug()<<popProtocol->connectToHost()<<popProtocol->lastError();
+    qDebug()<<popProtocol->login()<<popProtocol->lastError();
+    qDebug()<<popProtocol->updateFolderStatus()<<popProtocol->lastError();
 
     KNMailCompose *cp=new KNMailCompose(this);
     cp->show();
