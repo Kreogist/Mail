@@ -117,6 +117,17 @@ public:
      */
     static QString parseEncoding(QString data);
 
+    /*!
+     * \brief Parse the encoding content.
+     * \param content The encoding content, it might be in 7-bit, 8-bit, BASE64
+     * or quote printable.
+     * \param encoding Encoding format.
+     * \param decodedContent The decode content cache.
+     */
+    static void parseContent(const QByteArray &content,
+                             const QString &encoding,
+                             QByteArray &decodedContent);
+
 private:
     static QString parseEncodingPart(const QString &data);
     KNMailUtil();

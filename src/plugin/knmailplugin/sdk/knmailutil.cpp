@@ -133,6 +133,32 @@ QString KNMailUtil::parseEncoding(QString data)
     return parsedText;
 }
 
+void KNMailUtil::parseContent(const QByteArray &content,
+                              const QString &encoding,
+                              QByteArray &decodedContent)
+{
+    //Check the encoding.
+    if(encoding=="QUOTED-PRINTABLE")
+    {
+        //Give back the raw data parsed with quoted printable.
+        decodedContent=KNQuotedPrintable::decode(content);
+        //Mission complete.
+        return;
+    }
+    if(encoding=="BASE64")
+    {
+        //Give back the BASE64 decoding result.
+        decodedContent=QByteArray::fromBase64(content);
+        //Mission complete.
+        return;
+    }
+    //For the left things:
+    // - 7bit
+    // - 8bit
+    //Treat them as raw data.
+    decodedContent=content;
+}
+
 QString KNMailUtil::parseEncodingPart(const QString &data)
 {
     //Check if the data start with =? and ends with ?=

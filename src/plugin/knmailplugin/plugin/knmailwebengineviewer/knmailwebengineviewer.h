@@ -38,6 +38,11 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Reimplemented from KNMailWebViewerBase::setTextContent().
+     */
+    void setTextContent(const QByteArray &content,
+                        const QString &textType) Q_DECL_OVERRIDE;
 
 protected:
     /*!

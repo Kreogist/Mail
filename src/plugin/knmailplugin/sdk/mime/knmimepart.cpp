@@ -58,6 +58,11 @@ QByteArray KNMimePart::body() const
     return m_content;
 }
 
+bool KNMimePart::hasMimeHeader(const QString &field) const
+{
+    return m_propertyList.contains(field);
+}
+
 bool KNMimePart::isMultiPart() const
 {
     return false;

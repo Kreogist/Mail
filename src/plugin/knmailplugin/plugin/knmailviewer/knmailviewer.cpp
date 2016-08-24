@@ -18,6 +18,7 @@
 #include <QBoxLayout>
 #include <QLabel>
 #include <QFormLayout>
+#include <QTextCodec>
 
 #include "knthememanager.h"
 #include "knlocalemanager.h"
@@ -43,6 +44,7 @@
 
 KNMailViewer::KNMailViewer(QWidget *parent) :
     KNMailViewerBase(parent),
+    m_sendTime(QDateTime()),
     m_subjectText(QString()),
     m_filePath(QString()),
     m_subject(new QLabel(this)),
@@ -60,6 +62,19 @@ KNMailViewer::KNMailViewer(QWidget *parent) :
     setObjectName("MailViewer");
     //Set properties.
     setAutoFillBackground(true);
+    //Initial the map.
+    m_monthMap.insert("Jan",  1);
+    m_monthMap.insert("Feb",  2);
+    m_monthMap.insert("Mar",  3);
+    m_monthMap.insert("Apr",  4);
+    m_monthMap.insert("May",  5);
+    m_monthMap.insert("Jun",  6);
+    m_monthMap.insert("Jul",  7);
+    m_monthMap.insert("Aug",  8);
+    m_monthMap.insert("Sep",  9);
+    m_monthMap.insert("Oct", 10);
+    m_monthMap.insert("Nov", 11);
+    m_monthMap.insert("Dec", 12);
     //Configure labels.
     // Subject line.
     QFont subjectFont=font();
@@ -129,6 +144,7 @@ KNMailViewer::KNMailViewer(QWidget *parent) :
 
     //Debug.
     m_subjectText="Welcome to TechLauncher for Semester 2, 2016";
+    m_sendTime=QDateTime(QDate(2016, 7, 18), QTime(13, 0, 0));
     m_receiveTime->setText("July 18, 2016 13:00:00");
     m_senderList->addContact("saki.tojo@ll-anime.com", "Tojo Saki");
     m_receiverList->addContact("honoka.kousaka.longer.honoka@ll-anime.com", "Kousaka Honoka");
@@ -190,7 +206,7 @@ void KNMailViewer::setViewerPopup(bool isPopup)
     if(isPopup)
     {
         //Set the window flag of current widget.
-        setWindowFlags(Qt::Dialog);
+        setWindowFlags(Qt::Window);
         //Complete.
         return;
     }
@@ -216,15 +232,115 @@ void KNMailViewer::loadMail(const QString &mailPath)
         //Mission complete.
         return;
     }
-    //Parse the mail content.
+    //Parse the subject.
     m_subjectText=
             KNMailUtil::parseEncoding(m_mailContent->mimeHeader("subject"));
-    //Prepare the contact content.
+    //Prepare the sender.
     QString contactName,
             contactAddress=parseMailAddress(m_mailContent->mimeHeader("from"),
                                             contactName);
     //Update the content.
     m_senderList->addContact(contactAddress, contactName);
+    //Parse the receiver.
+    {
+        QStringList receiverList=m_mailContent->mimeHeader("to").split(',');
+        //For each receiver in the list, parse and add then to receiver list.
+        for(auto i : receiverList)
+        {
+            //Reset the contact name.
+            contactName=QString();
+            //Add content to the list.
+            contactAddress=parseMailAddress(i, contactName);
+            //Add to contact.
+            m_receiverList->addContact(contactAddress, contactName);
+        }
+    }
+    //Get the CC value.
+    {
+        //Check the cc content.
+        QString ccContent=m_mailContent->mimeHeader("cc");
+        //If the content has data.
+        if(ccContent.isEmpty())
+        {
+            //No content, hide the cc list and cc label.
+            m_ccLabel->hide();
+            m_ccList->hide();
+        }
+        else
+        {
+            //Show the content.
+            m_ccLabel->show();
+            m_ccList->show();
+            //Split the list.
+            QStringList ccList=ccContent.split(',');
+            //For each receiver in the list, parse and add then to cc list.
+            for(auto i : ccList)
+            {
+                //Reset the contact name.
+                contactName=QString();
+                //Add content to the list.
+                contactAddress=parseMailAddress(i, contactName);
+                //Add to contact.
+                m_ccList->addContact(contactAddress, contactName);
+            }
+        }
+    }
+    //Get the date.
+    {
+        //Reset send time.
+        m_sendTime=QDateTime();
+        //Check the date content.
+        QString dateContent=m_mailContent->mimeHeader("date");
+        //Only allowed the correct size.
+        if(dateContent.size()>30)
+        {
+            //Find the comma.
+            m_sendTime=QDateTime(QDate(dateContent.mid(12, 4).toInt(),
+                                       m_monthMap.value(dateContent.mid(8, 3)),
+                                       dateContent.mid(5, 2).toInt()),
+                                 QTime(dateContent.mid(17, 2).toInt(),
+                                       dateContent.mid(20, 2).toInt(),
+                                       dateContent.mid(23, 2).toInt()),
+                                 Qt::OffsetFromUTC);
+            //Get the offset
+            m_sendTime.setOffsetFromUtc(((dateContent.at(26)=='+')?
+                                            1:-1)*
+                                        (dateContent.mid(27, 2).toInt()*3600 +
+                                         dateContent.mid(29, 2).toInt()*60));
+        }
+    }
+    //Get the content.
+    if(m_mailContent->isMultiPart())
+    {
+        //Multipart processing.
+        return;
+    }
+    //Check whether we have content type or not.
+    if(!m_mailContent->hasMimeHeader("content-type"))
+    {
+        //Parse as plain text.
+        parseAsText("text/plain");
+        //Complete.
+        return;
+    }
+    //Parse as single content data.
+    QString contentType;
+    QMap<QString, QString> attributes;
+    parseContentType(m_mailContent->mimeHeader("content-type"),
+                     contentType,
+                     attributes);
+    //If the type is text type.
+    if(contentType.contains("text/"))
+    {
+        //Parse as plain text.
+        parseAsText(contentType,
+                    attributes.contains("charset")?
+                        attributes.value("charset").toLatin1().data():
+                        nullptr);
+        //Complete.
+        return;
+        ;
+    }
 }
 
 void KNMailViewer::resizeEvent(QResizeEvent *event)
@@ -235,6 +351,11 @@ void KNMailViewer::resizeEvent(QResizeEvent *event)
     m_subject->setText(m_subject->fontMetrics().elidedText(m_subjectText,
                                                            Qt::ElideRight,
                                                            m_subject->width()));
+    m_receiveTime->setText(
+                m_receiveTime->fontMetrics().elidedText(
+                    m_sendTime.toString("yyyy-MM-dd hh:mm:ss"),
+                    Qt::ElideRight,
+                    m_receiveTime->width()));
 }
 
 void KNMailViewer::closeEvent(QCloseEvent *event)
@@ -274,6 +395,8 @@ void KNMailViewer::onThemeChanged()
     m_receiverList->setContactPalette(buttonPal);
     m_senderList->setContactPalette(buttonPal);
     m_ccList->setContactPalette(buttonPal);
+    //Get the label palette.
+    ;
 }
 
 inline QString KNMailViewer::parseMailAddress(const QString &rawData,
@@ -285,7 +408,7 @@ inline QString KNMailViewer::parseMailAddress(const QString &rawData,
     if(startPosition==-1)
     {
         //No result find.
-        return QString();
+        return rawData;
     }
     //Find the end position for '>'.
     int endPosition=rawData.indexOf('>');
@@ -296,7 +419,56 @@ inline QString KNMailViewer::parseMailAddress(const QString &rawData,
         return QString();
     }
     //Parse the address name.
-    addressName=rawData.left(startPosition).simplified();
+    addressName=KNMailUtil::parseEncoding(
+                rawData.left(startPosition).simplified());
     //Give back the email address.
     return rawData.mid(startPosition+1, endPosition-startPosition-1);
+}
+
+inline void KNMailViewer::parseContentType(const QString &rawData,
+                                           QString &contentType,
+                                           QMap<QString, QString> &attributes)
+{
+    //Split the raw data.
+    QStringList typeAttributeList=rawData.split(';');
+    //Check each attribute.
+    for(QString i : typeAttributeList)
+    {
+        //Find '=' mark.
+        int equalPosition=i.indexOf('=');
+        //Check the position.
+        if(equalPosition==-1)
+        {
+            //Save as type.
+            contentType=i.simplified();
+            //Move to next.
+            continue;
+        }
+        //Parse the content.
+        attributes.insert(i.left(equalPosition).toLower().simplified(),
+                          i.mid(equalPosition+1).simplified());
+    }
+}
+
+void KNMailViewer::parseAsText(const QString &textType,
+                               const char *encoding)
+{
+    //Get encoding data.
+    QByteArray decodedCache;
+    //Parse the decoded data.
+    KNMailUtil::parseContent(
+                m_mailContent->body(),
+                m_mailContent->mimeHeader(
+                    "content-transfer-encoding").toUpper(),
+                decodedCache);
+    //Prase the content type list.
+    if(encoding!=nullptr)
+    {
+        //Get the text codec.
+        QTextCodec *codec=QTextCodec::codecForName(encoding);
+        //Translate the codec.
+        decodedCache=codec->toUnicode(decodedCache).toUtf8();
+    }
+    //Show the content.
+    m_viewer->setTextContent(decodedCache, textType);
 }

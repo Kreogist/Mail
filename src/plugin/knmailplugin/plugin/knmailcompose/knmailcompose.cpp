@@ -77,7 +77,8 @@ KNMailCompose::KNMailCompose(QWidget *parent) :
     contactLayout->addRow(m_receiverLabel, m_receiverText);
     contactLayout->addRow(m_ccLabel, m_ccText);
     contactLayout->addRow(m_bccLabel, m_bccText);
-    contactLayout->addRow(m_attachment, new QWidget(this));
+    m_attachment->hide();
+//    contactLayout->addRow(m_attachment, new QWidget(this));
     //Add to main layout.
     m_mainLayout->addWidget(m_textEditor, 1);
     //Add widget to the main layout.
@@ -107,4 +108,11 @@ void KNMailCompose::onThemeChanged()
 {
     //Update the panel palette.
     setPalette(knTheme->getPalette(objectName()));
+    //Get the palette.
+    QPalette labelPalette=knTheme->getPalette("MailViewerLabel");
+    m_senderLabel->setPalette(labelPalette);
+    m_receiverLabel->setPalette(labelPalette);
+    m_ccLabel->setPalette(labelPalette);
+    m_bccLabel->setPalette(labelPalette);
+    m_attachment->setPalette(labelPalette);
 }

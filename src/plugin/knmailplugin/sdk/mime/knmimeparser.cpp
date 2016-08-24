@@ -92,7 +92,6 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
             headerList.insert(headerField, headerValue);
         }
     }
-    qDebug()<<headerList;
     //Check the property data field, it should contains a property named
     //"Content-type".
     if(headerList.contains("content-type"))
@@ -197,6 +196,17 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
     KNMimePart *mimeContent=new KNMimePart();
     //Give the header to mime content;
     mimeContent->setMimeHeaderList(headerList);
+    //Combine all the content data together.
+    QByteArray dataContainer;
+    //Append all the data together.
+    for(int i=lineIndex; i<contents.size(); ++i)
+    {
+        //Save the data to container.
+        dataContainer.append(contents.at(i));
+    }
+    //Give the data container to the mime part.
+    mimeContent->setBody(dataContainer);
+    //Give back the mime content.
     return mimeContent;
 }
 

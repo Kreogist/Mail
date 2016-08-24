@@ -79,6 +79,13 @@ public:
     QByteArray body() const;
 
     /*!
+     * \brief Check whether the mime part has a mime header field.
+     * \param field The checking field.
+     * \return If contains the header field, return true.
+     */
+    bool hasMimeHeader(const QString &field) const;
+
+    /*!
      * \brief This function is used to judge whether current mime part is a
      * multi content part.
      * \return For a single mime part, return false.

@@ -18,6 +18,9 @@
 #ifndef KNMAILVIEWER_H
 #define KNMAILVIEWER_H
 
+#include <QDateTime>
+#include <QMap>
+
 #include "knmailviewerbase.h"
 
 class QLabel;
@@ -75,6 +78,13 @@ private slots:
 private:
     inline QString parseMailAddress(const QString &rawData,
                                     QString &addressName);
+    inline void parseContentType(const QString &rawData,
+                                 QString &contentType,
+                                 QMap<QString, QString> &attributes);
+    void parseAsText(const QString &textType,
+                     const char *encoding=nullptr);
+    QMap<QString, int> m_monthMap;
+    QDateTime m_sendTime;
     QString m_subjectText, m_filePath;
     QLabel *m_subject, *m_receiveTime, *m_senderLabel, *m_receiverLabel,
            *m_ccLabel;

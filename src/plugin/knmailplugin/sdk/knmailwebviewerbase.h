@@ -42,6 +42,13 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Display plain content in the viewer.
+     * \param content The display text.
+     * \param textType The text format.
+     */
+    virtual void setTextContent(const QByteArray &content,
+                                const QString &textType)=0;
 };
 
 #endif // KNMAILWEBVIEWERBASE_H
