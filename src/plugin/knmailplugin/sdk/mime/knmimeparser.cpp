@@ -23,6 +23,7 @@ Foundation,
 
 #include "knmimeparser.h"
 
+#include <QDebug>
 
 KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
 {
@@ -91,6 +92,7 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
             headerList.insert(headerField, headerValue);
         }
     }
+    qDebug()<<headerList;
     //Check the property data field, it should contains a property named
     //"Content-type".
     if(headerList.contains("content-type"))

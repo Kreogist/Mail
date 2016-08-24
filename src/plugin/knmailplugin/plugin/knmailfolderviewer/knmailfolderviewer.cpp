@@ -130,6 +130,7 @@ void KNMailFolderViewer::setViewer(KNMailViewerBase *viewer)
         //Ignore the viewer.
         return;
     }
+    m_viewer->loadMail("D:/文档/Kreogist/Mail/Accounts/u5870415@uds.anu.edu.au/Drafts/1.emlx");
     //Link the viewer.
     connect(m_viewer, &KNMailViewerBase::requirePopup,
             this, &KNMailFolderViewer::hideViewer);

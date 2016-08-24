@@ -110,7 +110,15 @@ public:
      */
     static QString fromUtf7(const QByteArray &data);
 
+    /*!
+     * \brief Parse encoding part of the subject, receiver and sender.
+     * \param data The raw data.
+     * \return The decoding data from the source.
+     */
+    static QString parseEncoding(QString data);
+
 private:
+    static QString parseEncodingPart(const QString &data);
     KNMailUtil();
     KNMailUtil(const KNMailUtil &);
     KNMailUtil(KNMailUtil &&);

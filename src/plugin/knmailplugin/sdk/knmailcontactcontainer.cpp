@@ -89,6 +89,8 @@ void KNMailContactContainer::clear()
         //Do delete later.
         i->deleteLater();
     }
+    //Clear the button list.
+    m_buttons.clear();
 }
 
 void KNMailContactContainer::resizeEvent(QResizeEvent *event)

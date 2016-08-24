@@ -33,6 +33,11 @@ QMap<QString, QString> KNMimePart::headerList() const
     return m_propertyList;
 }
 
+QString KNMimePart::mimeHeader(const QString &field) const
+{
+    return m_propertyList.value(field, QString());
+}
+
 void KNMimePart::setMimeHeaderList(const QMap<QString, QString> &propertyList)
 {
     m_propertyList = propertyList;

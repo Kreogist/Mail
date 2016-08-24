@@ -23,12 +23,17 @@
 #include "knlocalemanager.h"
 #include "knopacityanimebutton.h"
 
+#include "mime/knmimepart.h"
+#include "mime/knmimemultipart.h"
+#include "mime/knmimeparser.h"
 #include "knmailwebviewerbase.h"
 #include "knmailcontactbutton.h"
 #include "knmailcontactlist.h"
 #include "knmailglobal.h"
 
 #include "knmailviewer.h"
+
+#include <QDebug>
 
 #define TitleHMargin 31
 #define TitleVMargin 26
@@ -49,7 +54,8 @@ KNMailViewer::KNMailViewer(QWidget *parent) :
     m_receiverList(new KNMailContactList(this)),
     m_ccList(new KNMailContactList(this)),
     m_popup(new KNOpacityAnimeButton(this)),
-    m_viewer(nullptr)
+    m_viewer(nullptr),
+    m_mailContent(nullptr)
 {
     setObjectName("MailViewer");
     //Set properties.
@@ -148,6 +154,12 @@ KNMailViewer::~KNMailViewer()
     disconnect(knTheme, 0, this, 0);
     //Remove the translation signals.
     disconnect(knI18n, 0, this, 0);
+    //Check the mail content.
+    if(m_mailContent)
+    {
+        //Remove the mail content.
+        delete m_mailContent;
+    }
 }
 
 void KNMailViewer::setWebViewer(KNMailWebViewerBase *viewer)
@@ -188,12 +200,31 @@ void KNMailViewer::setViewerPopup(bool isPopup)
 
 void KNMailViewer::loadMail(const QString &mailPath)
 {
+    //Parse the sender content.
+    m_senderList->clear();
+    m_receiverList->clear();
+    m_ccList->clear();
     //Check the file path first.
     //! FIXME: Add checking codes here.
     //Save the file path.
     m_filePath=mailPath;
     //Parse the mail file into a mime part.
-    //! FIXEME Add parse code here.
+    m_mailContent=KNMimeParser::parseMime(mailPath);
+    //Check the content result.
+    if(m_mailContent==nullptr)
+    {
+        //Mission complete.
+        return;
+    }
+    //Parse the mail content.
+    m_subjectText=
+            KNMailUtil::parseEncoding(m_mailContent->mimeHeader("subject"));
+    //Prepare the contact content.
+    QString contactName,
+            contactAddress=parseMailAddress(m_mailContent->mimeHeader("from"),
+                                            contactName);
+    //Update the content.
+    m_senderList->addContact(contactAddress, contactName);
 }
 
 void KNMailViewer::resizeEvent(QResizeEvent *event)
@@ -243,4 +274,29 @@ void KNMailViewer::onThemeChanged()
     m_receiverList->setContactPalette(buttonPal);
     m_senderList->setContactPalette(buttonPal);
     m_ccList->setContactPalette(buttonPal);
+}
+
+inline QString KNMailViewer::parseMailAddress(const QString &rawData,
+                                              QString &addressName)
+{
+    //Search the content of '<' in the raw data.
+    int startPosition=rawData.indexOf('<');
+    //Check thte start position.
+    if(startPosition==-1)
+    {
+        //No result find.
+        return QString();
+    }
+    //Find the end position for '>'.
+    int endPosition=rawData.indexOf('>');
+    //Check the end position.
+    if(endPosition==-1)
+    {
+        //No result find.
+        return QString();
+    }
+    //Parse the address name.
+    addressName=rawData.left(startPosition).simplified();
+    //Give back the email address.
+    return rawData.mid(startPosition+1, endPosition-startPosition-1);
 }

@@ -46,6 +46,14 @@ public:
     QMap<QString, QString> headerList() const;
 
     /*!
+     * \brief Get MIME header information.
+     * \param field The field data.
+     * \return The value according to the field data, if no field found, return
+     * a null string.
+     */
+    QString mimeHeader(const QString &field) const;
+
+    /*!
      * \brief Set all the properties at once.
      * \param propertyList The property list map.
      */

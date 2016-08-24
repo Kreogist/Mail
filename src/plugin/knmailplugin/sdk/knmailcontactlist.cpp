@@ -203,5 +203,8 @@ void KNMailContactList::setExpandState(bool isExpand)
 
 void KNMailContactList::clear()
 {
+    //Clear all the content in the container.
     m_container->clear();
+    //Hide the more button.
+    m_moreButton->setVisible(false);
 }

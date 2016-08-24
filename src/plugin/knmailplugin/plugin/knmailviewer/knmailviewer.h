@@ -21,6 +21,7 @@
 #include "knmailviewerbase.h"
 
 class QLabel;
+class KNMimePart;
 class KNOpacityAnimeButton;
 class KNMailContactList;
 /*!
@@ -72,12 +73,15 @@ private slots:
     void onThemeChanged();
 
 private:
+    inline QString parseMailAddress(const QString &rawData,
+                                    QString &addressName);
     QString m_subjectText, m_filePath;
     QLabel *m_subject, *m_receiveTime, *m_senderLabel, *m_receiverLabel,
            *m_ccLabel;
     KNMailContactList *m_senderList, *m_receiverList, *m_ccList;
     KNOpacityAnimeButton *m_popup;
     KNMailWebViewerBase *m_viewer;
+    KNMimePart *m_mailContent;
 };
 
 #endif // KNMAILVIEWER_H
