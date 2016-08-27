@@ -15,15 +15,66 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+
+#include "knconfigure.h"
+#include "knglobal.h"
+#include "knmailutil.h"
+
 #include "knmailaccount.h"
 
 #include "knmailaccountmanager.h"
 
+#define ConfigureName "MailAccounts"
+#define FieldUsername "Username"
+#define FieldPassword "Password"
+#define FieldDisplayName "Display Name"
+#define FieldProvider "Provider"
+#define FieldSendProtocol "Send Protocol"
+#define FieldSendConfig "Send Config"
+#define FieldReceiveProtocol "Receive Protocol"
+#define FieldReceiveConfig "Receive Config"
+#define FieldConfigHostName "Host Name"
+#define FieldConfigPort "Port"
+#define FieldConfigLogin "Login Format"
+#define FieldConfigSslVersion "Ssl Version"
+#define FieldConfigSocketType "Socket Type"
+
 KNMailAccountManager *KNMailAccountManager::m_instance=nullptr;
 
 KNMailAccountManager::KNMailAccountManager(QObject *parent) :
-    QObject(parent)
+    QAbstractListModel(parent),
+    m_accountConfigure(knGlobal->userConfigure()->getConfigure(ConfigureName))
 {
+    //Load the account from the configuration.
+    QJsonArray accountList=
+            QJsonDocument::fromJson(
+                m_accountConfigure->data("Accounts")).array();
+    //Load data from account list.
+    for(auto i : accountList)
+    {
+        //Generate a mail account.
+        KNMailAccount *mailAccount=new KNMailAccount(this);
+        //Get the account information object.
+        QJsonObject &&account=i.toObject();
+        //Parse the account information.
+        mailAccount->setUsername(account.value(FieldUsername).toString());
+        mailAccount->setPassword(account.value(FieldPassword).toString());
+        mailAccount->setDisplayName(account.value(FieldDisplayName).toString());
+        mailAccount->setProvider(account.value(FieldProvider).toString());
+        mailAccount->setReceiveProtocolName(
+                    account.value(FieldSendProtocol).toString());
+        mailAccount->setSendProtocolName(
+                    account.value(FieldReceiveProtocol).toString());
+        QJsonObject configObject=account.value(FieldSendConfig).toObject();
+        mailAccount->setSendConfig(toConfig(&configObject));
+        configObject=account.value(FieldReceiveConfig).toObject();
+        mailAccount->setReceiveConfig(toConfig(&configObject));
+        //Append account to list.
+        appendAccount(mailAccount);
+    }
 }
 
 KNMailAccountManager *KNMailAccountManager::instance()
@@ -59,4 +110,49 @@ KNMailAccount *KNMailAccountManager::account(int accountIndex)
 int KNMailAccountManager::accountCount()
 {
     return m_accountList.size();
+}
+
+int KNMailAccountManager::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    //Account count is the list count.
+    return m_accountList.size();
+}
+
+QVariant KNMailAccountManager::data(const QModelIndex &index, int role) const
+{
+    //Check the validation of the index.
+    if(!index.isValid())
+    {
+        //No useful data will be returned.
+        return QVariant();
+    }
+    //Get the index row data.
+    const KNMailAccount *account=m_accountList.at(index.row());
+    //Check the account information.
+    switch(role)
+    {
+    case Qt::DisplayRole:
+        return QString("%1 <%2>").arg(account->displayName(),
+                                      account->username());
+    default:
+        return QVariant();
+    }
+}
+
+inline KNMailProtocolConfig KNMailAccountManager::toConfig(
+        QJsonObject *configObject)
+{
+    //Initial the config.
+    KNMailProtocolConfig protocolConfig;
+    //Set the data.
+    protocolConfig.hostName=configObject->value(FieldConfigHostName).toString();
+    protocolConfig.port=configObject->value(FieldConfigPort).toInt();
+    protocolConfig.loginFormat=configObject->value(FieldConfigLogin).toString();
+    protocolConfig.sslVersion=(QSsl::SslProtocol)configObject->value(
+                FieldConfigSslVersion).toInt();
+    protocolConfig.socketType=(MailProtocolSocket)configObject->value(
+                FieldConfigSocketType).toInt();
+    //Give back the procotol config.
+    return protocolConfig;
 }

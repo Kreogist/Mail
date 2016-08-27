@@ -129,6 +129,11 @@ public:
     QList<KNMailModel *> customFolders() const;
 
 signals:
+    /*!
+     * \brief When the count of the folder is changed, this signal will be
+     * emitted.
+     */
+    void folderCountChanged();
 
 public slots:
     /*!

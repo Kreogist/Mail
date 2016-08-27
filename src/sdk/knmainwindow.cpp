@@ -79,6 +79,8 @@ void KNMainWindow::setMainWidget(QWidget *widget)
     m_container->addWidget(widget);
     //Update the strectch parameter.
     m_container->setStretchFactor(1, 1);
+    m_container->setCollapsible(0, false);
+    m_container->setCollapsible(1, false);
 }
 
 void KNMainWindow::closeEvent(QCloseEvent *event)

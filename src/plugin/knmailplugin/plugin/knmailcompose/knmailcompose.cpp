@@ -24,6 +24,7 @@
 #include "knlocalemanager.h"
 #include "knthememanager.h"
 
+#include "knmailaccountmanager.h"
 #include "knmailglobal.h"
 #include "knmailcomposeedit.h"
 #include "knmailrotatebutton.h"
@@ -64,6 +65,8 @@ KNMailCompose::KNMailCompose(QWidget *parent) :
     });
     //Configure the text editor.
     m_textEditor->setFrameStyle(QFrame::NoFrame);
+    //Configure the sender combo.
+    m_senderText->setModel(knMailAccountManager);
 
     //Create subject layout
     QBoxLayout *subjectLayout=new QBoxLayout(QBoxLayout::LeftToRight,

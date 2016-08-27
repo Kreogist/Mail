@@ -16,6 +16,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include "knmailmodel.h"
+#include "knmailglobal.h"
 
 #include "knmailaccount.h"
 
@@ -58,7 +59,16 @@ void KNMailAccount::setReceiveConfig(const KNMailProtocolConfig &receiveConfig)
 
 void KNMailAccount::setCustomFolders(const QList<KNMailModel *> &customFolders)
 {
+    //Record the previous size.
+    int previousSize=m_customFolders.size();
+    //Update the folder list.
     m_customFolders = customFolders;
+    //Check the list size.
+    if(previousSize!=m_customFolders.size())
+    {
+        //Emit the folder count changed signal.
+        emit folderCountChanged();
+    }
 }
 
 QList<KNMailModel *> KNMailAccount::customFolders() const
@@ -139,7 +149,10 @@ QString KNMailAccount::username() const
 
 void KNMailAccount::setUsername(const QString &username)
 {
+    //Save the user name.
     m_username = username;
+    //When the user name is set, the configure folder is set.
+    ;
 }
 
 QString KNMailAccount::displayName() const

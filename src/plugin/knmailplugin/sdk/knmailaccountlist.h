@@ -18,6 +18,8 @@
 #ifndef KNMAILACCOUNTLIST_H
 #define KNMAILACCOUNTLIST_H
 
+#include <QHash>
+
 #include "knmailmodel.h"
 
 #include "knsensescrollarea.h"
@@ -83,13 +85,15 @@ private slots:
     void onActionThemeChanged();
     void onActionAccountAdded(int accountIndex);
     void onActionPanelExpanded(int panelHeight);
-    void onActionChangeHeight(int containerHeight);
+    void onActionPanelFold();
     void onActionMouseInOut(int opacity);
+    void onActionShowFolder(KNMailModel *folder);
+    void onPanelSizeChange(int previousSize, int panelSize);
 
 private:
-    inline void startAnime(int targetHeight);
     inline void startScrollAnime(int targetAlpha);
     QList<KNMailAccountWidget *> m_accountList;
+    QHash<QObject *, int> m_heightDeltaList;
     QPalette m_accountPalette;
     QTimeLine *m_expandAnime, *m_mouseAnime;
     QWidget *m_container;

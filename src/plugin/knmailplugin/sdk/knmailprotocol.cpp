@@ -81,7 +81,7 @@ bool KNMailProtocol::startConnection(const KNMailProtocolConfig &config)
         //Recast the socket as SSL socket,
         QSslSocket *sslSocket=static_cast<QSslSocket *>(m_socket);
         //Update the protocol to a later version.
-        sslSocket->setProtocol(QSsl::TlsV1_0OrLater);
+        sslSocket->setProtocol(config.sslVersion);
         //Update the
         sslSocket->connectToHostEncrypted(config.hostName, config.port);
         break;
@@ -112,15 +112,15 @@ bool KNMailProtocol::waitForConnection()
     return m_socketConnected;
 #else
     //Wait for the client read read.
-    if(!m_socket->waitForConnected(m_connectionTimeout))
+    if(m_socket->waitForConnected(m_connectionTimeout))
     {
-        //Save the last error.
-        setLastError(ResponseTimeout);
-        //Fail to wait for ready read.
-        return false;
+        //Complete.
+        return true;
     }
-    //Complete.
-    return true;
+    //Save the last error.
+    setLastError(ResponseTimeout);
+    //Fail to wait for ready read.
+    return false;
 #endif
 }
 

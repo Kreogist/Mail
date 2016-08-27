@@ -33,7 +33,6 @@
 
 KNMailAccountList::KNMailAccountList(QWidget *parent) :
     KNSenseScrollArea(parent),
-    m_expandAnime(new QTimeLine(200, this)),
     m_mouseAnime(new QTimeLine(200, this)),
     m_container(new QWidget(this)),
     m_containerLayout(new QBoxLayout(QBoxLayout::TopToBottom,
@@ -68,11 +67,6 @@ KNMailAccountList::KNMailAccountList(QWidget *parent) :
     m_container->setLayout(m_containerLayout);
     //Add ended stretch.
     m_containerLayout->addStretch();
-    //Configure the expand time line.
-    m_expandAnime->setUpdateInterval(33);
-    m_expandAnime->setEasingCurve(QEasingCurve::Linear);
-    connect(m_expandAnime, &QTimeLine::frameChanged,
-            this, &KNMailAccountList::onActionChangeHeight);
     //Configure the mouse time line.
     m_mouseAnime->setUpdateInterval(33);
     m_mouseAnime->setEasingCurve(QEasingCurve::OutCubic);
@@ -132,9 +126,13 @@ void KNMailAccountList::addAccountWidget(KNMailAccountWidget *accountWidget)
     //Link the account widget expanded height.
     connect(accountWidget, &KNMailAccountWidget::panelExpanded,
             this, &KNMailAccountList::onActionPanelExpanded);
+    connect(accountWidget, &KNMailAccountWidget::panelFolded,
+            this, &KNMailAccountList::onActionPanelFold);
     //Link the show request to the manager's request.
     connect(accountWidget, &KNMailAccountWidget::requireShowFolder,
-            this, &KNMailAccountList::requireShowFolder);
+            this, &KNMailAccountList::onActionShowFolder);
+    connect(accountWidget, &KNMailAccountWidget::panelSizeChange,
+            this, &KNMailAccountList::onPanelSizeChange);
 }
 
 void KNMailAccountList::resizeEvent(QResizeEvent *event)
@@ -187,27 +185,21 @@ void KNMailAccountList::onActionAccountAdded(int accountIndex)
 
 void KNMailAccountList::onActionPanelExpanded(int panelHeight)
 {
-    //Check the current index.
-    if(m_currentIndex>-1)
-    {
-        //Fold the old item.
-        m_accountList.at(m_currentIndex)->foldPanel();
-    }
-    //Find the account item and save the current index.
-    m_currentIndex=
-            m_accountList.indexOf(static_cast<KNMailAccountWidget *>(sender()));
     //Update the container height counter.
-    m_containerHeight=panelHeight +
-            (knMailAccountManager->accountCount() - 1) *
-            (ItemHeight + ItemSpacing);
+    m_containerHeight+=panelHeight-ItemMargin-ItemHeight;
     //Start the animation.
-    startAnime(m_containerHeight);
+    m_container->setFixedHeight(m_containerHeight);
 }
 
-void KNMailAccountList::onActionChangeHeight(int containerHeight)
+void KNMailAccountList::onActionPanelFold()
 {
+    //Recast the sender.
+    KNMailAccountWidget *senderWidget=
+            static_cast<KNMailAccountWidget *>(sender());
+    //Update the height indicator.
+    m_containerHeight+=(ItemHeight+ItemMargin-senderWidget->expandedHeight());
     //Update the container height.
-    m_container->setFixedHeight(containerHeight);
+    m_container->setFixedHeight(m_containerHeight);
 }
 
 void KNMailAccountList::onActionMouseInOut(int opacity)
@@ -226,15 +218,29 @@ void KNMailAccountList::onActionMouseInOut(int opacity)
     customScrollBar()->setPalette(pal);
 }
 
-inline void KNMailAccountList::startAnime(int targetHeight)
+void KNMailAccountList::onActionShowFolder(KNMailModel *folder)
 {
-    //Start the time line.
-    m_expandAnime->stop();
-    //Update the frame range.
-    m_expandAnime->setFrameRange(m_container->height(),
-                                 targetHeight);
-    //Start the anime.
-    m_expandAnime->start();
+    //Check the new index folder.
+    int senderIndex=
+            m_accountList.indexOf(static_cast<KNMailAccountWidget *>(sender()));
+    //Find the account item and save the current index.
+    if(m_currentIndex!=senderIndex)
+    {
+        //Reset the previous index's current index.
+        m_accountList.at(m_currentIndex)->setCurrentIndex(-1);
+        //Update the current index.
+        m_currentIndex=senderIndex;
+    }
+    //Recast the message.
+    emit requireShowFolder(folder);
+}
+
+void KNMailAccountList::onPanelSizeChange(int previousSize, int panelSize)
+{
+    //Calculate the new size.
+    m_containerHeight+=(panelSize-previousSize);
+    //Update the fixed size.
+    m_container->setFixedHeight(m_containerHeight);
 }
 
 inline void KNMailAccountList::startScrollAnime(int targetAlpha)

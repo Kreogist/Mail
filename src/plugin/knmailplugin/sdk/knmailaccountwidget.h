@@ -78,6 +78,14 @@ signals:
     void panelFolded();
 
     /*!
+     * \brief When the mail panel size is changed caused by update folder, this
+     * signal will be emitted.
+     * \param previousHeight The previous widget height.
+     * \param currentHeight The current widget height.
+     */
+    void panelSizeChange(int previousHeight, int currentHeight);
+
+    /*!
      * \brief When user click one folder, this signal will be emitted for
      * requiring to show the folder.
      * \param folder The folder model.
@@ -130,6 +138,8 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
+    void onFolderCountChanged();
+    void onFoldedFinished();
     void onActionResizePanel(int currentHeight);
 
 private:

@@ -66,6 +66,9 @@ KNMailAccountWidget::KNMailAccountWidget(KNMailAccount *account,
     //Link the button.
     connect(m_button[ButtonExpand], &KNMailRotateButton::clicked,
             this, &KNMailAccountWidget::expandPanel);
+    //Link the account.
+    connect(m_account, &KNMailAccount::folderCountChanged,
+            this, &KNMailAccountWidget::onFolderCountChanged);
     //Update the font size.
     QFont labelFont=font();
     labelFont.setPixelSize(TextHeight);
@@ -117,14 +120,26 @@ void KNMailAccountWidget::mouseReleaseEvent(QMouseEvent *event)
     if(m_isPressed && rect().contains(event->pos()))
     {
         //Check whether the panel is expanded.
-        if(m_expanded)
+        //Check whether the widget is displaying the widget.
+        if(m_expanded && m_drawContent)
         {
-            //Check whether the widget is displaying the widget.
-            if(m_drawContent)
+            //Check the click position, calculate the model index.
+            int targetIndex=(event->pos().y()/ItemHeight)-1;
+            //Check the target index.
+            if(targetIndex==-1)
             {
-                //Check the click position, calculate the model index.
+                //When the panel is expanded, and it doesn't contain selected
+                //item try to fold it.
+                if(m_currentIndex==-1)
+                {
+                    //Fold the panel.
+                    foldPanel();
+                }
+            }
+            else
+            {
                 //Set current index to be clicked index.
-                setCurrentIndex((event->pos().y()/ItemHeight)-1);
+                setCurrentIndex(targetIndex);
             }
         }
         else
@@ -244,6 +259,29 @@ void KNMailAccountWidget::resizeEvent(QResizeEvent *event)
     }
 }
 
+void KNMailAccountWidget::onFolderCountChanged()
+{
+    //Check the widget status.
+    if(m_expanded)
+    {
+        //The size of the folder is definitely changed, calculate the new height.
+        int previousHeight=height();
+        //Start the animation to the expand state.
+        setFixedHeight(expandedHeight());
+        //Emit the update the size signal.
+        emit panelSizeChange(previousHeight, height());
+    }
+}
+
+void KNMailAccountWidget::onFoldedFinished()
+{
+    //Disconnect the time line.
+    disconnect(m_expandAnime, &QTimeLine::finished,
+               this, &KNMailAccountWidget::onFoldedFinished);
+    //Emit the folded signal.
+    emit panelFolded();
+}
+
 void KNMailAccountWidget::onActionResizePanel(int currentHeight)
 {
     //Save the progress.
@@ -318,10 +356,11 @@ void KNMailAccountWidget::foldPanel()
     }
     //Update fold parameters.
     updateFoldParameters();
+    //Connected to the folded signal.
+    connect(m_expandAnime, &QTimeLine::finished,
+            this, &KNMailAccountWidget::onFoldedFinished);
     //Start the animation to the fold state.
     startHeightAnime(ItemHeight + ItemMargin);
-    //Emit the signal.
-    emit panelFolded();
 }
 
 void KNMailAccountWidget::expandPanel()
@@ -346,20 +385,18 @@ void KNMailAccountWidget::setCurrentIndex(int index)
 {
     //Check the index is valid or not, then check the click position
     //with the current index.
-    if(index>-1 && index!=m_currentIndex)
+    if(index!=m_currentIndex && index<m_account->folderCount())
     {
-        //Check the clicked index if larger than the last one.
-        if(index>=m_account->folderCount())
-        {
-            //Get the clicked index.
-            index=m_account->folderCount()-1;
-        }
         //Update the selected index.
         m_currentIndex=index;
         //Update the widget.
         update();
-        //Emit the model switch signal.
-        emit requireShowFolder(m_account->folder(m_currentIndex));
+        //Check the current index.
+        if(m_currentIndex>-1)
+        {
+            //Emit the model switch signal.
+            emit requireShowFolder(m_account->folder(m_currentIndex));
+        }
     }
 }
 

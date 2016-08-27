@@ -20,7 +20,11 @@
 
 #include <QList>
 
-#include <QObject>
+#include "knmailutil.h"
+
+#include <QAbstractListModel>
+
+using namespace MailUtil;
 
 /*!
  * \def knMailAccountManager
@@ -28,15 +32,18 @@
  */
 #define knMailAccountManager (KNMailAccountManager::instance())
 
+class KNConfigure;
 class KNMailAccount;
 /*!
  * \brief The KNMailAccountManager class provides a unique interface to manage
  * all the account objects.
  */
-class KNMailAccountManager : public QObject
+class KNMailAccountManager : public QAbstractListModel
 {
     Q_OBJECT
 public:
+    ~KNMailAccountManager();
+
     /*!
      * \brief Get the account manager global instance.
      * \return The account manager global instance.
@@ -69,6 +76,16 @@ public:
      */
     int accountCount();
 
+    /*!
+     * \brief Reimplemented from QAbstractListModel::rowCount().
+     */
+    int rowCount(const QModelIndex &parent=QModelIndex()) const Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from QAbstractListModel::data().
+     */
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+
 signals:
     /*!
      * \brief When one account is appended to the account manager, this signal
@@ -80,10 +97,12 @@ signals:
 public slots:
 
 private:
+    inline KNMailProtocolConfig toConfig(QJsonObject *configObject);
     static KNMailAccountManager *m_instance;
     explicit KNMailAccountManager(QObject *parent = 0);
 
     QList<KNMailAccount *> m_accountList;
+    KNConfigure *m_accountConfigure;
 };
 
 #endif // KNMAILACCOUNTMANAGER_H

@@ -18,6 +18,7 @@
 #ifndef KNMAILUTIL_H
 #define KNMAILUTIL_H
 
+#include <QSsl>
 #include <QString>
 
 namespace MailUtil
@@ -92,7 +93,14 @@ namespace MailUtil
         QString loginFormat;
         QString hostName;
         quint16 port;
+        QSsl::SslProtocol sslVersion;
         MailProtocolSocket socketType;
+        KNMailProtocolConfig() :
+            port(0),
+            sslVersion(QSsl::SecureProtocols),
+            socketType(SocketTcp)
+        {
+        }
     };
 }
 

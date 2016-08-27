@@ -47,11 +47,12 @@ KNSingletonApplication::KNSingletonApplication(int &argc,
         //Check out the pending message. If there's valid file path, then it
         //will be send to the main instance.
         //Send the messages.
-        if(pendingMessages.size()>1 && sendMessages(uniqueKey, pendingMessages))
+        if(pendingMessages.size()>1)
         {
-            //Complete the mission.
-            return;
+            //Send the useful message.
+            sendMessages(uniqueKey, pendingMessages);
         }
+        return;
     }
     //If we could go here, then means we couldn't send the message to the
     //previous instance.
