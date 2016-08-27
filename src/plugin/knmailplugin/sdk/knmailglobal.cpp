@@ -16,6 +16,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include "knlocalemanager.h"
+#include "knglobal.h"
 
 #include "knmailcomposegeneratorbase.h"
 #include "knmailaccount.h"
@@ -75,11 +76,35 @@ void KNMailGlobal::initial(QObject *parent)
     }
 }
 
-QString KNMailGlobal::defaultFolderName(int index)
+QString KNMailGlobal::defaultFolderDisplayName(int index) const
 {
     Q_ASSERT(index>-1 && index<DefaultFolderCount);
     //Give back the folder name.
     return m_defaultFolderName[index];
+}
+
+QString KNMailGlobal::defaultFolderName(int index) const
+{
+    Q_ASSERT(index>-1 && index<DefaultFolderCount);
+    //Give back the folder name.
+    switch(index)
+    {
+    case FolderInbox:
+        return "Inbox";
+    case FolderDrafts:
+        return "Drafts";
+    case FolderSentItems:
+        return "SentItems";
+    case FolderJunk:
+        return "Junk";
+    case FolderTrash:
+        return "Trash";
+    }
+}
+
+QString KNMailGlobal::mailAccountFolder() const
+{
+    return knGlobal->dirPath(KNGlobal::UserDataDir) + "/Accounts";
 }
 
 QString KNMailGlobal::viewerTitleText(int index)

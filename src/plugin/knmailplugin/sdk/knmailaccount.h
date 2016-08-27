@@ -191,6 +191,11 @@ public slots:
      */
     void setCustomFolders(const QList<KNMailModel *> &customFolders);
 
+    /*!
+     * \brief Save the folder content.
+     */
+    void saveFolder();
+
 private slots:
 
 private:

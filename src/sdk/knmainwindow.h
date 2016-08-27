@@ -21,6 +21,7 @@
 #include <QMainWindow>
 
 class QSplitter;
+class KNMailPluginBase;
 /*!
  * \brief The KNMainWindow class provides the main window of the Mail
  * application. It will host for all the visible widget. It might be hide but it
@@ -75,6 +76,7 @@ private slots:
 
 private:
     QSplitter *m_container;
+    KNMailPluginBase *m_mainWidget;
     Qt::WindowStates m_originalWindowState;
 };
 

@@ -24,6 +24,7 @@ Foundation,
 #include <QComboBox>
 
 #include "knopacitypressedbutton.h"
+#include "knthememanager.h"
 
 #include "knmailcomposeedit.h"
 
@@ -31,6 +32,7 @@ Foundation,
 
 #define ButtonSize 16
 #define ToolBarHeight 20
+#define DefaultFontSize 12
 
 KNMailComposeEdit::KNMailComposeEdit(QWidget *parent) :
     QTextEdit(parent),
@@ -48,7 +50,7 @@ KNMailComposeEdit::KNMailComposeEdit(QWidget *parent) :
     m_toolBar->setFocusProxy(this);
     //Update the text font.
     QFont defaultTextFont=font();
-    defaultTextFont.setPointSize(9);
+    defaultTextFont.setPointSize(DefaultFontSize);
     setFont(defaultTextFont);
     //Construct the button.
     for(int i=0; i<ControlButtonCount; ++i)
@@ -76,6 +78,7 @@ KNMailComposeEdit::KNMailComposeEdit(QWidget *parent) :
     //Add widget to layout.
     //  Font box.
     m_fontBox->view()->setFocusProxy(this);
+    m_fontBox->lineEdit()->setText(defaultTextFont.family());
     toolBarLayout->addWidget(m_fontBox);
     connect(m_fontBox, &QFontComboBox::currentFontChanged,
             [=](const QFont &font){
@@ -87,6 +90,8 @@ KNMailComposeEdit::KNMailComposeEdit(QWidget *parent) :
     fontSizeList << "9" << "10" << "11" << "12" << "13" << "14" << "18" << "24"
                  << "36" << "48" << "64" << "72" << "96" << "144" << "288";
     m_fontSizeBox->addItems(fontSizeList);
+    m_fontSizeBox->lineEdit()->setText(
+                QString::number(defaultTextFont.pointSize()));
     toolBarLayout->addWidget(m_fontSizeBox);
     connect(m_fontSizeBox, &QComboBox::currentTextChanged,
             [=](const QString &fontText){
@@ -147,6 +152,11 @@ KNMailComposeEdit::KNMailComposeEdit(QWidget *parent) :
         //Move the tool bar.
         updateToolBarGeometry();
     });
+
+    //Link the theme change.
+    connect(knTheme, &KNThemeManager::themeChange,
+            this, &KNMailComposeEdit::onThemeChanged);
+    onThemeChanged();
 }
 
 void KNMailComposeEdit::resizeEvent(QResizeEvent *event)
@@ -171,6 +181,14 @@ void KNMailComposeEdit::focusOutEvent(QFocusEvent *event)
 //    startAnime(0);
     //Do original event.
     QTextEdit::focusOutEvent(event);
+}
+
+void KNMailComposeEdit::onThemeChanged()
+{
+    //Get the combo palette.
+    QPalette pal=knTheme->getPalette("MailViewerCombo");
+    m_fontBox->setPalette(pal);
+    m_fontSizeBox->setPalette(pal);
 }
 
 void KNMailComposeEdit::setBlockStatus(bool enabled)
@@ -200,4 +218,3 @@ void KNMailComposeEdit::updateToolBarGeometry()
                            width(),
                            ToolBarHeight);
 }
-

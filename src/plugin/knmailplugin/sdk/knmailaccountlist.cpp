@@ -224,7 +224,7 @@ void KNMailAccountList::onActionShowFolder(KNMailModel *folder)
     int senderIndex=
             m_accountList.indexOf(static_cast<KNMailAccountWidget *>(sender()));
     //Find the account item and save the current index.
-    if(m_currentIndex!=senderIndex)
+    if(m_currentIndex!=senderIndex && m_currentIndex!=-1)
     {
         //Reset the previous index's current index.
         m_accountList.at(m_currentIndex)->setCurrentIndex(-1);

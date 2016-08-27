@@ -15,21 +15,28 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+
 #include "knmailglobal.h"
 
 #include "knmailmodel.h"
 
+#define ItemSender "S"
+#define ItemSenderName "SN"
+#define ItemReceiver "R"
+#define ItemReceiverName "RN"
+#define ItemTitle "T"
+#define ItemBriefContent "B"
+#define ItemIndex "I"
+#define ItemLoaded "L"
+
 KNMailModel::KNMailModel(QObject *parent) :
     QAbstractTableModel(parent),
-    m_folderPath(QString()),
     m_folderName(QString()),
     m_defaultFolderIndex(-1)
 {
-}
-
-QString KNMailModel::folderPath() const
-{
-    return m_folderPath;
 }
 
 int KNMailModel::rowCount(const QModelIndex &parent) const
@@ -151,11 +158,6 @@ void KNMailModel::appendRows(const QList<KNMailListItem> &items)
     endInsertRows();
 }
 
-void KNMailModel::setFolderPath(const QString &folderPath)
-{
-    m_folderPath = folderPath;
-}
-
 int KNMailModel::defaultFolderIndex() const
 {
     return m_defaultFolderIndex;
@@ -170,10 +172,104 @@ QString KNMailModel::folderName() const
 {
     return m_defaultFolderIndex==-1?
                 m_folderName:
-                knMailGlobal->defaultFolderName(m_defaultFolderIndex);
+                knMailGlobal->defaultFolderDisplayName(m_defaultFolderIndex);
 }
 
 void KNMailModel::setFolderName(const QString &folderName)
 {
     m_folderName = folderName;
+}
+
+void KNMailModel::loadFromFolder(const QString &accountFolder)
+{
+    //Load the configuration from the folder.
+    QFile metaDataFile(
+                accountFolder + "/" +
+                ((m_defaultFolderIndex==-1)?
+                     knMailGlobal->defaultFolderName(m_defaultFolderIndex):
+                     m_folderName) + "/info.json");
+    //Load the content from file.
+    if(!metaDataFile.open(QIODevice::ReadOnly))
+    {
+        //It cannot open the file as read only mode.
+        return;
+    }
+    //Load the data, translate the to list item.
+    m_itemArray=QJsonDocument::fromJson(metaDataFile.readAll()).array();
+    //Close the file.
+    metaDataFile.close();
+    //Reset the content.
+    reset();
+    //Start to insert content.
+    beginInsertRows(QModelIndex(), 0, m_itemArray.size()-1);
+    //Check all the array.
+    for(auto i:m_itemArray)
+    {
+        //Translate the item
+        QJsonObject itemData=i.toObject();
+        //Generate the item.
+        KNMailListItem item;
+        //Construct the item.
+        item.sender=itemData.value(ItemSender).toString();
+        item.senderName=itemData.value(ItemSenderName).toString();
+        item.receiver=itemData.value(ItemReceiver).toString();
+        item.receiverName=itemData.value(ItemReceiverName).toString();
+        item.title=itemData.value(ItemTitle).toString();
+        item.breifContext=itemData.value(ItemBriefContent).toString();
+        item.index=itemData.value(ItemIndex).toInt();
+        item.loaded=itemData.value(ItemLoaded).toBool();
+        //Add the item to list.
+        m_itemList.append(item);
+    }
+    //Finish insert the content.
+    endInsertRows();
+    //Recover the memory.
+    m_itemArray=QJsonArray();
+}
+
+void KNMailModel::saveToFolder(const QString &accountFolder)
+{
+    //Construct the item array.
+    for(auto item : m_itemList)
+    {
+        //Translate the item
+        QJsonObject itemData;
+        //Construct the item.
+        itemData.insert(ItemSender, item.sender);
+        itemData.insert(ItemSenderName, item.senderName);
+        itemData.insert(ItemReceiver, item.receiver);
+        itemData.insert(ItemReceiverName, item.receiverName);
+        itemData.insert(ItemTitle, item.title);
+        itemData.insert(ItemBriefContent, item.breifContext);
+        itemData.insert(ItemIndex, item.index);
+        itemData.insert(ItemLoaded, item.loaded);
+        //Add the item to list.
+        m_itemArray.append(itemData);
+    }
+    //Load the configuration from the folder.
+    QFile metaDataFile(
+                accountFolder + "/" +
+                ((m_defaultFolderIndex==-1)?
+                     knMailGlobal->defaultFolderName(m_defaultFolderIndex):
+                     m_folderName) + "/info.json");
+    //Open for write.
+    if(metaDataFile.open(QIODevice::WriteOnly))
+    {
+        //Write the content to the meta data file.
+        metaDataFile.write(QJsonDocument(m_itemArray).toJson());
+    }
+    //Close the file.
+    metaDataFile.close();
+    //Clear the array.
+    m_itemArray=QJsonArray();
+}
+
+void KNMailModel::reset()
+{
+    //Start to reset the content.
+    beginResetModel();
+    //Clear the content.
+    m_itemList.clear();
+    //End the reset content.
+    endResetModel();
 }

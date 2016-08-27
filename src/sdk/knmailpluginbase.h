@@ -56,7 +56,10 @@ public:
 signals:
 
 public slots:
-
+    /*!
+     * \brief Save the account data.
+     */
+    virtual void saveAccount()=0;
 };
 
 #endif // KNMAILPLUGINBASE_H

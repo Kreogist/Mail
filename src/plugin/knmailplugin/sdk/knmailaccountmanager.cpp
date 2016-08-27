@@ -48,33 +48,6 @@ KNMailAccountManager::KNMailAccountManager(QObject *parent) :
     QAbstractListModel(parent),
     m_accountConfigure(knGlobal->userConfigure()->getConfigure(ConfigureName))
 {
-    //Load the account from the configuration.
-    QJsonArray accountList=
-            QJsonDocument::fromJson(
-                m_accountConfigure->data("Accounts")).array();
-    //Load data from account list.
-    for(auto i : accountList)
-    {
-        //Generate a mail account.
-        KNMailAccount *mailAccount=new KNMailAccount(this);
-        //Get the account information object.
-        QJsonObject &&account=i.toObject();
-        //Parse the account information.
-        mailAccount->setUsername(account.value(FieldUsername).toString());
-        mailAccount->setPassword(account.value(FieldPassword).toString());
-        mailAccount->setDisplayName(account.value(FieldDisplayName).toString());
-        mailAccount->setProvider(account.value(FieldProvider).toString());
-        mailAccount->setReceiveProtocolName(
-                    account.value(FieldSendProtocol).toString());
-        mailAccount->setSendProtocolName(
-                    account.value(FieldReceiveProtocol).toString());
-        QJsonObject configObject=account.value(FieldSendConfig).toObject();
-        mailAccount->setSendConfig(toConfig(&configObject));
-        configObject=account.value(FieldReceiveConfig).toObject();
-        mailAccount->setReceiveConfig(toConfig(&configObject));
-        //Append account to list.
-        appendAccount(mailAccount);
-    }
 }
 
 KNMailAccountManager *KNMailAccountManager::instance()
@@ -140,6 +113,67 @@ QVariant KNMailAccountManager::data(const QModelIndex &index, int role) const
     }
 }
 
+void KNMailAccountManager::loadAccountList()
+{
+    //Load the account from the configuration.
+    QJsonArray accountList=
+            QJsonDocument::fromJson(
+                m_accountConfigure->data("Accounts").toString().toUtf8()
+                ).array();
+    //Load data from account list.
+    for(auto i : accountList)
+    {
+        //Generate a mail account.
+        KNMailAccount *mailAccount=new KNMailAccount(this);
+        //Get the account information object.
+        QJsonObject &&account=i.toObject();
+        //Parse the account information.
+        mailAccount->setUsername(account.value(FieldUsername).toString());
+        mailAccount->setPassword(account.value(FieldPassword).toString());
+        mailAccount->setDisplayName(account.value(FieldDisplayName).toString());
+        mailAccount->setProvider(account.value(FieldProvider).toString());
+        mailAccount->setReceiveProtocolName(
+                    account.value(FieldSendProtocol).toString());
+        mailAccount->setSendProtocolName(
+                    account.value(FieldReceiveProtocol).toString());
+        QJsonObject configObject=account.value(FieldSendConfig).toObject();
+        mailAccount->setSendConfig(toConfig(&configObject));
+        configObject=account.value(FieldReceiveConfig).toObject();
+        mailAccount->setReceiveConfig(toConfig(&configObject));
+        //Append account to list.
+        appendAccount(mailAccount);
+    }
+}
+
+void KNMailAccountManager::saveAccountList()
+{
+    //Load the account from the configuration.
+    QJsonArray accountList;
+    //Load data from account list.
+    for(auto mailAccount : m_accountList)
+    {
+        //Get the account information object.
+        QJsonObject account;
+        //Parse the account information.
+        account.insert(FieldUsername, mailAccount->username());
+        account.insert(FieldPassword, mailAccount->password());
+        account.insert(FieldDisplayName, mailAccount->displayName());
+        account.insert(FieldProvider, mailAccount->provider());
+        account.insert(FieldSendProtocol, mailAccount->receiveProtocolName());
+        account.insert(FieldReceiveProtocol, mailAccount->sendProtocolName());
+        KNMailProtocolConfig config=mailAccount->sendConfig();
+        account.insert(FieldSendConfig, fromConfig(&config));
+        config=mailAccount->receiveConfig();
+        account.insert(FieldReceiveConfig, fromConfig(&config));
+        //Append account to list.
+        accountList.append(account);
+    }
+    //Write content
+    m_accountConfigure->setData("Accounts",
+                                QString(QJsonDocument(accountList).toJson(
+                                            QJsonDocument::Compact)));
+}
+
 inline KNMailProtocolConfig KNMailAccountManager::toConfig(
         QJsonObject *configObject)
 {
@@ -155,4 +189,19 @@ inline KNMailProtocolConfig KNMailAccountManager::toConfig(
                 FieldConfigSocketType).toInt();
     //Give back the procotol config.
     return protocolConfig;
+}
+
+inline QJsonObject KNMailAccountManager::fromConfig(
+        KNMailProtocolConfig *protocolConfig)
+{
+    //Initial the object.
+    QJsonObject configObject;
+    //Save the data.
+    configObject.insert(FieldConfigHostName, protocolConfig->hostName);
+    configObject.insert(FieldConfigPort, protocolConfig->port);
+    configObject.insert(FieldConfigLogin, protocolConfig->loginFormat);
+    configObject.insert(FieldConfigSslVersion, (int)protocolConfig->sslVersion);
+    configObject.insert(FieldConfigSocketType, (int)protocolConfig->socketType);
+    //Give back the config object.
+    return configObject;
 }

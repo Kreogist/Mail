@@ -18,6 +18,7 @@
 #ifndef KNMAILMODEL_H
 #define KNMAILMODEL_H
 
+#include <QJsonArray>
 #include <QList>
 
 #include "knmailutil.h"
@@ -39,14 +40,6 @@ public:
      * \param parent The parent object.
      */
     explicit KNMailModel(QObject *parent = 0);
-
-    /*!
-     * \brief Get the physical folder path on the hard drive. It should be a
-     * relative folder position which should combine with the parent folder path
-     * from mail user configuration.
-     * \return  The folder relative position. Default it is an empty string.
-     */
-    QString folderPath() const;
 
     /*!
      * \brief Reimplemented from QAbstractTableModel::rowCount().
@@ -106,20 +99,32 @@ public slots:
     void setDefaultFolderIndex(int defaultFolderIndex);
 
     /*!
-     * \brief Set the folder path position.
-     * \param folderPath The folder path position.
-     */
-    void setFolderPath(const QString &folderPath);
-
-    /*!
      * \brief Set the folder display name.
      * \param folderName The folder display name.
      */
     void setFolderName(const QString &folderName);
 
+    /*!
+     * \brief Load mail folder content from account folder.
+     * \param accountFolder The account folder.
+     */
+    void loadFromFolder(const QString &accountFolder);
+
+    /*!
+     * \brief Save mail content to specific folder.
+     * \param accountFolder The account folder.
+     */
+    void saveToFolder(const QString &accountFolder);
+
+    /*!
+     * \brief Clear all the content in the model.
+     */
+    void reset();
+
 private:
     QList<KNMailListItem> m_itemList;
     QString m_folderPath, m_folderName;
+    QJsonArray m_itemArray;
     int m_defaultFolderIndex;
 };
 

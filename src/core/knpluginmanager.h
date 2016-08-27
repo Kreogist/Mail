@@ -40,6 +40,7 @@ public:
      * empty. You should construct the plugin manager in the main() function.
      */
     explicit KNPluginManager(QObject *parent = 0);
+    ~KNPluginManager();
 
 signals:
 
@@ -71,11 +72,12 @@ public slots:
      */
     void onActionArgumentsAvaliable(QStringList arguments);
 
+private slots:
+
 private:
     inline void setApplicationInformation();
     void loadLeftBar(KNMainWindowLeftBarBase *leftBar);
     void loadMailPlugin(KNMailPluginBase *mailPlugin);
-    KNMainWindow *m_mainWindow;
     KNMainWindowLeftBarBase *m_leftBar;
 };
 

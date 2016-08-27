@@ -62,6 +62,7 @@ protected:
     void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
+    void onThemeChanged();
 
 private:
     enum ControlButtons

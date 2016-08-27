@@ -118,6 +118,12 @@ void KNMailFolderViewer::setFolderModel(KNMailModel *folderModel)
                 &QItemSelectionModel::currentChanged,
                 this, &KNMailFolderViewer::onSelectionChange);
     }
+    //Check the viewer.
+    if(m_folderView->isVisible())
+    {
+        //Hide the viewer.
+        hideViewer();
+    }
 }
 
 void KNMailFolderViewer::setViewer(KNMailViewerBase *viewer)

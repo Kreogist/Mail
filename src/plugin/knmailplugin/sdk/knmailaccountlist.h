@@ -58,7 +58,6 @@ signals:
     void requireShowFolder(KNMailModel *folder);
 
 public slots:
-
     /*!
      * \brief Add one account widget to the end of the list.
      * \param accountWidget The account widget list item.

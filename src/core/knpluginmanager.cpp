@@ -22,6 +22,7 @@
 #include "knversion.h"
 #include "knglobal.h"
 #include "knmainwindow.h"
+#include "knconfiguremanager.h"
 #include "account/knaccountwidget.h"
 
 //Ports
@@ -38,7 +39,6 @@
 
 KNPluginManager::KNPluginManager(QObject *parent) :
     QObject(parent),
-    m_mainWindow(nullptr),
     m_leftBar(nullptr)
 {
     //Set the application information.
@@ -47,6 +47,12 @@ KNPluginManager::KNPluginManager(QObject *parent) :
     QApplication::setStyle(QStyleFactory::create("fusion"));
     //Initial the global.
     KNGlobal::initial(this);
+}
+
+KNPluginManager::~KNPluginManager()
+{
+    //Save the configure.
+    knConf->saveConfigure();
 }
 
 void KNPluginManager::setMainWindow(KNMainWindow *mainWindow)

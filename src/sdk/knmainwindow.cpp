@@ -23,11 +23,14 @@
 
 #include "knthememanager.h"
 
+#include "knmailpluginbase.h"
+
 #include "knmainwindow.h"
 
 KNMainWindow::KNMainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_container(new QSplitter(this)),
+    m_mainWidget(nullptr),
     m_originalWindowState(Qt::WindowNoState)
 {
     setObjectName("MainWindow");
@@ -81,12 +84,16 @@ void KNMainWindow::setMainWidget(QWidget *widget)
     m_container->setStretchFactor(1, 1);
     m_container->setCollapsible(0, false);
     m_container->setCollapsible(1, false);
+    //Save the widget.
+    m_mainWidget=static_cast<KNMailPluginBase *>(widget);
 }
 
 void KNMainWindow::closeEvent(QCloseEvent *event)
 {
     //Do original event.
     QMainWindow::closeEvent(event);
+    //Save the account information.
+    m_mainWidget->saveAccount();
     //Emit the about to close signal.
     emit aboutToClose();
 }

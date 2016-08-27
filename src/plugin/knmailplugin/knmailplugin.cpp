@@ -113,51 +113,11 @@ void KNMailPlugin::loadPlugins()
     //Load the folder viewer.
     loadFolderViewer(new KNMailFolderViewer);
 
+    //Load the account information.
+    knMailAccountManager->loadAccountList();
+
     //Debug
     m_mainLayout->setCurrentIndex(1);
-
-    KNMailAccount *superaccount=new KNMailAccount(this);
-    superaccount->setDisplayName("Haolei Ye");
-    superaccount->setUsername("myiosappleid@icloud.com");
-    superaccount->setProvider("netease");
-    knMailAccountManager->appendAccount(superaccount);
-
-    KNMailAccount *account=new KNMailAccount(this);
-    account->setDisplayName("Han Wang");
-    account->setUsername("abc@anu.edu.au");
-    account->setProvider("google");
-    knMailAccountManager->appendAccount(account);
-
-    KNMailModel *inboxFolder=account->folder(FolderInbox);
-    KNMailListItem mailItem;
-    mailItem.title="Follow Charlie Miller, and Dino A. Dai Zovi on Twitter!";
-    mailItem.sender="info@twitter.com";
-    mailItem.senderName="Twitter";
-    mailItem.receiver="tomguts@126.com";
-    mailItem.receiverName="Harinlen";
-    mailItem.breifContext="Hey Harinlen Angela, Here are some prople we think you might like to follow.";
-    for(int i=0; i<20; ++i)
-    {
-        inboxFolder->appendRow(mailItem);
-    }
-
-    account=new KNMailAccount(this);
-    account->setDisplayName("JinShuai Ma");
-    account->setUsername("def@anu.edu.au");
-    account->setProvider("netease");
-    knMailAccountManager->appendAccount(account);
-
-    KNMailImapProtocol *popProtocol=new KNMailImapProtocol(this);
-    KNMailProtocolConfig config;
-    config.loginFormat="%1 %2";
-    config.hostName="imap.mail.me.com";
-    config.port=993;
-    config.socketType=SocketSsl;
-    superaccount->setReceiveConfig(config);
-    popProtocol->setAccount(superaccount);
-    qDebug()<<popProtocol->connectToHost()<<popProtocol->lastError();
-    qDebug()<<popProtocol->login()<<popProtocol->lastError();
-    qDebug()<<popProtocol->updateFolderStatus()<<popProtocol->lastError();
 }
 
 inline void KNMailPlugin::initialInfrastructure()
@@ -224,6 +184,12 @@ void KNMailPlugin::loadComposerGenerator(KNMailComposeGeneratorBase *generator)
 QWidget *KNMailPlugin::composeButton() const
 {
     return m_composeButton;
+}
+
+void KNMailPlugin::saveAccount()
+{
+    //Save the content data.
+    knMailAccountManager->saveAccountList();
 }
 
 void KNMailPlugin::retranslate()

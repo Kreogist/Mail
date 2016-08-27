@@ -48,6 +48,11 @@ void KNGlobal::initial(QObject *parent)
     }
 }
 
+QString KNGlobal::dirPath(const int &index) const
+{
+    return m_dirPath[index];
+}
+
 KNConfigure *KNGlobal::cacheConfigure()
 {
     return knConf->configure(KNConfigureManager::Cache);

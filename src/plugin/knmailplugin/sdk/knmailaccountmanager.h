@@ -42,8 +42,6 @@ class KNMailAccountManager : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    ~KNMailAccountManager();
-
     /*!
      * \brief Get the account manager global instance.
      * \return The account manager global instance.
@@ -95,9 +93,19 @@ signals:
     void accountAppended(int accountIndex);
 
 public slots:
+    /*!
+     * \brief Load the account from the directory.
+     */
+    void loadAccountList();
+
+    /*!
+     * \brief Save the account from the directory.
+     */
+    void saveAccountList();
 
 private:
     inline KNMailProtocolConfig toConfig(QJsonObject *configObject);
+    inline QJsonObject fromConfig(KNMailProtocolConfig *protocolConfig);
     static KNMailAccountManager *m_instance;
     explicit KNMailAccountManager(QObject *parent = 0);
 

@@ -70,6 +70,24 @@ public:
     static void initial(QObject *parent = 0);
 
     /*!
+     * \brief Get the specific directory path. The definition of each
+     * directories.\n
+     *   Kreogist Dir - This dir stores all the configure or database file of
+     * Kreogist applications. This path cannot be changed.\n
+     *   User Data Dir - This dir stores the configure file. This path cannot
+     * be changed.\n
+     *   Resource Dir - This dir stores the default system resource. Like some
+     * official plugins. This path cannot be changed.\n
+     *   Contact Dir - This dir stores the contact data.\n
+     *   General Dir - This dir stores Kreogist Account information or some
+     * public resource shared by Kreogist Application.
+     * You should get the directory according to the DefaultPath enumerate.
+     * \param index The directory enumerate number.
+     * \return The path of the directory.
+     */
+    QString dirPath(const int &index) const;
+
+    /*!
      * \brief Get the cache configure class.
      * \return The cache KNConfigure class.
      */

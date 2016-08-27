@@ -63,13 +63,27 @@ public:
     static void initial(QObject *parent = 0);
 
     /*!
-     * \brief Get the default folder name. It will be translate via the
+     * \brief Get the default folder display name. It will be translate via the
      * different language.
      * \param index The folder index, it will be check before calling. It should
      * be no less than 0 and less than DefaultFolderCount.
      * \return Translated default folder name.
      */
-    QString defaultFolderName(int index);
+    QString defaultFolderDisplayName(int index) const;
+
+    /*!
+     * \brief Get the default folder name. It will be used to access the folder
+     * name.
+     * \param index The folder index, it will be check before calling.
+     * \return Default folder name.
+     */
+    QString defaultFolderName(int index) const;
+
+    /*!
+     * \brief Get the folde which stores all the mail account folder.
+     * \return The mail account folder path.
+     */
+    QString mailAccountFolder() const;
 
     /*!
      * \brief Get the viewer title text according to the index.

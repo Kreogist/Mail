@@ -15,10 +15,14 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#include <QDir>
+
 #include "knmailmodel.h"
 #include "knmailglobal.h"
 
 #include "knmailaccount.h"
+
+#define AccountFolder knMailGlobal->mailAccountFolder() + "/" + m_username
 
 KNMailAccount::KNMailAccount(QObject *parent) :
     QObject(parent),
@@ -68,6 +72,24 @@ void KNMailAccount::setCustomFolders(const QList<KNMailModel *> &customFolders)
     {
         //Emit the folder count changed signal.
         emit folderCountChanged();
+    }
+}
+
+void KNMailAccount::saveFolder()
+{
+    //Get the account folder.
+    QString accountFolder=AccountFolder;
+    //Save the folder content.
+    for(int i=0; i<DefaultFolderCount; ++i)
+    {
+        //Save the file content.
+        m_defaultFolders[i]->saveToFolder(accountFolder);
+    }
+    //Save the custom folder.
+    for(auto i : m_customFolders)
+    {
+        //Save the custom folder.
+        i->saveToFolder(accountFolder);
     }
 }
 
@@ -151,8 +173,62 @@ void KNMailAccount::setUsername(const QString &username)
 {
     //Save the user name.
     m_username = username;
-    //When the user name is set, the configure folder is set.
-    ;
+    //Get the account folder.
+    QString accountFolder=AccountFolder;
+    //Update the directory information according to the username, get the file
+    //info list.
+    QFileInfoList folderList=QDir(accountFolder).entryInfoList();
+    //List the directory from the folder.
+    for(auto i:folderList)
+    {
+        //Ignore . and ..
+        if(i.fileName()=="." || i.fileName()=="..")
+        {
+            continue;
+        }
+        //Check the content type.
+        if(i.isDir())
+        {
+            //Check the file name.
+            if(i.fileName()=="Inbox")
+            {
+                //Load the inbox content.
+                m_defaultFolders[FolderInbox]->loadFromFolder(accountFolder);
+            }
+            else if(i.fileName()=="SentItems")
+            {
+                //Load the sent items content.
+                m_defaultFolders[FolderSentItems]->loadFromFolder(
+                            accountFolder);
+            }
+            else if(i.fileName()=="Drafts")
+            {
+                //Load the draft content.
+                m_defaultFolders[FolderDrafts]->loadFromFolder(accountFolder);
+            }
+            else if(i.fileName()=="Trash")
+            {
+                //Load the trash content.
+                m_defaultFolders[FolderTrash]->loadFromFolder(accountFolder);
+            }
+            else if(i.fileName()=="Junk")
+            {
+                //Load the junk content.
+                m_defaultFolders[FolderJunk]->loadFromFolder(accountFolder);
+            }
+            else
+            {
+                //Contruct a new model.
+                KNMailModel *folderModel=new KNMailModel(this);
+                //Set the folder model name.
+                folderModel->setFolderName(i.fileName());
+                //Load the folder content.
+                folderModel->loadFromFolder(accountFolder);
+            }
+        }
+    }
+    //Emit the update signal.
+    emit folderCountChanged();
 }
 
 QString KNMailAccount::displayName() const

@@ -18,6 +18,9 @@
         "WindowText" : "#000000",
         "Highlight" : "#C0C0C0"
     },
+    "MailViewerCombo" : {
+        "Parent" : "MailCompose"
+    },
     "MainWindowLeftBar" : {
         "Parent" : "MainWindow",
         "Base" : "#171717",

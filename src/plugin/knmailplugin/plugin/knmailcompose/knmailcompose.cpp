@@ -136,10 +136,13 @@ void KNMailCompose::onThemeChanged()
     //Update the panel palette.
     setPalette(knTheme->getPalette(objectName()));
     //Get the palette.
-    QPalette labelPalette=knTheme->getPalette("MailViewerLabel");
-    m_senderLabel->setPalette(labelPalette);
-    m_receiverLabel->setPalette(labelPalette);
-    m_ccLabel->setPalette(labelPalette);
-    m_bccLabel->setPalette(labelPalette);
-    m_attachment->setPalette(labelPalette);
+    QPalette pal=knTheme->getPalette("MailViewerLabel");
+    m_senderLabel->setPalette(pal);
+    m_receiverLabel->setPalette(pal);
+    m_ccLabel->setPalette(pal);
+    m_bccLabel->setPalette(pal);
+    m_attachment->setPalette(pal);
+    //Get the combo palette.
+    pal=knTheme->getPalette("MailViewerCombo");
+    m_senderText->setPalette(pal);
 }

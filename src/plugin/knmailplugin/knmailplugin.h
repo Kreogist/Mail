@@ -61,6 +61,10 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Reimplemented from KNMailPluginBase::saveAccount().
+     */
+    void saveAccount() Q_DECL_OVERRIDE;
 
 protected:
 

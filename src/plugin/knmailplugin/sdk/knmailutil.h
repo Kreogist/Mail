@@ -77,7 +77,6 @@ namespace MailUtil
         QString title;
         QString breifContext;
         //File information.
-        QString fileName;
         int index;
         //Flags.
         bool loaded;
