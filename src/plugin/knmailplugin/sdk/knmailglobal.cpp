@@ -122,7 +122,7 @@ QString KNMailGlobal::viewerTitleText(int index)
 
 QPixmap KNMailGlobal::providerIcon(const QString &providerName)
 {
-    return m_providerIcon.value(providerName);
+    return m_providerIcon.value(providerName, m_emtpyIcon);
 }
 
 KNMailViewerBase *KNMailGlobal::generateViewer()
@@ -163,6 +163,7 @@ void KNMailGlobal::retranslate()
 
 KNMailGlobal::KNMailGlobal(QObject *parent) :
     QObject(parent),
+    m_emtpyIcon(QPixmap(":/plugin/mail/providers/generic.png")),
     m_viewerGenerator(nullptr),
     m_webViewerGenerator(nullptr),
     m_composerGenerator(nullptr)

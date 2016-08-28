@@ -20,5 +20,6 @@
         <file>mail/composer/bold.png</file>
         <file>mail/composer/italic.png</file>
         <file>mail/composer/underline.png</file>
+        <file>mail/providers/generic.png</file>
     </qresource>
 </RCC>

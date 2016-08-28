@@ -170,6 +170,7 @@ private:
     QString m_defaultFolderName[DefaultFolderCount],
             m_titleFieldText[MailViewerTitleFieldCount];
     QHash<QString, QPixmap> m_providerIcon;
+    QPixmap m_emtpyIcon;
     QThread m_receiverThread;
     QString m_noSubject;
     KNMailViewerGeneratorBase *m_viewerGenerator;
