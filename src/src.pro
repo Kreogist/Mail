@@ -361,4 +361,5 @@ HEADERS += \
     sdk/knquotedprintable.h \
     plugin/knmailplugin/sdk/knmailcomposegeneratorbase.h \
     plugin/knmailplugin/plugin/knmailcompose/knmailcomposegenerator.h \
-    plugin/knmailplugin/sdk/knmailcomposermanager.h
+    plugin/knmailplugin/sdk/knmailcomposermanager.h \
+    sdk/knplatformextras.h
