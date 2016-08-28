@@ -91,3 +91,48 @@ QString KNUtil::ensurePathValid(const QString &path)
     return QDir().mkpath(detectInfo.absoluteFilePath())?
                 detectInfo.absoluteFilePath():QString();
 }
+
+bool KNUtil::removeDirectory(const QString &directoryPath)
+{
+    //Initial the result.
+    bool result=true;
+    //Get the target dir.
+    QDir targetDir(directoryPath);
+    //If the directory exist.
+    if(targetDir.exists())
+    {
+        //Get all the data in the list.
+        for(auto i : targetDir.entryInfoList(
+                QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot,
+                QDir::DirsFirst))
+        {
+            //Check the directory name.
+            if(i.fileName()=="." || i.fileName()=="..")
+            {
+                //Move on.
+                continue;
+            }
+            //Check the item is a dir or a file.
+            if(i.isDir())
+            {
+                //Remove the dir.
+                result=removeDirectory(i.absoluteFilePath());
+            }
+            else
+            {
+                //Remove the file.
+                result=QFile::remove(i.absoluteFilePath());
+            }
+            //Check the result.
+            if(!result)
+            {
+                //Failed to remove the directory.
+                return false;
+            }
+        }
+        //Remove the empty directory.
+        result=targetDir.remove(directoryPath);
+    }
+    //Mission complete, give the result.
+    return result;
+}

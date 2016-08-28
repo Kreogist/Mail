@@ -156,6 +156,11 @@ QString KNMailAccount::displayString() const
     return m_displayName + " <" + m_username + ">";
 }
 
+QString KNMailAccount::accountDirectoryPath() const
+{
+    return AccountFolder;
+}
+
 int KNMailAccount::folderCount()
 {
     return DefaultFolderCount + m_customFolders.size();

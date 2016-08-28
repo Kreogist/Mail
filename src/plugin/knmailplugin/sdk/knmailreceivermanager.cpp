@@ -17,7 +17,14 @@
  */
 #include <QThread>
 
+#include "knmailaccount.h"
+#include "knmailaccountmanager.h"
+#include "knmailprotocolmanager.h"
+#include "knmailreceiverprotocol.h"
+
 #include "knmailreceivermanager.h"
+
+#include <QDebug>
 
 KNMailReceiverManager *KNMailReceiverManager::m_instance=nullptr;
 
@@ -40,8 +47,74 @@ void KNMailReceiverManager::initial(QThread *workingThread)
     }
 }
 
-KNMailReceiverManager::KNMailReceiverManager(QObject *parent) :
-    QObject(parent)
+void KNMailReceiverManager::updateAllAccount()
 {
+    //Append all the account pointer to the queue.
+    m_updateQueue.append(knMailAccountManager->account(0));
+    qDebug()<<m_updateQueue.size();
+    //Check the working states.
+    m_workingLock.lock();
+    //Check the working state.
+    if(!m_isWorking)
+    {
+        //Update the working flag.
+        m_isWorking=true;
+        //Emit the signal.
+        emit requireUpdateNext();
+    }
+    //Release the lock.
+    m_workingLock.unlock();
+}
 
+void KNMailReceiverManager::onUpdateNextItem()
+{
+    //Check the queue state.
+    if(m_updateQueue.isEmpty())
+    {
+        //Lock and change the state.
+        m_workingLock.lock();
+        //Update the flag.
+        m_isWorking=false;
+        //Release the lock
+        m_workingLock.unlock();
+        //Mission complete.
+        return;
+    }
+    //Get the first item in the queue.
+    KNMailAccount *account=m_updateQueue.takeFirst();
+    qDebug()<<account->username()<<account->receiveProtocolName();
+    //Generate the protocol.
+    m_workingProtocol.reset(knMailProtocolManager->generateReceiverProtocol(
+                                account->receiveProtocolName()));
+    qDebug()<<m_workingProtocol.isNull();
+    //Null pointer checking.
+    if(m_workingProtocol.isNull())
+    {
+        //! FIXME: Emit a notification to notice that wrong configuration.
+    }
+    else
+    {
+        qDebug()<<"Start to update account.";
+        //Set the working account to the protocol.
+        m_workingProtocol->setAccount(account);
+        //Update all the folder content.
+        m_workingProtocol->updateFolderStatus();
+        qDebug()<<"Complete.";
+        //Reset the null.
+        m_workingProtocol.reset(nullptr);
+    }
+    //Ask to process next.
+    emit requireUpdateNext();
+}
+
+KNMailReceiverManager::KNMailReceiverManager(QObject *parent) :
+    QObject(parent),
+    m_isWorking(false)
+{
+    //Reset the pointer.
+    m_workingProtocol.reset(nullptr);
+    //Link the request loop.
+    connect(this, &KNMailReceiverManager::requireUpdateNext,
+            this, &KNMailReceiverManager::onUpdateNextItem,
+            Qt::QueuedConnection);
 }

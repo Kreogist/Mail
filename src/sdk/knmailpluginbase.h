@@ -60,6 +60,11 @@ public slots:
      * \brief Save the account data.
      */
     virtual void saveAccount()=0;
+
+    /*!
+     * \brief Ask the plugin to start to work.
+     */
+    virtual void startWorking()=0;
 };
 
 #endif // KNMAILPLUGINBASE_H

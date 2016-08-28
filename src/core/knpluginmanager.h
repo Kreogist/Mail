@@ -43,6 +43,10 @@ public:
     ~KNPluginManager();
 
 signals:
+    /*!
+     * \brief When the application is launching, this signal will be emitted.
+     */
+    void requireLaunch();
 
 public slots:
     /*!

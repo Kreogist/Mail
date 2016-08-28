@@ -281,7 +281,8 @@ SOURCES += \
     sdk/knquotedprintable.cpp \
     plugin/knmailplugin/plugin/knmailcompose/knmailcomposegenerator.cpp \
     plugin/knmailplugin/sdk/knmailcomposermanager.cpp \
-    plugin/knmailplugin/sdk/knmailreceivermanager.cpp
+    plugin/knmailplugin/sdk/knmailreceivermanager.cpp \
+    plugin/knmailplugin/sdk/knmailprotocolmanager.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -364,4 +365,7 @@ HEADERS += \
     plugin/knmailplugin/plugin/knmailcompose/knmailcomposegenerator.h \
     plugin/knmailplugin/sdk/knmailcomposermanager.h \
     sdk/knplatformextras.h \
-    plugin/knmailplugin/sdk/knmailreceivermanager.h
+    plugin/knmailplugin/sdk/knmailreceivermanager.h \
+    plugin/knmailplugin/sdk/knmailprotocolgenerator.h \
+    plugin/knmailplugin/plugin/knmailimapprotocol/knmailimapprotocolgenerator.h \
+    plugin/knmailplugin/sdk/knmailprotocolmanager.h

@@ -40,21 +40,28 @@ signals:
 
 public slots:
     /*!
-     * \brief Reimplemented from KNMailProtocol::connectToHost().
+     * \brief Reimplemented from KNMailReceiverProtocol::connectToHost().
      */
     bool connectToHost() Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from KNMailProtocol::login().
+     * \brief Reimplemented from KNMailReceiverProtocol::login().
      */
     bool login() Q_DECL_OVERRIDE;
 
     /*!
-     * \brief Reimplemented from KNMailProtocol::updateFolderStatus().
+     * \brief Reimplemented from KNMailReceiverProtocol::updateFolderStatus().
      */
     bool updateFolderStatus() Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMailReceiverProtocol::updateFolder().
+     */
+    bool updateFolder(KNMailModel *folder) Q_DECL_OVERRIDE;
+
 private:
+    inline QString findFolderName(const QString &rawFolderInfo,
+                                  QString *folderFlag=nullptr);
     inline bool waitAndCheckResponse(QList<QByteArray> *responseCache=nullptr);
     inline bool sendImapMessage(const QString &message)
     {

@@ -136,9 +136,9 @@ void KNMailAccountManager::loadAccountList()
         mailAccount->setPassword(account.value(FieldPassword).toString());
         mailAccount->setDisplayName(account.value(FieldDisplayName).toString());
         mailAccount->setProvider(account.value(FieldProvider).toString());
-        mailAccount->setReceiveProtocolName(
-                    account.value(FieldSendProtocol).toString());
         mailAccount->setSendProtocolName(
+                    account.value(FieldSendProtocol).toString());
+        mailAccount->setReceiveProtocolName(
                     account.value(FieldReceiveProtocol).toString());
         QJsonObject configObject=account.value(FieldSendConfig).toObject();
         mailAccount->setSendConfig(toConfig(&configObject));
@@ -165,8 +165,8 @@ void KNMailAccountManager::saveAccountList()
         account.insert(FieldPassword, mailAccount->password());
         account.insert(FieldDisplayName, mailAccount->displayName());
         account.insert(FieldProvider, mailAccount->provider());
-        account.insert(FieldSendProtocol, mailAccount->receiveProtocolName());
-        account.insert(FieldReceiveProtocol, mailAccount->sendProtocolName());
+        account.insert(FieldSendProtocol, mailAccount->sendProtocolName());
+        account.insert(FieldReceiveProtocol, mailAccount->receiveProtocolName());
         KNMailProtocolConfig config=mailAccount->sendConfig();
         account.insert(FieldSendConfig, fromConfig(&config));
         config=mailAccount->receiveConfig();

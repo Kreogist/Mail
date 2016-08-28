@@ -77,12 +77,12 @@ namespace MailUtil
         QString title;
         QString breifContext;
         //File information.
-        int index;
+        int uid;
         //Flags.
-        bool loaded;
+        bool cached;
         KNMailListItem() :
-            index(-1),
-            loaded(false)
+            uid(-1),
+            cached(false)
         {
         }
     };

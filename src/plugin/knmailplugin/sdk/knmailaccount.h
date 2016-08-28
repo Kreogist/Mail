@@ -82,6 +82,12 @@ public:
     QString displayString() const;
 
     /*!
+     * \brief Get the account directory path.
+     * \return The account directory path.
+     */
+    QString accountDirectoryPath() const;
+
+    /*!
      * \brief Get the totoal folder count. It will include the system folder.
      * \return The system and customer folder count.
      */

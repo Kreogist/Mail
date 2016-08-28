@@ -18,6 +18,7 @@
 #include "knlocalemanager.h"
 #include "knglobal.h"
 
+#include "knmailprotocolmanager.h"
 #include "knmailcomposegeneratorbase.h"
 #include "knmailaccount.h"
 #include "knmailpopupmanager.h"
@@ -65,6 +66,8 @@ KNMailGlobal::~KNMailGlobal()
     m_receiverThread.wait();
     //Remove the receiver.
     knMailReceiverManager->deleteLater();
+    //Recover the protocol manager object.
+    knMailProtocolManager->deleteLater();
 }
 
 KNMailGlobal *KNMailGlobal::instance()
@@ -106,6 +109,7 @@ QString KNMailGlobal::defaultFolderName(int index) const
     case FolderTrash:
         return "Trash";
     }
+    return QString();
 }
 
 QString KNMailGlobal::mailAccountFolder() const
@@ -173,12 +177,17 @@ KNMailGlobal::KNMailGlobal(QObject *parent) :
     KNMailPopupManager::initial(this);
     KNMailComposerManager::initial(this);
     KNMailReceiverManager::initial(&m_receiverThread);
+    KNMailProtocolManager::initial();
 
     //Initial the provider icons.
     m_providerIcon.insert("netease",
                           QPixmap(":/plugin/mail/providers/netease.png"));
     m_providerIcon.insert("google",
                           QPixmap(":/plugin/mail/providers/gmail.png"));
+
+    //Link the update request.
+    connect(this, &KNMailGlobal::requireUpdateAll,
+            knMailReceiverManager, &KNMailReceiverManager::updateAllAccount);
 
     //Link retranslate.
     knI18n->link(this, &KNMailGlobal::retranslate);

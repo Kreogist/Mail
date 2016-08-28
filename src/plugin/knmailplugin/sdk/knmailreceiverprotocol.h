@@ -20,6 +20,7 @@
 
 #include "knmailprotocol.h"
 
+class KNMailModel;
 /*!
  * \brief The KNMailReceiverProtocol class provides the receiver abstract
  * protocol. It will manage the update configure of the protocol and the data
@@ -34,18 +35,25 @@ public:
 signals:
 
 public slots:
+    /*!
+     * \brief Update all the folder status of the account.
+     * \return If the protocol update the status successfully, then return true.
+     */
+    virtual bool updateFolderStatus()=0;
+
+    /*!
+     * \brief Update a specfic folder content.
+     * \param folder The folder model pointer.
+     * \return If we update the folder successfully, then return true, else
+     * return false.
+     */
+    virtual bool updateFolder(KNMailModel *folder)=0;
 
 protected:
     /*!
      * \brief Reimplemented from KNMailProtocol::updateProtocolConfig().
      */
     void updateProtocolConfig() Q_DECL_OVERRIDE;
-
-    /*!
-     * \brief Update all the folder status of the account.
-     * \return If the protocol update the status successfully, then return true.
-     */
-    virtual bool updateFolderStatus()=0;
 };
 
 #endif // KNMAILRECEIVERPROTOCOL_H

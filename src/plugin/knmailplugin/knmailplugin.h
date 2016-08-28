@@ -66,6 +66,11 @@ public slots:
      */
     void saveAccount() Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMailPluginBase::startWorking().
+     */
+    void startWorking() Q_DECL_OVERRIDE;
+
 protected:
 
 private slots:

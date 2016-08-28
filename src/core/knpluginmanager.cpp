@@ -70,6 +70,8 @@ void KNPluginManager::loadPlugins()
 
 void KNPluginManager::launchApplication()
 {
+    //Launch the mail plugin start working function.
+    emit requireLaunch();
     //Get the main window pointer.
     KNMainWindow *mainWindow=knGlobal->mainWindow();
     //Show the main window.
@@ -113,6 +115,9 @@ void KNPluginManager::loadMailPlugin(KNMailPluginBase *mailPlugin)
     KNMainWindow *mainWindow=knGlobal->mainWindow();
     //Load the plugin.
     mailPlugin->loadPlugins();
+    //Link the mail plugin.
+    connect(this, &KNPluginManager::requireLaunch,
+            mailPlugin, &KNMailPluginBase::startWorking);
     //Set the main window widget to main window.
     mainWindow->setMainWidget(mailPlugin);
     //Add the sidebar to left bar.

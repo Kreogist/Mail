@@ -155,6 +155,10 @@ public:
     QString noSubjectText() const;
 
 signals:
+    /*!
+     * \brief Require to update all E-mail account data.
+     */
+    void requireUpdateAll();
 
 public slots:
 

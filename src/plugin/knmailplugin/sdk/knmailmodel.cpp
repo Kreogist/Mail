@@ -16,6 +16,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QFile>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
 
@@ -189,8 +190,9 @@ void KNMailModel::loadFromFolder(const QString &accountFolder)
     QFile metaDataFile(
                 accountFolder + "/" +
                 ((m_defaultFolderIndex==-1)?
-                     knMailGlobal->defaultFolderName(m_defaultFolderIndex):
-                     m_folderName) + "/info.json");
+                     m_folderName:
+                     knMailGlobal->defaultFolderName(m_defaultFolderIndex))
+                + "/info.json");
     //Load the content from file.
     if(!metaDataFile.open(QIODevice::ReadOnly))
     {
@@ -203,6 +205,12 @@ void KNMailModel::loadFromFolder(const QString &accountFolder)
     metaDataFile.close();
     //Reset the content.
     reset();
+    //Check the item array size.
+    if(m_itemArray.isEmpty())
+    {
+        //Ignore the item array.
+        return;
+    }
     //Start to insert content.
     beginInsertRows(QModelIndex(), 0, m_itemArray.size()-1);
     //Check all the array.
@@ -219,8 +227,8 @@ void KNMailModel::loadFromFolder(const QString &accountFolder)
         item.receiverName=itemData.value(ItemReceiverName).toString();
         item.title=itemData.value(ItemTitle).toString();
         item.breifContext=itemData.value(ItemBriefContent).toString();
-        item.index=itemData.value(ItemIndex).toInt();
-        item.loaded=itemData.value(ItemLoaded).toBool();
+        item.uid=itemData.value(ItemIndex).toInt();
+        item.cached=itemData.value(ItemLoaded).toBool();
         //Add the item to list.
         m_itemList.append(item);
     }
@@ -256,8 +264,8 @@ void KNMailModel::saveToFolder(const QString &accountFolder)
         itemData.insert(ItemReceiverName, item.receiverName);
         itemData.insert(ItemTitle, item.title);
         itemData.insert(ItemBriefContent, item.breifContext);
-        itemData.insert(ItemIndex, item.index);
-        itemData.insert(ItemLoaded, item.loaded);
+        itemData.insert(ItemIndex, item.uid);
+        itemData.insert(ItemLoaded, item.cached);
         //Add the item to list.
         m_itemArray.append(itemData);
     }
@@ -277,10 +285,94 @@ void KNMailModel::saveToFolder(const QString &accountFolder)
 
 void KNMailModel::reset()
 {
+    //Check the list.
+    if(m_itemList.isEmpty())
+    {
+        //Ignore the list.
+        return;
+    }
     //Start to reset the content.
     beginResetModel();
     //Clear the content.
     m_itemList.clear();
     //End the reset content.
     endResetModel();
+}
+
+void KNMailModel::removeModelContent(const QString &accountFolder)
+{
+    //Remove the folder.
+    QDir(accountFolder + "/" +
+         ((m_defaultFolderIndex==-1)?
+              m_folderName:
+              knMailGlobal->defaultFolderName(m_defaultFolderIndex))).
+            removeRecursively();
+}
+
+void KNMailModel::updateUidList(const QString &accountFolder,
+                                QList<int> *uidList)
+{
+    //Generate the item list.
+    QList<KNMailListItem> *updateList=new QList<KNMailListItem>();
+    //Get the folder path.
+    QString folderPath=accountFolder + "/" +
+            ((m_defaultFolderIndex==-1)?
+                 m_folderName:
+                 knMailGlobal->defaultFolderName(m_defaultFolderIndex));
+    //Check until all the content has been removed.
+    while(!uidList->isEmpty() && !m_itemList.isEmpty())
+    {
+        //Get the last content.
+        int currentUid=uidList->takeLast();
+        //Check the uid.
+        while(!m_itemList.isEmpty() && m_itemList.last().uid<currentUid)
+        {
+            //Remove the last index.
+            KNMailListItem lastItem=m_itemList.takeLast();
+            //Delete the mail file if the file is cached.
+            if(lastItem.cached)
+            {
+                //Get the cache folder name and file name.
+                QString mailName=QString::number(lastItem.uid);
+                //Delete the file.
+                QFile::remove(folderPath + "/" + mailName + ".eml");
+                //Delete the cache folder.
+                QDir(folderPath + "/" + mailName).removeRecursively();
+            }
+        }
+        //Check if the item list is empty or not.
+        if(!m_itemList.isEmpty())
+        {
+            //When it is not empty, the last one must has the same uid as the
+            //current uid.
+            updateList->prepend(m_itemList.takeLast());
+        }
+    }
+    //When all the content is complete, all the id left in the uid list will be
+    //the content left in the new item.
+    //And these mail will be the new mail need to update.
+    while(!uidList->isEmpty())
+    {
+        //Generate the new item for them.
+        KNMailListItem currentItem;
+        //Set the uid.
+        currentItem.uid=uidList->takeLast();
+        currentItem.title=QString::number(currentItem.uid);
+        //Prepend to the current list.
+        updateList->prepend(currentItem);
+    }
+    //Update the item list.
+    m_itemList=(*updateList);
+    //Remove the update list.
+    delete updateList;
+}
+
+QString KNMailModel::serverName() const
+{
+    return m_serverName;
+}
+
+void KNMailModel::setServerName(const QString &serverName)
+{
+    m_serverName = serverName;
 }

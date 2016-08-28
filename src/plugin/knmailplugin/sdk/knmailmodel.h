@@ -89,9 +89,21 @@ public:
      */
     int defaultFolderIndex() const;
 
+    /*!
+     * \brief Get the folder name saved on server.
+     * \return The folder name on server.
+     */
+    QString serverName() const;
+
 signals:
 
 public slots:
+    /*!
+     * \brief Set the folder name saved on server.
+     * \param serverName The folder name on server.
+     */
+    void setServerName(const QString &serverName);
+
     /*!
      * \brief Set the default folder index.
      * \param defaultFolderIndex The folder index.
@@ -121,9 +133,22 @@ public slots:
      */
     void reset();
 
+    /*!
+     * \brief Remove the model content on the hard drive.
+     * \param accountFolder The account folder.
+     */
+    void removeModelContent(const QString &accountFolder);
+
+    /*!
+     * \brief Update current folder's mail content via the new uid list.
+     * \param accountFolder The account folder.
+     * \param uidList The mail uid list.
+     */
+    void updateUidList(const QString &accountFolder, QList<int> *uidList);
+
 private:
     QList<KNMailListItem> m_itemList;
-    QString m_folderPath, m_folderName;
+    QString m_folderPath, m_folderName, m_serverName;
     QJsonArray m_itemArray;
     int m_defaultFolderIndex;
 };

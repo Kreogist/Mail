@@ -59,6 +59,13 @@ public:
      */
     static QString ensurePathValid(const QString &path);
 
+    /*!
+     * \brief Remove a folder directory.
+     * \param directoryPath The folder path.
+     * \return If the directory has been removed, it will return true.
+     */
+    static bool removeDirectory(const QString &directoryPath);
+
 private:
     KNUtil();
     KNUtil(const KNUtil &);

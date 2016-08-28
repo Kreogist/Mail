@@ -29,6 +29,7 @@
 #include "knmailaccountlist.h"
 #include "knmailpopupmanager.h"
 #include "knmailcomposermanager.h"
+#include "knmailprotocolmanager.h"
 
 //Ports.
 #include "knmailemptyhintbase.h"
@@ -39,6 +40,7 @@
 #include "knmailviewergeneratorbase.h"
 #include "knmailwebviewergeneratorbase.h"
 #include "knmailprotocol.h"
+#include "knmailprotocolgenerator.h"
 #include "knmailcomposebase.h"
 
 //Plugins.
@@ -62,8 +64,7 @@
 #include "plugin/knmailcompose/knmailcompose.h"
 #include "plugin/knmailcompose/knmailcomposegenerator.h"
 // Protocols.
-#include "plugin/knmailpop3protocol/knmailpop3protocol.h"
-#include "plugin/knmailimapprotocol/knmailimapprotocol.h"
+#include "plugin/knmailimapprotocol/knmailimapprotocolgenerator.h"
 
 #include "knmailplugin.h"
 
@@ -112,6 +113,8 @@ void KNMailPlugin::loadPlugins()
     loadEmptyHint(new KNMailEmptyHint);
     //Load the folder viewer.
     loadFolderViewer(new KNMailFolderViewer);
+    //Load the protocol factorys.
+    knMailProtocolManager->appendFactory(new KNMailImapProtocolGenerator);
 
     //Load the account information.
     knMailAccountManager->loadAccountList();
@@ -190,6 +193,12 @@ void KNMailPlugin::saveAccount()
 {
     //Save the content data.
     knMailAccountManager->saveAccountList();
+}
+
+void KNMailPlugin::startWorking()
+{
+    //Emit the global update all signal.
+    emit knMailGlobal->requireUpdateAll();
 }
 
 void KNMailPlugin::retranslate()

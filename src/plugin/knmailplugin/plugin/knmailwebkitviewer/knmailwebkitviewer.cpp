@@ -26,6 +26,23 @@ KNMailWebkitViewer::KNMailWebkitViewer(QWidget *parent) :
     m_browser->setUrl(QUrl("http://www.google.co.jp"));
 }
 
+void KNMailWebkitViewer::setTextContent(const QByteArray &content,
+                                        const QString &textType)
+{
+    //Check text type.
+    if(textType.contains("plain"))
+    {
+        //Set the plain text content, suppose all the content is encoding in
+        //UTF-8.
+        m_browser->setHtml("<HTML> <HEAD></HEAD> <BODY> <PLAINTEXT>" +
+                           content);
+        //Complete.
+        return;
+    }
+    //Use set content to process other type text.
+    m_browser->setContent(content, textType);
+}
+
 void KNMailWebkitViewer::resizeEvent(QResizeEvent *event)
 {
     //Update the widget size.

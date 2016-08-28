@@ -18,8 +18,14 @@
 #ifndef KNMAILRECEIVERMANAGER_H
 #define KNMAILRECEIVERMANAGER_H
 
+#include <QMutex>
+#include <QScopedPointer>
+
+#include "knmailreceiverprotocol.h"
+
 #include <QObject>
 
+class KNMailAccount;
 /*!
  * \def knMailReceiverManager
  * A global pointer of the mail receiver manager.
@@ -47,14 +53,31 @@ public:
     static void initial(QThread *workingThread);
 
 signals:
+    /*!
+     * \brief This function will only be used internally, don't call this
+     * function out size. Ask for update the next item.
+     */
+    void requireUpdateNext();
 
 public slots:
+    /*!
+     * \brief Update all the account content, it won't download E-mail content,
+     * but only update the folder states.
+     */
+    void updateAllAccount();
+
+private slots:
+    void onUpdateNextItem();
 
 private:
     static KNMailReceiverManager *m_instance;
     explicit KNMailReceiverManager(QObject *parent = 0);
     KNMailReceiverManager(const KNMailReceiverManager &);
     KNMailReceiverManager(KNMailReceiverManager &&);
+    QScopedPointer<KNMailReceiverProtocol> m_workingProtocol;
+    QList<KNMailAccount *> m_updateQueue;
+    QMutex m_workingLock;
+    bool m_isWorking;
 };
 
 #endif // KNMAILRECEIVERMANAGER_H
