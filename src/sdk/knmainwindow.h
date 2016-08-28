@@ -78,6 +78,7 @@ private:
     QSplitter *m_container;
     KNMailPluginBase *m_mainWidget;
     Qt::WindowStates m_originalWindowState;
+    bool m_windowClosed;
 };
 
 #endif // KNMAINWINDOW_H

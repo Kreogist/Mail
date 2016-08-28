@@ -31,6 +31,8 @@
 
 #include "knmailcompose.h"
 
+#include <QDebug>
+
 KNMailCompose::KNMailCompose(QWidget *parent) :
     KNMailComposeBase(parent),
     m_mainLayout(new QBoxLayout(QBoxLayout::TopToBottom, this)),
@@ -144,5 +146,6 @@ void KNMailCompose::onThemeChanged()
     m_attachment->setPalette(pal);
     //Get the combo palette.
     pal=knTheme->getPalette("MailViewerCombo");
+    qDebug()<<pal.color(QPalette::Highlight);
     m_senderText->setPalette(pal);
 }

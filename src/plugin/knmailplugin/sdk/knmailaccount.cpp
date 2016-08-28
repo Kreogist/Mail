@@ -17,12 +17,16 @@
  */
 #include <QDir>
 
+#include "knutil.h"
+
 #include "knmailmodel.h"
 #include "knmailglobal.h"
 
 #include "knmailaccount.h"
 
-#define AccountFolder knMailGlobal->mailAccountFolder() + "/" + m_username
+#include <QDebug>
+
+#define AccountFolder (knMailGlobal->mailAccountFolder() + "/" + m_username)
 
 KNMailAccount::KNMailAccount(QObject *parent) :
     QObject(parent),
@@ -78,7 +82,13 @@ void KNMailAccount::setCustomFolders(const QList<KNMailModel *> &customFolders)
 void KNMailAccount::saveFolder()
 {
     //Get the account folder.
-    QString accountFolder=AccountFolder;
+    QString accountFolder=KNUtil::ensurePathValid(AccountFolder);
+    //Check the accout folder.
+    if(accountFolder.isEmpty())
+    {
+        //Failed to find the folder.
+        return;
+    }
     //Save the folder content.
     for(int i=0; i<DefaultFolderCount; ++i)
     {
@@ -175,6 +185,12 @@ void KNMailAccount::setUsername(const QString &username)
     m_username = username;
     //Get the account folder.
     QString accountFolder=AccountFolder;
+    //Check the accout folder.
+    if(accountFolder.isEmpty())
+    {
+        //Failed to find the folder.
+        return;
+    }
     //Update the directory information according to the username, get the file
     //info list.
     QFileInfoList folderList=QDir(accountFolder).entryInfoList();

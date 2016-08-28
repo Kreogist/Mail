@@ -152,6 +152,8 @@ void KNMailAccountManager::saveAccountList()
     //Load data from account list.
     for(auto mailAccount : m_accountList)
     {
+        //Save the mail account folders.
+        mailAccount->saveFolder();
         //Get the account information object.
         QJsonObject account;
         //Parse the account information.

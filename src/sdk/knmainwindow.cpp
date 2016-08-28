@@ -31,7 +31,8 @@ KNMainWindow::KNMainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_container(new QSplitter(this)),
     m_mainWidget(nullptr),
-    m_originalWindowState(Qt::WindowNoState)
+    m_originalWindowState(Qt::WindowNoState),
+    m_windowClosed(false)
 {
     setObjectName("MainWindow");
     //Set properties.
@@ -92,10 +93,16 @@ void KNMainWindow::closeEvent(QCloseEvent *event)
 {
     //Do original event.
     QMainWindow::closeEvent(event);
-    //Save the account information.
-    m_mainWidget->saveAccount();
-    //Emit the about to close signal.
-    emit aboutToClose();
+    //Check the flag.
+    if(!m_windowClosed)
+    {
+        //Save the account information.
+        m_mainWidget->saveAccount();
+        //Set the flag.
+        m_windowClosed=true;
+        //Emit the about to close signal.
+        emit aboutToClose();
+    }
 }
 
 void KNMainWindow::onActionFullScreen()

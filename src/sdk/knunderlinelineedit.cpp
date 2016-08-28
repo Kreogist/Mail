@@ -37,6 +37,7 @@ KNUnderLineLineEdit::KNUnderLineLineEdit(QWidget *parent) :
     m_timeLine->setEasingCurve(QEasingCurve::OutCubic);
     connect(m_timeLine, &QTimeLine::frameChanged,
             this, &KNUnderLineLineEdit::onActionUpdateOpacity);
+    onActionUpdateOpacity(BaseOpacity);
 }
 
 void KNUnderLineLineEdit::updatePalette(const QPalette &pal)

@@ -20,8 +20,11 @@
 #include <QJsonObject>
 
 #include "knmailglobal.h"
+#include "knutil.h"
 
 #include "knmailmodel.h"
+
+#include <QDebug>
 
 #define ItemSender "S"
 #define ItemSenderName "SN"
@@ -229,6 +232,18 @@ void KNMailModel::loadFromFolder(const QString &accountFolder)
 
 void KNMailModel::saveToFolder(const QString &accountFolder)
 {
+    //Get the folder path.
+    QString folderPath=KNUtil::ensurePathValid(
+                accountFolder + "/" +
+                ((m_defaultFolderIndex==-1)?
+                     m_folderName:
+                     knMailGlobal->defaultFolderName(m_defaultFolderIndex)));
+    //Check the folder path.
+    if(folderPath.isEmpty())
+    {
+        //Failed to get the folder path.
+        return;
+    }
     //Construct the item array.
     for(auto item : m_itemList)
     {
@@ -247,11 +262,7 @@ void KNMailModel::saveToFolder(const QString &accountFolder)
         m_itemArray.append(itemData);
     }
     //Load the configuration from the folder.
-    QFile metaDataFile(
-                accountFolder + "/" +
-                ((m_defaultFolderIndex==-1)?
-                     knMailGlobal->defaultFolderName(m_defaultFolderIndex):
-                     m_folderName) + "/info.json");
+    QFile metaDataFile(folderPath + "/info.json");
     //Open for write.
     if(metaDataFile.open(QIODevice::WriteOnly))
     {

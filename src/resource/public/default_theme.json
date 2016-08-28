@@ -19,7 +19,8 @@
         "Highlight" : "#C0C0C0"
     },
     "MailViewerCombo" : {
-        "Parent" : "MailCompose"
+        "Parent" : "MailCompose",
+        "Highlight" : "#C0C0C0"
     },
     "MainWindowLeftBar" : {
         "Parent" : "MainWindow",
