@@ -207,6 +207,7 @@ void KNMailAccount::setUsername(const QString &username)
         {
             continue;
         }
+        qDebug()<<i.fileName();
         //Check the content type.
         if(i.isDir())
         {
@@ -245,6 +246,8 @@ void KNMailAccount::setUsername(const QString &username)
                 folderModel->setFolderName(i.fileName());
                 //Load the folder content.
                 folderModel->loadFromFolder(accountFolder);
+                //Add model to account.
+                m_customFolders.append(folderModel);
             }
         }
     }

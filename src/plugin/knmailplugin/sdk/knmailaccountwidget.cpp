@@ -299,8 +299,6 @@ inline void KNMailAccountWidget::updateExpandParameters()
     m_drawContent=true;
     //Save the expanded state.
     m_expanded=true;
-    //Update the selector data.
-    setCurrentIndex(0);
 }
 
 inline void KNMailAccountWidget::updateFoldParameters()

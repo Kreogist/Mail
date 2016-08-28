@@ -108,6 +108,7 @@ void KNMailAccountList::addAccountWidget(KNMailAccountWidget *accountWidget)
         //Expand the first item.
         accountWidget->setExpand(true);
         //Set the current index to the first account.
+        accountWidget->setCurrentIndex(0);
         m_currentIndex=0;
         //Load the inbox model.
         emit requireShowFolder(accountWidget->currentModel());
