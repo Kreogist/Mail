@@ -20,6 +20,7 @@
 
 #include <QHash>
 #include <QPixmap>
+#include <QThread>
 
 #include "knmailutil.h"
 
@@ -169,6 +170,7 @@ private:
     QString m_defaultFolderName[DefaultFolderCount],
             m_titleFieldText[MailViewerTitleFieldCount];
     QHash<QString, QPixmap> m_providerIcon;
+    QThread m_receiverThread;
     QString m_noSubject;
     KNMailViewerGeneratorBase *m_viewerGenerator;
     KNMailWebViewerGeneratorBase *m_webViewerGenerator;

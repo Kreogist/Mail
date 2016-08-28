@@ -67,10 +67,14 @@ void KNMailAccountManager::initial(QObject *parent)
 
 void KNMailAccountManager::appendAccount(KNMailAccount *account)
 {
+    //Add begin signal.
+    beginInsertRows(QModelIndex(), m_accountList.size(), m_accountList.size());
     //Change the account relationship.
     account->setParent(this);
     //Add account object to the account list.
     m_accountList.append(account);
+    //When append complete, end.
+    endInsertRows();
     //Emit the extend signal.
     emit accountAppended(m_accountList.size()-1);
 }

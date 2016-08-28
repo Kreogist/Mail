@@ -26,6 +26,7 @@
 #include "knmailviewerbase.h"
 #include "knmailwebviewergeneratorbase.h"
 #include "knmailcomposermanager.h"
+#include "knmailreceivermanager.h"
 
 #include "knmailglobal.h"
 
@@ -59,6 +60,11 @@ KNMailGlobal::~KNMailGlobal()
         //Reset the pointer.
         m_viewerGenerator=nullptr;
     }
+    //Quit and wait the receiver thread.
+    m_receiverThread.quit();
+    m_receiverThread.wait();
+    //Remove the receiver.
+    knMailReceiverManager->deleteLater();
 }
 
 KNMailGlobal *KNMailGlobal::instance()
@@ -165,6 +171,7 @@ KNMailGlobal::KNMailGlobal(QObject *parent) :
     KNMailAccountManager::initial(this);
     KNMailPopupManager::initial(this);
     KNMailComposerManager::initial(this);
+    KNMailReceiverManager::initial(&m_receiverThread);
 
     //Initial the provider icons.
     m_providerIcon.insert("netease",

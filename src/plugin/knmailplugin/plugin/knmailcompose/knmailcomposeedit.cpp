@@ -49,7 +49,7 @@ KNMailComposeEdit::KNMailComposeEdit(QWidget *parent) :
     m_toolBar->setFixedHeight(ToolBarHeight);
     m_toolBar->setFocusProxy(this);
     //Update the text font.
-    QFont defaultTextFont=font();
+    QFont defaultTextFont=font(), interfaceFont=font();
     defaultTextFont.setPointSize(DefaultFontSize);
     setFont(defaultTextFont);
     //Construct the button.
@@ -69,6 +69,10 @@ KNMailComposeEdit::KNMailComposeEdit(QWidget *parent) :
                 QIcon(":/plugin/mail/composer/italic.png"));
     m_statusButton[ButtonUnderline]->setIcon(
                 QIcon(":/plugin/mail/composer/underline.png"));
+    //Configure the combo box.
+    interfaceFont.setPixelSize(12);
+    m_fontBox->setFont(interfaceFont);
+    m_fontSizeBox->setFont(interfaceFont);
 
     //Set layout to toolbar.
     QBoxLayout *toolBarLayout=new QBoxLayout(QBoxLayout::LeftToRight,

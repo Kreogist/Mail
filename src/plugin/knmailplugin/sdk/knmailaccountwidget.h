@@ -92,6 +92,12 @@ signals:
      */
     void requireShowFolder(KNMailModel *folder);
 
+    /*!
+     * \brief Require to update all the folder of mail account.
+     * \param account The account pointer.
+     */
+    void requireUpdateAccount(KNMailAccount *account);
+
 public slots:
     /*!
      * \brief Set whether the panel is expanded.
