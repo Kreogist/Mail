@@ -23,9 +23,10 @@
 
 #include "knmailaccount.h"
 #include "knmailmodel.h"
-#include "knmailfolderviewertitle.h"
-#include "knmailfoldertreeview.h"
 #include "knmailviewerbase.h"
+#include "knmailfolderviewertitle.h"
+#include "knmailfolderproxymodel.h"
+#include "knmailfoldertreeview.h"
 
 #include "knmailfolderviewer.h"
 
@@ -40,6 +41,7 @@ KNMailFolderViewer::KNMailFolderViewer(QWidget *parent) :
     m_folderView(new KNMailFolderTreeView(this)),
     m_shadowLayer(new KNClickableLabel(this)),
     m_viewer(nullptr),
+    m_proxyModel(new KNMailFolderProxyModel(this)),
     m_viewerAnime(new QTimeLine(200, this)),
     m_isAnimeShown(true)
 {
@@ -48,8 +50,15 @@ KNMailFolderViewer::KNMailFolderViewer(QWidget *parent) :
     setAutoFillBackground(true);
     //Register to the theme manager.
     knTheme->registerWidget(this);
+    //Update the proxy model.
+    m_proxyModel->setPageSize(20);
     //Configure the folder view.
     m_folderView->setObjectName("");
+    m_folderView->setModel(m_proxyModel);
+    //Link the selection model selected signal to show the viewer.
+    connect(m_folderView->selectionModel(),
+            &QItemSelectionModel::currentChanged,
+            this, &KNMailFolderViewer::onSelectionChange);
     connect(m_folderView, &KNMailFolderTreeView::clicked,
             this, &KNMailFolderViewer::onSelectionChange);
     //Configure the shadow layer.
@@ -110,15 +119,8 @@ void KNMailFolderViewer::setFolderModel(KNMailModel *folderModel)
         m_title->setFolderName(folderModel->folderName());
     }
     //Update the folder model
-    m_folderView->setModel(folderModel);
-    //Check the selection model.
-    if(m_folderView->selectionModel())
-    {
-        //Link the selection model selected signal to show the viewer.
-        connect(m_folderView->selectionModel(),
-                &QItemSelectionModel::currentChanged,
-                this, &KNMailFolderViewer::onSelectionChange);
-    }
+    m_proxyModel->setSourceModel(folderModel);
+    m_proxyModel->setPageIndex(0);
     //Check the viewer.
     if(m_folderView->isVisible())
     {
@@ -137,7 +139,6 @@ void KNMailFolderViewer::setViewer(KNMailViewerBase *viewer)
         //Ignore the viewer.
         return;
     }
-    m_viewer->loadMail("/Users/saki/Documents/Kreogist/Mail/Accounts/u5870415@uds.anu.edu.au/Inbox/5.emlx");
     //Link the viewer.
     connect(m_viewer, &KNMailViewerBase::requirePopup,
             this, &KNMailFolderViewer::hideViewer);
@@ -196,11 +197,12 @@ void KNMailFolderViewer::onSelectionChange(const QModelIndex &current)
         m_viewer->show();
         m_shadowLayer->show();
         //Get the model parent, it should be the account.
-        KNMailModel *currentModel=(KNMailModel *)(current.model());
+        KNMailModel *currentModel=(KNMailModel *)(m_proxyModel->sourceModel());
         KNMailAccount *mailAccount=
                 static_cast<KNMailAccount *>(currentModel->parent());
-        qDebug()<<mailAccount->accountDirectoryPath()+"/"+currentModel->folderName()+"/"+current.data(MailPathRole).toString()+".eml";
-        m_viewer->loadMail(mailAccount->accountDirectoryPath()+"/"+currentModel->folderName()+"/"+current.data(MailPathRole).toString()+".eml");
+        m_viewer->loadMail(mailAccount->accountDirectoryPath() + "/" +
+                           currentModel->folderName() + "/" +
+                           current.data(MailPathRole).toString()+".eml");
         //Start the animation.
         startAnimeViewer(MaximumShadowDepth);
     }

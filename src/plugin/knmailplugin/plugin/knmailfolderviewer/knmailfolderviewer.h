@@ -25,9 +25,10 @@
 class QTimeLine;
 class KNClickableLabel;
 class KNMailModel;
+class KNMailViewerBase;
 class KNMailFolderViewerTitle;
 class KNMailFolderTreeView;
-class KNMailViewerBase;
+class KNMailFolderProxyModel;
 /*!
  * \brief The KNMailFolderViewer class is an official realized which used all
  * SDKs to achieve the basic needs of a folder viewer.
@@ -77,6 +78,7 @@ private:
     KNMailFolderTreeView *m_folderView;
     KNClickableLabel *m_shadowLayer;
     KNMailViewerBase *m_viewer;
+    KNMailFolderProxyModel *m_proxyModel;
     QTimeLine *m_viewerAnime;
     bool m_isAnimeShown;
 };

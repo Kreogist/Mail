@@ -43,6 +43,12 @@ void KNMailWebEngineViewer::setTextContent(const QByteArray &content,
     m_browser->setContent(content, textType);
 }
 
+void KNMailWebEngineViewer::reset()
+{
+    //Clear the browser content.
+    m_browser->load(QUrl("about:blank"));
+}
+
 void KNMailWebEngineViewer::resizeEvent(QResizeEvent *event)
 {
     //Update the widget size.

@@ -49,6 +49,11 @@ public slots:
      */
     virtual void setTextContent(const QByteArray &content,
                                 const QString &textType)=0;
+
+    /*!
+     * \brief Clear all the content of the viewer.
+     */
+    virtual void reset()=0;
 };
 
 #endif // KNMAILWEBVIEWERBASE_H

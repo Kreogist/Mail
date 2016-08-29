@@ -195,10 +195,18 @@ void KNMailViewer::setViewerPopup(bool isPopup)
 
 void KNMailViewer::loadMail(const QString &mailPath)
 {
+    //Update the subject text.
+    m_subjectText.clear();
+    //Reset send time.
+    m_sendTime=QDateTime();
+    //Update the title and time data.
+    updateTitleAndTime();
     //Parse the sender content.
     m_senderList->clear();
     m_receiverList->clear();
     m_ccList->clear();
+    //Reset the viewer.
+    m_viewer->reset();
     //Check the file path first.
     //! FIXME: Add checking codes here.
     //Save the file path.
@@ -214,7 +222,6 @@ void KNMailViewer::loadMail(const QString &mailPath)
     //Parse the subject.
     m_subjectText=
             KNMailUtil::parseEncoding(m_mailContent->mimeHeader("subject"));
-    setWindowTitle(m_subjectText);
     //Prepare the sender.
     QString contactName,
             contactAddress=parseMailAddress(m_mailContent->mimeHeader("from"),
@@ -267,8 +274,6 @@ void KNMailViewer::loadMail(const QString &mailPath)
     }
     //Get the date.
     {
-        //Reset send time.
-        m_sendTime=QDateTime();
         //Check the date content.
         QString dateContent=m_mailContent->mimeHeader("date");
         //Only allowed the correct size.
@@ -321,7 +326,6 @@ void KNMailViewer::loadMail(const QString &mailPath)
                         nullptr);
         //Complete.
         return;
-        ;
     }
 }
 
@@ -381,10 +385,16 @@ void KNMailViewer::onThemeChanged()
 
 inline void KNMailViewer::updateTitleAndTime()
 {
+    //Get the subject text.
+    QString subjectText=m_subjectText.isEmpty()?
+                knMailGlobal->noSubjectText():
+                m_subjectText;
     //Update the subject text.
-    m_subject->setText(m_subject->fontMetrics().elidedText(m_subjectText,
+    m_subject->setText(m_subject->fontMetrics().elidedText(subjectText,
                                                            Qt::ElideRight,
                                                            m_subject->width()));
+    setWindowTitle(subjectText);
+    //Update the receive time.
     m_receiveTime->setText(
                 m_receiveTime->fontMetrics().elidedText(
                     m_sendTime.toString("yyyy-MM-dd hh:mm:ss"),
