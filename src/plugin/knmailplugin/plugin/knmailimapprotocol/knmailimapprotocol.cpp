@@ -23,6 +23,7 @@
 #include "knmailmodel.h"
 #include "knmailaccount.h"
 #include "knmailutil.h"
+#include "knutil.h"
 
 #include "knmailimapprotocol.h"
 
@@ -390,9 +391,16 @@ bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
         }
         //Save the index.
         QString mailServerIndex=QString::number(folder->rowCount()-i),
-                mailFilePath=account()->accountDirectoryPath() + "/" +
-                folder->folderName() + "/" +
+                mailFileDir=account()->accountDirectoryPath() + "/" +
+                folder->folderName(),
+                mailFilePath= mailFileDir + "/" +
                 QString::number(folder->uid(i)) + ".eml";
+        //Ensure the folder is existed.
+        if(KNUtil::ensurePathValid(mailFileDir).isEmpty())
+        {
+            //Ignore this mail.
+            continue;
+        }
         //Open the file.
         QFile emlFile(mailFilePath);
         //Open the file as write only mode.

@@ -23,7 +23,7 @@ KNMailWebEngineViewer::KNMailWebEngineViewer(QWidget *parent) :
     KNMailWebViewerBase(parent),
     m_browser(new QWebEngineView(this))
 {
-    m_browser->setUrl(QUrl("http://www.google.co.jp"));
+//    m_browser->setUrl(QUrl("http://www.google.co.jp"));
 }
 
 void KNMailWebEngineViewer::setTextContent(const QByteArray &content,
