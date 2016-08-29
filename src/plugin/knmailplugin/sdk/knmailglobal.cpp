@@ -65,10 +65,14 @@ KNMailGlobal::~KNMailGlobal()
     //Quit and wait the receiver thread.
     m_receiverThread.quit();
     m_receiverThread.wait();
+    m_updaterThread.quit();
+    m_updaterThread.wait();
     //Remove the receiver.
     knMailReceiverManager->deleteLater();
     //Recover the protocol manager object.
     knMailProtocolManager->deleteLater();
+    //Recover the mail folder updater.
+    knMailModelUpdater->deleteLater();
 }
 
 KNMailGlobal *KNMailGlobal::instance()
@@ -177,7 +181,7 @@ KNMailGlobal::KNMailGlobal(QObject *parent) :
     KNMailAccountManager::initial(this);
     KNMailPopupManager::initial(this);
     KNMailComposerManager::initial(this);
-    KNMailModelUpdater::initial(this);
+    KNMailModelUpdater::initial(&m_updaterThread);
     KNMailReceiverManager::initial(&m_receiverThread);
     KNMailProtocolManager::initial();
 

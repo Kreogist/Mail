@@ -48,9 +48,9 @@ public:
 
     /*!
      * \brief Initial the receiver updater object.
-     * \param parent The parent object.
+     * \param workingThread The object working thread.
      */
-    static void initial(QObject *parent);
+    static void initial(QThread *workingThread);
 
 signals:
 

@@ -189,7 +189,7 @@ private:
     QTcpSocket *m_socket;
     KNMailAccount *m_account;
     int m_lastError, m_connectionTimeout, m_responseTimeout, m_sendTimeout;
-    bool m_dataWritten, m_dataReadyRead, m_socketConnected;
+    bool m_dataWritten, m_dataReadyRead, m_socketConnected, m_destory;
 };
 
 #endif // KNMAILPROTOCOL_H

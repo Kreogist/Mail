@@ -24,6 +24,7 @@
 
 class QTimeLine;
 class KNClickableLabel;
+class KNMailAccount;
 class KNMailModel;
 class KNMailViewerBase;
 class KNMailFolderViewerTitle;
@@ -44,6 +45,17 @@ public:
     explicit KNMailFolderViewer(QWidget *parent = 0);
 
 signals:
+    /*!
+     * \brief Ask to update the folder content.
+     * \param account The account class object.
+     * \param folder The folder model pointer.
+     * \param startPosition Start position of the update position.
+     * \param endPosition End position of the update position.
+     */
+    void requireUpdateFolder(KNMailAccount *account,
+                             KNMailModel *folder,
+                             int startPosition,
+                             int endPosition);
 
 public slots:
     /*!

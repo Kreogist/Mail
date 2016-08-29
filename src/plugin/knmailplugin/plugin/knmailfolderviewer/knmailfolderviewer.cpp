@@ -51,6 +51,10 @@ KNMailFolderViewer::KNMailFolderViewer(QWidget *parent) :
     setAutoFillBackground(true);
     //Register to the theme manager.
     knTheme->registerWidget(this);
+    //Link with the updater.
+    connect(this, &KNMailFolderViewer::requireUpdateFolder,
+            knMailModelUpdater, &KNMailModelUpdater::startUpdateFolder,
+            Qt::QueuedConnection);
     //Update the proxy model.
     m_proxyModel->setPageSize(5);
     connect(m_proxyModel, &KNMailFolderProxyModel::requireUpdate,
@@ -205,13 +209,11 @@ void KNMailFolderViewer::onUpdateItems(int startPosition, int endPosition)
 {
     //Get current model.
     KNMailModel *currentModel=(KNMailModel *)(m_proxyModel->sourceModel());
-    qDebug()<<currentModel->managedAccount()->username();
     //Update the data via the updater.
-    knMailModelUpdater->startUpdateFolder(
-                currentModel->managedAccount(),
-                currentModel,
-                startPosition,
-                endPosition);
+    emit requireUpdateFolder(currentModel->managedAccount(),
+                             currentModel,
+                             startPosition,
+                             endPosition);
 }
 
 void KNMailFolderViewer::onSelectionChange(const QModelIndex &current)
@@ -252,7 +254,7 @@ inline void KNMailFolderViewer::updateShadowDarkness(const qreal &alpha)
     QPalette pal=m_shadowLayer->palette();
     pal.setColor(QPalette::Window,
                  QColor(0, 0, 0, //Black color
-                        alpha * MaximumShadowDepth//Calculate the alpha
+                        alpha * MaximumShadowDepth //Calculate the alpha
                         ));
     //Update the palette.
     m_shadowLayer->setPalette(pal);

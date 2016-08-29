@@ -222,8 +222,8 @@ void KNMailViewer::loadMail(const QString &mailPath)
         return;
     }
     //Parse the subject.
-    m_subjectText=
-            KNMailUtil::parseEncoding(m_mailContent->mimeHeader("subject"));
+    m_subjectText=KNMailUtil::parseEncoding(
+                m_mailContent->mimeHeader("subject").simplified());
     //Prepare the sender.
     QString contactName,
             contactAddress=parseMailAddress(m_mailContent->mimeHeader("from"),
@@ -290,6 +290,7 @@ void KNMailViewer::loadMail(const QString &mailPath)
                                          dateContent.mid(29, 2).toInt()*60));
         }
     }
+    qDebug()<<"All the list content parse complete.";
     //Update labels.
     updateTitleAndTime();
     //Get the content.

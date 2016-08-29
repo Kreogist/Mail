@@ -373,6 +373,7 @@ bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
         //Failed to select the folder.
         return false;
     }
+    qDebug()<<"Begin download E-mail from"<<startPosition<<"to"<<endPosition;
     //Loop for all the content.
     for(int i=startPosition; i<endPosition; ++i)
     {

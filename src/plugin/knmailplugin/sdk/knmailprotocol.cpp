@@ -34,7 +34,8 @@ KNMailProtocol::KNMailProtocol(QObject *parent) :
     m_sendTimeout(30000),
     m_dataWritten(false),
     m_dataReadyRead(false),
-    m_socketConnected(false)
+    m_socketConnected(false),
+    m_destory(false)
 {
 }
 
@@ -45,6 +46,8 @@ KNMailProtocol::~KNMailProtocol()
     {
         delete m_socket;
     }
+    //Set the destory flag.
+    m_destory=true;
 }
 
 QTcpSocket *KNMailProtocol::socket() const
@@ -157,6 +160,13 @@ void KNMailProtocol::setSocketType(MailProtocolSocket type)
                 //End the waiting loop.
                 m_waitConnectLoop.quit();
             });
+    //Link with the destory signal.
+    connect(this, &KNMailProtocol::destroyed,
+            &m_waitWriteLoop, &QEventLoop::quit);
+    connect(this, &KNMailProtocol::destroyed,
+            &m_waitReadLoop, &QEventLoop::quit);
+    connect(this, &KNMailProtocol::destroyed,
+            &m_waitConnectLoop, &QEventLoop::quit);
 }
 
 bool KNMailProtocol::sendMessage(const QString &message)

@@ -175,7 +175,7 @@ private:
             m_titleFieldText[MailViewerTitleFieldCount];
     QHash<QString, QPixmap> m_providerIcon;
     QPixmap m_emtpyIcon;
-    QThread m_receiverThread;
+    QThread m_receiverThread, m_updaterThread;
     QString m_noSubject;
     KNMailViewerGeneratorBase *m_viewerGenerator;
     KNMailWebViewerGeneratorBase *m_webViewerGenerator;

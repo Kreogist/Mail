@@ -17,6 +17,7 @@ Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QScopedPointer>
+#include <QThread>
 
 #include "knmailaccount.h"
 #include "knmailmodel.h"
@@ -39,13 +40,17 @@ KNMailModelUpdater *KNMailModelUpdater::instance()
     return m_instance;
 }
 
-void KNMailModelUpdater::initial(QObject *parent)
+void KNMailModelUpdater::initial(QThread *workingThread)
 {
     //Check the pointer.
     if(m_instance==nullptr)
     {
         //Initial the instance.
-        m_instance=new KNMailModelUpdater(parent);
+        m_instance=new KNMailModelUpdater();
+        //Move to working thread.
+        m_instance->moveToThread(workingThread);
+        //Start working.
+        workingThread->start();
     }
 }
 
