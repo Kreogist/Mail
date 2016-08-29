@@ -384,6 +384,7 @@ bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
         //Check whether we need to update the data.
         if(folder->isItemCached(i))
         {
+            qDebug()<<"Cached!";
             //Ignore the item which is already cached.
             continue;
         }
@@ -397,6 +398,7 @@ bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
         //Open the file as write only mode.
         if(!emlFile.open(QIODevice::WriteOnly))
         {
+            qDebug()<<"Cannot open file"<<mailFilePath;
             //Ignore the current file.
             continue;
         }

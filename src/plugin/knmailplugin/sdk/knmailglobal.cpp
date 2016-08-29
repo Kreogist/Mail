@@ -108,7 +108,7 @@ QString KNMailGlobal::defaultFolderName(int index) const
     case FolderDrafts:
         return "Drafts";
     case FolderSentItems:
-        return "SentItems";
+        return "Sent";
     case FolderJunk:
         return "Junk";
     case FolderTrash:

@@ -225,7 +225,7 @@ void KNMailAccount::setUsername(const QString &username)
                 //Load the inbox content.
                 m_defaultFolders[FolderInbox]->loadFromFolder(accountFolder);
             }
-            else if(i.fileName()=="SentItems")
+            else if(i.fileName()=="Sent")
             {
                 //Load the sent items content.
                 m_defaultFolders[FolderSentItems]->loadFromFolder(
