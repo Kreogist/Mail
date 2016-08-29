@@ -15,6 +15,8 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#include "knmailmodel.h"
+
 #include "knmailfolderproxymodel.h"
 
 KNMailFolderProxyModel::KNMailFolderProxyModel(QObject *parent) :
@@ -84,6 +86,12 @@ inline void KNMailFolderProxyModel::updateIndexes()
         //Update the start and end.
         m_pageStart=qMin(m_pageIndex*m_pageSize-1, modelSize);
         m_pageEnd=qMin((m_pageIndex+1)*m_pageSize, modelSize);
-        //Update the sort filter.
+        //Check the model needs update or not.
+        if(static_cast<KNMailModel *>(sourceModel())->needCache(m_pageStart+1,
+                                                                m_pageEnd))
+        {
+            //Emit the update signal.
+            emit requireUpdate(m_pageStart+1, m_pageEnd);
+        }
     }
 }

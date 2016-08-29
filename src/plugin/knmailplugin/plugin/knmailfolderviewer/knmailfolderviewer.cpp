@@ -21,6 +21,7 @@
 #include "knthememanager.h"
 #include "knclickablelabel.h"
 
+#include "knmailmodelupdater.h"
 #include "knmailaccount.h"
 #include "knmailmodel.h"
 #include "knmailviewerbase.h"
@@ -51,7 +52,9 @@ KNMailFolderViewer::KNMailFolderViewer(QWidget *parent) :
     //Register to the theme manager.
     knTheme->registerWidget(this);
     //Update the proxy model.
-    m_proxyModel->setPageSize(20);
+    m_proxyModel->setPageSize(5);
+    connect(m_proxyModel, &KNMailFolderProxyModel::requireUpdate,
+            this, &KNMailFolderViewer::onUpdateItems, Qt::QueuedConnection);
     //Configure the folder view.
     m_folderView->setObjectName("");
     m_folderView->setModel(m_proxyModel);
@@ -101,11 +104,12 @@ KNMailFolderViewer::KNMailFolderViewer(QWidget *parent) :
 
 void KNMailFolderViewer::setFolderModel(KNMailModel *folderModel)
 {
-    //Clear the selection model connection.
-    if(m_folderView->selectionModel())
+    //Check the previous model.
+    if(m_proxyModel->sourceModel())
     {
-        //Remove the connection.
-        disconnect(m_folderView->selectionModel(), 0, 0, 0);
+        //Disconnect with its previous signal.
+        disconnect(static_cast<KNMailModel *>(m_proxyModel->sourceModel()),
+                   0, 0, 0);
     }
     //Check the model.
     if(folderModel==nullptr)
@@ -120,6 +124,10 @@ void KNMailFolderViewer::setFolderModel(KNMailModel *folderModel)
     }
     //Update the folder model
     m_proxyModel->setSourceModel(folderModel);
+    //Link the folder model.
+    connect(folderModel, &KNMailModel::modelUpdated,
+            this, &KNMailFolderViewer::onModelUpdate);
+    //Reset the page index.
     m_proxyModel->setPageIndex(0);
     //Check the viewer.
     if(m_folderView->isVisible())
@@ -187,22 +195,46 @@ void KNMailFolderViewer::resizeEvent(QResizeEvent *event)
     }
 }
 
+void KNMailFolderViewer::onModelUpdate()
+{
+    //Update the current page, set the current index to the model.
+    m_proxyModel->setPageIndex(m_proxyModel->pageIndex());
+}
+
+void KNMailFolderViewer::onUpdateItems(int startPosition, int endPosition)
+{
+    //Get current model.
+    KNMailModel *currentModel=(KNMailModel *)(m_proxyModel->sourceModel());
+    qDebug()<<currentModel->managedAccount()->username();
+    //Update the data via the updater.
+    knMailModelUpdater->startUpdateFolder(
+                currentModel->managedAccount(),
+                currentModel,
+                startPosition,
+                endPosition);
+}
+
 void KNMailFolderViewer::onSelectionChange(const QModelIndex &current)
 {
     Q_UNUSED(current)
+    //Check the current index validation.
+    if(!current.data(MailCachedRole).toBool())
+    {
+        //Ignore the mail which is not cached.
+        return;
+    }
+    //Get the model parent, it should be the account.
+    KNMailModel *currentModel=(KNMailModel *)(m_proxyModel->sourceModel());
+    KNMailAccount *mailAccount=currentModel->managedAccount();
+    m_viewer->loadMail(mailAccount->accountDirectoryPath() + "/" +
+                       currentModel->folderName() + "/" +
+                       current.data(MailPathRole).toString()+".eml");
     //Check viewer state.
     if(!m_viewer->isVisible())
     {
         //Show the viewer.
         m_viewer->show();
         m_shadowLayer->show();
-        //Get the model parent, it should be the account.
-        KNMailModel *currentModel=(KNMailModel *)(m_proxyModel->sourceModel());
-        KNMailAccount *mailAccount=
-                static_cast<KNMailAccount *>(currentModel->parent());
-        m_viewer->loadMail(mailAccount->accountDirectoryPath() + "/" +
-                           currentModel->folderName() + "/" +
-                           current.data(MailPathRole).toString()+".eml");
         //Start the animation.
         startAnimeViewer(MaximumShadowDepth);
     }

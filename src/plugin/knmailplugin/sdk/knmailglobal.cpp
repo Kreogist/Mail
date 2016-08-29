@@ -28,6 +28,7 @@
 #include "knmailwebviewergeneratorbase.h"
 #include "knmailcomposermanager.h"
 #include "knmailreceivermanager.h"
+#include "knmailmodelupdater.h"
 
 #include "knmailglobal.h"
 
@@ -176,6 +177,7 @@ KNMailGlobal::KNMailGlobal(QObject *parent) :
     KNMailAccountManager::initial(this);
     KNMailPopupManager::initial(this);
     KNMailComposerManager::initial(this);
+    KNMailModelUpdater::initial(this);
     KNMailReceiverManager::initial(&m_receiverThread);
     KNMailProtocolManager::initial();
 

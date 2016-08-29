@@ -16,6 +16,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QTcpSocket>
+#include <QFile>
 
 #include "knmailmodel.h"
 #include "knmailaccount.h"
@@ -24,6 +25,8 @@
 #include "knmailimapprotocol.h"
 
 #include <QDebug>
+
+#define TriedTimes 5
 
 KNMailImapProtocol::KNMailImapProtocol(QObject *parent) :
     KNMailReceiverProtocol(parent),
@@ -64,7 +67,7 @@ bool KNMailImapProtocol::connectToHost()
 bool KNMailImapProtocol::login()
 {
     //Check the state of pop socket.
-    if(socket()->state()!=QAbstractSocket::ConnectedState &&
+    if(socket() && socket()->state()!=QAbstractSocket::ConnectedState &&
             //Socket is not online, try to re-connect.
             (!connectToHost()))
     {
@@ -91,15 +94,18 @@ bool KNMailImapProtocol::login()
         return false;
     }
     qDebug()<<"Login success.";
-    //For netease, we have to use ID command to register the client.
-    sendImapMessage("ID (\"name\" \"Kreogist Mail\""
-                    "\"version\" \"1.0\""
-                    "\"vendor\" \"Kreogist Dev Team\")");
-    //Wait for response, we don't need to check the response.
-    if(!waitForResponse())
+    if(config.idCheck)
     {
-        //Failed to send the ID command.
-        return false;
+        //For netease, we have to use ID command to register the client.
+        sendImapMessage("ID (\"name\" \"Kreogist Mail\""
+                        "\"version\" \"1.0\""
+                        "\"vendor\" \"Kreogist Dev Team\")");
+        //Wait for response, we don't need to check the response.
+        if(!waitForResponse())
+        {
+            //Failed to send the ID command.
+            return false;
+        }
     }
     //Set the login state.
     m_loginState=true;
@@ -133,6 +139,8 @@ bool KNMailImapProtocol::updateFolderStatus()
     //Get the current mail name list.
     QList<KNMailModel *> customFolders=mailAccount->customFolders(),
                          updatedCustomFolders;
+    //Get the account directory path.
+    QString accountDirectory=mailAccount->accountDirectoryPath();
     //Check the folder status.
     for(auto i : folderStatus)
     {
@@ -221,6 +229,9 @@ bool KNMailImapProtocol::updateFolderStatus()
                 //Take the folder from the original folder list, append to new
                 //folder list.
                 currentModel=customFolders.takeAt(i);
+                //Update current model information.
+                currentModel->setServerName(rawFolderName);
+                currentModel->setManagedAccount(mailAccount);
                 //Add folder to folder list.
                 updatedCustomFolders.append(currentModel);
                 //Update the folder.
@@ -236,17 +247,16 @@ bool KNMailImapProtocol::updateFolderStatus()
             continue;
         }
         //We didn't find the folder, we have to construct this folder.
-        currentModel=new KNMailModel(mailAccount);
+        currentModel=new KNMailModel();
         //Set the folder name.
         currentModel->setFolderName(folderName);
         currentModel->setServerName(rawFolderName);
-        //Update the folder data.
-        updateFolder(currentModel);
+        currentModel->setManagedAccount(mailAccount);
         //Add folder to updated list.
         updatedCustomFolders.append(currentModel);
+        //Update the folder data.
+        updateFolder(currentModel);
     }
-    //Get the account directory path.
-    QString accountDirectory=mailAccount->accountDirectoryPath();
     //Clear all the left folder in the original list.
     while(!customFolders.isEmpty())
     {
@@ -257,8 +267,6 @@ bool KNMailImapProtocol::updateFolderStatus()
         //Clear the folder.
         folder->deleteLater();
     }
-    //Update the folder list.
-    mailAccount->setCustomFolders(updatedCustomFolders);
     //Get the response.
     return true;
 }
@@ -338,8 +346,182 @@ bool KNMailImapProtocol::updateFolder(KNMailModel *folder)
     folder->updateUidList(account()->accountDirectoryPath(), uidList);
     //Recover the list memory.
     delete uidList;
+    //Save the content.
+    folder->saveToFolder(folder->managedAccount()->accountDirectoryPath());
     //Update the data successfully.
     return true;
+}
+
+bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
+                                             int startPosition,
+                                             int endPosition)
+{
+    //Check the login state.
+    if((!m_loginState) && (!login()))
+    {
+        //Failed to login, then failed to update the status.
+        return false;
+    }
+    //Select the folder first.
+    sendImapMessage("SELECT \"" + folder->serverName() + "\"");
+    //Wait and check response.
+    if(!waitAndCheckResponse())
+    {
+        qDebug()<<"No response from server.";
+        //Reset the login state, because the connection is cut.
+        m_loginState=false;
+        //Failed to select the folder.
+        return false;
+    }
+    //Loop for all the content.
+    for(int i=startPosition; i<endPosition; ++i)
+    {
+        //Check whether we need to update the data.
+        if(folder->isItemCached(i))
+        {
+            //Ignore the item which is already cached.
+            continue;
+        }
+        //Save the index.
+        QString mailServerIndex=QString::number(folder->rowCount()-i);
+        //Open the file.
+        QFile emlFile(account()->accountDirectoryPath() + "/" +
+                      folder->folderName() + "/" +
+                      QString::number(folder->uid(i)) + ".eml");
+        //Open the file as write only mode.
+        if(!emlFile.open(QIODevice::WriteOnly))
+        {
+            //Ignore the current file.
+            continue;
+        }
+        qDebug()<<"Start fetching"<<mailServerIndex<<"header";
+        //Fetch all the E-mail content down.
+        sendImapMessage("FETCH " + mailServerIndex + " body[HEADER]");
+        //Wait for response from server.
+        int tries=TriedTimes;
+        while(tries--)
+        {
+            //Wait for response from server.
+            if(!waitForReadyRead())
+            {
+                //Close the cache file.
+                emlFile.close();
+                //Move to next try.
+                continue;
+            }
+            //Response data cache.
+            QByteArray responseData;
+            //Reset the tries.
+            tries=TriedTimes;
+            //Try to read all content from the socket.
+            while(socket()->bytesAvailable() > 0)
+            {
+                //Generate the mail file.
+                responseData=socket()->readLine();
+                //Check the response data.
+                if(responseData.startsWith("*") ||
+                        responseData.startsWith(" FLAGS") ||
+                        responseData.startsWith(m_header.toLatin1() + " OK"))
+                {
+                    //This line should be ignored, the content of current line
+                    //shows:
+                    // * UID FETCH (BODY[HEADER] {size}
+                    // or
+                    // AXX OK FETCH completed.
+                    continue;
+                }
+                //Write the content to the cache file.
+                emlFile.write(responseData);
+                qDebug()<<responseData;
+            }
+            //Check the data is still left or not.
+            if(socket()->bytesAvailable()==0)
+            {
+                //Stop looping.
+                break;
+            }
+        }
+        //Check the tries time.
+        if(tries==0)
+        {
+            //The header is not read complete.
+            //Close the cache file.
+            emlFile.close();
+            //Move to next mail.
+            continue;
+        }
+        qDebug()<<"Start fetching"<<mailServerIndex<<"content";
+        //Fetch all the E-mail body data down.
+        sendImapMessage("FETCH " + mailServerIndex + " body[TEXT]");
+        //Wait for response from server.
+        tries=TriedTimes;
+        while(tries--)
+        {
+            //Wait for response from server.
+            if(!waitForReadyRead())
+            {
+                //Close the cache file.
+                emlFile.close();
+                //Move to next try.
+                continue;
+            }
+            //Response data cache.
+            QByteArray responseData;
+            //Reset the tries.
+            tries=TriedTimes;
+            //Try to read all content from the socket.
+            while(socket()->bytesAvailable() > 0)
+            {
+                //Generate the mail file.
+                responseData=socket()->readLine();
+                //Check the response data.
+                if(responseData.startsWith("*") ||
+                        responseData.startsWith(m_header.toLatin1() + " OK") ||
+                        responseData.startsWith(" FLAGS"))
+                {
+                    //This line should be ignored, the content of current line
+                    //shows:
+                    // * UID FETCH (BODY[TEXT] {size}
+                    // or
+                    //  FLAGS (\Seen))
+                    // or
+                    // AXX OK FETCH completed.
+                    continue;
+                }
+                //Write the content to the cache file.
+                emlFile.write(responseData);
+            }
+            //Check the data is still left or not.
+            if(socket()->bytesAvailable()==0)
+            {
+                //Stop looping.
+                break;
+            }
+        }
+        //Close the cache file.
+        emlFile.close();
+        qDebug()<<i<<"fetch complete.";
+        //Update the item information of the model.
+        KNMailListItem cachedItem=folder->item(i);
+        //Update the information of the item.
+        cachedItem.cached=true;
+        //Update the item.
+        folder->updateItem(i, cachedItem);
+        //Save the folder content.
+        folder->saveToFolder(folder->managedAccount()->accountDirectoryPath());
+    }
+    //Mission complete.
+    return true;
+}
+
+void KNMailImapProtocol::updateProtocolConfig()
+{
+    //Do original configure.
+    KNMailReceiverProtocol::updateProtocolConfig();
+    //Link with the account.
+    connect(this, &KNMailImapProtocol::requireUpdateFolders,
+            account(), &KNMailAccount::setCustomFolders,
+            Qt::QueuedConnection);
 }
 
 QString KNMailImapProtocol::findFolderName(const QString &rawFolderInfo,
@@ -394,7 +576,7 @@ QString KNMailImapProtocol::findFolderName(const QString &rawFolderInfo,
 bool KNMailImapProtocol::waitAndCheckResponse(QList<QByteArray> *responseCache)
 {
     //We have to try several times.
-    int tries=5;
+    int tries=TriedTimes;
     //Do tries times loop.
     while(tries--)
     {
@@ -402,6 +584,8 @@ bool KNMailImapProtocol::waitAndCheckResponse(QList<QByteArray> *responseCache)
         QList<QByteArray> imapResponse;
         if(waitForResponse(&imapResponse))
         {
+            //Reset the tries time.
+            tries=TriedTimes;
             //Check the response.
             QString lastResponse=imapResponse.last();
             //We got OK from the server, that means mission complete.

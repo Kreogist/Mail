@@ -68,6 +68,8 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
+    void onModelUpdate();
+    void onUpdateItems(int startPosition, int endPosition);
     void onSelectionChange(const QModelIndex &current);
 
 private:

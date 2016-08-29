@@ -52,7 +52,8 @@ namespace MailUtil
 
     enum MailItemRole
     {
-        MailPathRole = Qt::UserRole + 1
+        MailPathRole = Qt::UserRole + 1,
+        MailCachedRole
     };
 
     enum MailProtocolSocket
@@ -99,10 +100,12 @@ namespace MailUtil
         quint16 port;
         QSsl::SslProtocol sslVersion;
         MailProtocolSocket socketType;
+        bool idCheck;
         KNMailProtocolConfig() :
             port(0),
             sslVersion(QSsl::SecureProtocols),
-            socketType(SocketTcp)
+            socketType(SocketTcp),
+            idCheck(false)
         {
         }
     };

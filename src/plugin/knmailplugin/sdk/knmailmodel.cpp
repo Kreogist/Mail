@@ -18,7 +18,6 @@
 #include <QFile>
 #include <QDir>
 #include <QJsonDocument>
-#include <QJsonObject>
 
 #include "knmailglobal.h"
 #include "knutil.h"
@@ -35,10 +34,13 @@
 #define ItemBriefContent "B"
 #define ItemIndex "I"
 #define ItemLoaded "L"
+#define FolderItems "Items"
+#define FolderServerName "ServerName"
 
 KNMailModel::KNMailModel(QObject *parent) :
     QAbstractTableModel(parent),
     m_folderName(QString()),
+    m_managedAccount(nullptr),
     m_defaultFolderIndex(-1)
 {
 }
@@ -88,6 +90,8 @@ QVariant KNMailModel::data(const QModelIndex &index, int role) const
         }
     case MailPathRole:
         return QString::number(item.uid);
+    case MailCachedRole:
+        return item.cached;
     default:
         return QVariant();
     }
@@ -201,7 +205,10 @@ void KNMailModel::loadFromFolder(const QString &accountFolder)
         return;
     }
     //Load the data, translate the to list item.
-    m_itemArray=QJsonDocument::fromJson(metaDataFile.readAll()).array();
+    m_folderContent=QJsonDocument::fromJson(metaDataFile.readAll()).object();
+    //Split the data.
+    m_serverName=m_folderContent.value(FolderServerName).toString();
+    m_itemArray=m_folderContent.value(FolderItems).toArray();
     //Close the file.
     metaDataFile.close();
     //Reset the content.
@@ -237,6 +244,7 @@ void KNMailModel::loadFromFolder(const QString &accountFolder)
     endInsertRows();
     //Recover the memory.
     m_itemArray=QJsonArray();
+    m_folderContent=QJsonObject();
 }
 
 void KNMailModel::saveToFolder(const QString &accountFolder)
@@ -270,18 +278,22 @@ void KNMailModel::saveToFolder(const QString &accountFolder)
         //Add the item to list.
         m_itemArray.append(itemData);
     }
+    //Insert the item array.
+    m_folderContent.insert(FolderItems, m_itemArray);
+    m_folderContent.insert(FolderServerName, m_serverName);
     //Load the configuration from the folder.
     QFile metaDataFile(folderPath + "/info.json");
     //Open for write.
     if(metaDataFile.open(QIODevice::WriteOnly))
     {
         //Write the content to the meta data file.
-        metaDataFile.write(QJsonDocument(m_itemArray).toJson());
+        metaDataFile.write(QJsonDocument(m_folderContent).toJson());
     }
     //Close the file.
     metaDataFile.close();
     //Clear the array.
     m_itemArray=QJsonArray();
+    m_folderContent=QJsonObject();
 }
 
 void KNMailModel::reset()
@@ -366,11 +378,66 @@ void KNMailModel::updateUidList(const QString &accountFolder,
     m_itemList=(*updateList);
     //Remove the update list.
     delete updateList;
+    //Emit the update signal.
+    emit modelUpdated();
+}
+
+KNMailAccount *KNMailModel::managedAccount() const
+{
+    return m_managedAccount;
+}
+
+KNMailListItem KNMailModel::item(int position) const
+{
+    return m_itemList.at(position);
+}
+
+void KNMailModel::updateItem(int position, const KNMailListItem &item)
+{
+    //Update the item at the position.
+    m_itemList.replace(position, item);
+    //Emit the data changed signal.
+    emit dataChanged(index(position, 0),
+                     index(position, FolderModelColumnCount-1));
+}
+
+void KNMailModel::setManagedAccount(KNMailAccount *managedAccount)
+{
+    m_managedAccount = managedAccount;
 }
 
 QString KNMailModel::serverName() const
 {
     return m_serverName;
+}
+
+bool KNMailModel::needCache(int startPosition, int endPosition)
+{
+    //Valid the position.
+    startPosition=qMin(startPosition, m_itemList.size());
+    endPosition=qMin(endPosition, m_itemList.size());
+    //Check the position.
+    for(int i=startPosition; i<endPosition; ++i)
+    {
+        //Check the is cache status.
+        if(!m_itemList.at(i).cached)
+        {
+            //If any data is cached, then it need to be update.
+            return true;
+        }
+    }
+    //Or else it doesn't need to be update.
+    return false;
+}
+
+bool KNMailModel::isItemCached(int position)
+{
+    return m_itemList.at(position).cached;
+}
+
+int KNMailModel::uid(int position)
+{
+    return m_itemList.at(position).uid;
 }
 
 void KNMailModel::setServerName(const QString &serverName)

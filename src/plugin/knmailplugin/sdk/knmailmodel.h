@@ -18,6 +18,7 @@
 #ifndef KNMAILMODEL_H
 #define KNMAILMODEL_H
 
+#include <QJsonObject>
 #include <QJsonArray>
 #include <QList>
 
@@ -27,6 +28,7 @@
 
 using namespace MailUtil;
 
+class KNMailAccount;
 /*!
  * \brief The KNMailModel class provides the mail information of a mail account
  * folder.
@@ -95,9 +97,57 @@ public:
      */
     QString serverName() const;
 
+    /*!
+     * \brief Check whether the data of the model from start to end need cache.
+     * \param startPosition The start position.
+     * \param endPosition The end position.
+     * \return If any data is not cached, return true.
+     */
+    bool needCache(int startPosition, int endPosition);
+
+    /*!
+     * \brief Check whether a specific item is already cached.
+     * \param position The item position.
+     * \return If the item is cached, return true.
+     */
+    bool isItemCached(int position);
+
+    /*!
+     * \brief Get the uid of the mail at the specific position.
+     * \param position The mail position in the model.
+     * \return The uid of the mail.
+     */
+    int uid(int position);
+
+    /*!
+     * \brief Get the managed account. It is actuall the parent of this model,
+     * however, the multithread is forbidden to operate the parent. So we used
+     * this.
+     * \return The parent account.
+     */
+    KNMailAccount *managedAccount() const;
+
+    /*!
+     * \brief Get the item at position i.
+     * \param position The position of the item in the list.
+     * \return The item at the position.
+     */
+    KNMailListItem item(int position) const;
+
 signals:
+    /*!
+     * \brief When the model is synced with server, this signal will be emitted.
+     */
+    void modelUpdated();
 
 public slots:
+    /*!
+     * \brief Update an E-mail item at the position.
+     * \param position The position of the item.
+     * \param item The item of the position.
+     */
+    void updateItem(int position, const KNMailListItem &item);
+
     /*!
      * \brief Set the folder name saved on server.
      * \param serverName The folder name on server.
@@ -146,10 +196,18 @@ public slots:
      */
     void updateUidList(const QString &accountFolder, QList<int> *uidList);
 
+    /*!
+     * \brief Set the managed account object pointer.
+     * \param managedAccount The account object pointer.
+     */
+    void setManagedAccount(KNMailAccount *managedAccount);
+
 private:
     QList<KNMailListItem> m_itemList;
     QString m_folderPath, m_folderName, m_serverName;
+    QJsonObject m_folderContent;
     QJsonArray m_itemArray;
+    KNMailAccount *m_managedAccount;
     int m_defaultFolderIndex;
 };
 

@@ -18,14 +18,11 @@
 #ifndef KNMAILPROTOCOL_H
 #define KNMAILPROTOCOL_H
 
+#include <QEventLoop>
 
 #include "knmailutil.h"
 
 #include <QObject>
-
-#ifdef Q_OS_WIN
-#include <QEventLoop>
-#endif
 
 using namespace MailUtil;
 
@@ -181,17 +178,18 @@ protected:
      */
     bool waitForResponse(QList<QByteArray> *responseText);
 
+    /*!
+     * \brief Wait for the socket is ready for reading.
+     * \return If the socket is ready for reading within the timeout time,
+     * return true.
+     */
+    bool waitForReadyRead();
 private:
-    inline bool waitForReadyRead();
-#ifdef Q_OS_WIN
     QEventLoop m_waitWriteLoop, m_waitReadLoop, m_waitConnectLoop;
-#endif
     QTcpSocket *m_socket;
     KNMailAccount *m_account;
     int m_lastError, m_connectionTimeout, m_responseTimeout, m_sendTimeout;
-#ifdef Q_OS_WIN
     bool m_dataWritten, m_dataReadyRead, m_socketConnected;
-#endif
 };
 
 #endif // KNMAILPROTOCOL_H

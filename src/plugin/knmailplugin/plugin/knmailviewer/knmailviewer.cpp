@@ -205,6 +205,8 @@ void KNMailViewer::loadMail(const QString &mailPath)
     m_senderList->clear();
     m_receiverList->clear();
     m_ccList->clear();
+    m_ccList->hide();
+    m_ccLabel->hide();
     //Reset the viewer.
     m_viewer->reset();
     //Check the file path first.
@@ -247,13 +249,7 @@ void KNMailViewer::loadMail(const QString &mailPath)
         //Check the cc content.
         QString ccContent=m_mailContent->mimeHeader("cc");
         //If the content has data.
-        if(ccContent.isEmpty())
-        {
-            //No content, hide the cc list and cc label.
-            m_ccLabel->hide();
-            m_ccList->hide();
-        }
-        else
+        if(!ccContent.isEmpty())
         {
             //Show the content.
             m_ccLabel->show();
@@ -470,8 +466,12 @@ void KNMailViewer::parseAsText(const QString &textType,
     {
         //Get the text codec.
         QTextCodec *codec=QTextCodec::codecForName(encoding);
-        //Translate the codec.
-        decodedCache=codec->toUnicode(decodedCache).toUtf8();
+        //Check the codec.
+        if(codec)
+        {
+            //Translate the codec.
+            decodedCache=codec->toUnicode(decodedCache).toUtf8();
+        }
     }
     //Show the content.
     m_viewer->setTextContent(decodedCache, textType);

@@ -283,7 +283,8 @@ SOURCES += \
     plugin/knmailplugin/sdk/knmailcomposermanager.cpp \
     plugin/knmailplugin/sdk/knmailreceivermanager.cpp \
     plugin/knmailplugin/sdk/knmailprotocolmanager.cpp \
-    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderproxymodel.cpp
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderproxymodel.cpp \
+    plugin/knmailplugin/sdk/knmailmodelupdater.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -370,4 +371,5 @@ HEADERS += \
     plugin/knmailplugin/sdk/knmailprotocolgenerator.h \
     plugin/knmailplugin/plugin/knmailimapprotocol/knmailimapprotocolgenerator.h \
     plugin/knmailplugin/sdk/knmailprotocolmanager.h \
-    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderproxymodel.h
+    plugin/knmailplugin/plugin/knmailfolderviewer/knmailfolderproxymodel.h \
+    plugin/knmailplugin/sdk/knmailmodelupdater.h

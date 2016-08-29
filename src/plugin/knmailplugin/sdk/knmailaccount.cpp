@@ -42,6 +42,7 @@ KNMailAccount::KNMailAccount(QObject *parent) :
         m_defaultFolders[i]=new KNMailModel(this);
         //Set the folder index.
         m_defaultFolders[i]->setDefaultFolderIndex(i);
+        m_defaultFolders[i]->setManagedAccount(this);
     }
 }
 
@@ -244,6 +245,7 @@ void KNMailAccount::setUsername(const QString &username)
                 KNMailModel *folderModel=new KNMailModel(this);
                 //Set the folder model name.
                 folderModel->setFolderName(i.fileName());
+                folderModel->setManagedAccount(this);
                 //Load the folder content.
                 folderModel->loadFromFolder(accountFolder);
                 //Add model to account.

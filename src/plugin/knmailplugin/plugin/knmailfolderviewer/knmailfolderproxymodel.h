@@ -59,6 +59,13 @@ public:
     void setPageSize(int pageSize);
 
 signals:
+    /*!
+     * \brief Ask to update the item area.
+     * \param startPosition The start position. This index item should be
+     * contained in the list.
+     * \param endPosition The end position. This index shouldn't be contained.
+     */
+    void requireUpdate(int startPosition, int endPosition);
 
 public slots:
 

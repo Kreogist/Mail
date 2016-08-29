@@ -37,6 +37,11 @@ public:
     explicit KNMailImapProtocol(QObject *parent = 0);
 
 signals:
+    /*!
+     * \brief Require to update the custom folder list of the account.
+     * \param customFolders The new folder list.
+     */
+    void requireUpdateFolders(QList<KNMailModel *> customFolders);
 
 public slots:
     /*!
@@ -58,6 +63,19 @@ public slots:
      * \brief Reimplemented from KNMailReceiverProtocol::updateFolder().
      */
     bool updateFolder(KNMailModel *folder) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from KNMailReceiverProtocol::updateFolderContent().
+     */
+    bool updateFolderContent(KNMailModel *folder,
+                             int startPosition,
+                             int endPosition) Q_DECL_OVERRIDE;
+
+protected:
+    /*!
+     * \brief Reimplemented from KNMailReceiverProtocol::updateProtocolConfig().
+     */
+    void updateProtocolConfig() Q_DECL_OVERRIDE;
 
 private:
     inline QString findFolderName(const QString &rawFolderInfo,

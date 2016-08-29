@@ -30,6 +30,10 @@ class KNMailReceiverProtocol : public KNMailProtocol
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief Construct a KNMailReceiverProtocol object.
+     * \param parent The parent object.
+     */
     explicit KNMailReceiverProtocol(QObject *parent = 0);
 
 signals:
@@ -48,6 +52,17 @@ public slots:
      * return false.
      */
     virtual bool updateFolder(KNMailModel *folder)=0;
+
+    /*!
+     * \brief Update the folder item content.
+     * \param folder The folder model.
+     * \param startPosition The start position of the item.
+     * \param endPosition The end position of the item.
+     * \return If all the data is cached, return true.
+     */
+    virtual bool updateFolderContent(KNMailModel *folder,
+                                     int startPosition,
+                                     int endPosition)=0;
 
 protected:
     /*!
