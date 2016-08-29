@@ -251,3 +251,9 @@ int KNMailContactFlowLayout::layoutHeight() const
 {
     return m_layoutHeight;
 }
+
+void KNMailContactFlowLayout::clear()
+{
+    //Replace all the items.
+    m_itemList.clear();
+}

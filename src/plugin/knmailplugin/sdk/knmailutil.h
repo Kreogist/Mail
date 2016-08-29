@@ -50,6 +50,11 @@ namespace MailUtil
         FolderModelColumnCount
     };
 
+    enum MailItemRole
+    {
+        MailPathRole = Qt::UserRole + 1
+    };
+
     enum MailProtocolSocket
     {
         SocketTcp,

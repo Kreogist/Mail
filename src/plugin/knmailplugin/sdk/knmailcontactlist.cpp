@@ -145,6 +145,18 @@ void KNMailContactList::showEvent(QShowEvent *event)
     m_moreButton->move(width()-m_moreButton->width(), 0);
 }
 
+void KNMailContactList::wheelEvent(QWheelEvent *event)
+{
+    //Check the expand state.
+    if(!m_isExpand)
+    {
+        //Ignore the wheel event when folding.
+        return;
+    }
+    //Update the contact list.
+    QScrollArea::wheelEvent(event);
+}
+
 void KNMailContactList::onLayoutLineCountChanged(int lineCount)
 {
     //Update visibility.

@@ -141,27 +141,6 @@ KNMailViewer::KNMailViewer(QWidget *parent) :
     connect(knI18n, &KNLocaleManager::languageChange,
             this, &KNMailViewer::retranslate);
     retranslate();
-
-    //Debug.
-    m_subjectText="Welcome to TechLauncher for Semester 2, 2016";
-    m_sendTime=QDateTime(QDate(2016, 7, 18), QTime(13, 0, 0));
-    m_receiveTime->setText("July 18, 2016 13:00:00");
-    m_senderList->addContact("saki.tojo@ll-anime.com", "Tojo Saki");
-    m_receiverList->addContact("honoka.kousaka.longer.honoka@ll-anime.com", "Kousaka Honoka");
-    m_receiverList->addContact("kotori.minami@ll-anime.com", "Minami Kotori");
-    m_receiverList->addContact("umi.sonoda@ll-anime.com", "Sonoda Umi");
-    m_receiverList->addContact("umi.sonoda@ll-anime.com", "Sonoda Umi");
-    m_receiverList->addContact("umi.sonoda@ll-anime.com", "Sonoda Umi");
-    m_receiverList->addContact("umi.sonoda@ll-anime.com", "Sonoda Umi");
-    m_ccList->addContact("eri.ayase@ll-anime.com", "Ayase Eri");
-    m_ccList->addContact("nozomi.tojo@ll-anime.com", "Tojo Nozomi");
-    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
-    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
-    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
-    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
-    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
-    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
-    m_ccList->addContact("nico.yazawa@ll-anime.com", "Yazawa Nico");
 }
 
 KNMailViewer::~KNMailViewer()
@@ -310,6 +289,8 @@ void KNMailViewer::loadMail(const QString &mailPath)
                                          dateContent.mid(29, 2).toInt()*60));
         }
     }
+    //Update labels.
+    updateTitleAndTime();
     //Get the content.
     if(m_mailContent->isMultiPart())
     {
@@ -348,15 +329,8 @@ void KNMailViewer::resizeEvent(QResizeEvent *event)
 {
     //Resize the viewer first.
     KNMailViewerBase::resizeEvent(event);
-    //Update the subject text.
-    m_subject->setText(m_subject->fontMetrics().elidedText(m_subjectText,
-                                                           Qt::ElideRight,
-                                                           m_subject->width()));
-    m_receiveTime->setText(
-                m_receiveTime->fontMetrics().elidedText(
-                    m_sendTime.toString("yyyy-MM-dd hh:mm:ss"),
-                    Qt::ElideRight,
-                    m_receiveTime->width()));
+    //Update title and date labels.
+    updateTitleAndTime();
 }
 
 void KNMailViewer::closeEvent(QCloseEvent *event)
@@ -405,6 +379,19 @@ void KNMailViewer::onThemeChanged()
     ;
 }
 
+inline void KNMailViewer::updateTitleAndTime()
+{
+    //Update the subject text.
+    m_subject->setText(m_subject->fontMetrics().elidedText(m_subjectText,
+                                                           Qt::ElideRight,
+                                                           m_subject->width()));
+    m_receiveTime->setText(
+                m_receiveTime->fontMetrics().elidedText(
+                    m_sendTime.toString("yyyy-MM-dd hh:mm:ss"),
+                    Qt::ElideRight,
+                    m_receiveTime->width()));
+}
+
 inline QString KNMailViewer::parseMailAddress(const QString &rawData,
                                               QString &addressName)
 {
@@ -414,7 +401,7 @@ inline QString KNMailViewer::parseMailAddress(const QString &rawData,
     if(startPosition==-1)
     {
         //No result find.
-        return rawData;
+        return rawData.trimmed();
     }
     //Find the end position for '>'.
     int endPosition=rawData.indexOf('>');
@@ -428,7 +415,8 @@ inline QString KNMailViewer::parseMailAddress(const QString &rawData,
     addressName=KNMailUtil::parseEncoding(
                 rawData.left(startPosition).simplified());
     //Give back the email address.
-    return rawData.mid(startPosition+1, endPosition-startPosition-1);
+    return rawData.mid(startPosition+1,
+                       endPosition-startPosition-1).trimmed();
 }
 
 inline void KNMailViewer::parseContentType(const QString &rawData,

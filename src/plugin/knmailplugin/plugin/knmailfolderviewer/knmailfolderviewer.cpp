@@ -21,6 +21,7 @@
 #include "knthememanager.h"
 #include "knclickablelabel.h"
 
+#include "knmailaccount.h"
 #include "knmailmodel.h"
 #include "knmailfolderviewertitle.h"
 #include "knmailfoldertreeview.h"
@@ -194,6 +195,12 @@ void KNMailFolderViewer::onSelectionChange(const QModelIndex &current)
         //Show the viewer.
         m_viewer->show();
         m_shadowLayer->show();
+        //Get the model parent, it should be the account.
+        KNMailModel *currentModel=(KNMailModel *)(current.model());
+        KNMailAccount *mailAccount=
+                static_cast<KNMailAccount *>(currentModel->parent());
+        qDebug()<<mailAccount->accountDirectoryPath()+"/"+currentModel->folderName()+"/"+current.data(MailPathRole).toString()+".eml";
+        m_viewer->loadMail(mailAccount->accountDirectoryPath()+"/"+currentModel->folderName()+"/"+current.data(MailPathRole).toString()+".eml");
         //Start the animation.
         startAnimeViewer(MaximumShadowDepth);
     }

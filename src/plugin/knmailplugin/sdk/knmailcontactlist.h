@@ -83,6 +83,11 @@ protected:
      */
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from QScrollArea::wheelEvent().
+     */
+    void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
+
 private slots:
     void onLayoutLineCountChanged(int lineCount);
 

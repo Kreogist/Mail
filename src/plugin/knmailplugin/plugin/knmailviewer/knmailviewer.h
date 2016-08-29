@@ -76,6 +76,7 @@ private slots:
     void onThemeChanged();
 
 private:
+    inline void updateTitleAndTime();
     inline QString parseMailAddress(const QString &rawData,
                                     QString &addressName);
     inline void parseContentType(const QString &rawData,

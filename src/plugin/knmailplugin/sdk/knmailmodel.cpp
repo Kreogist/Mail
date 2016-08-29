@@ -86,7 +86,8 @@ QVariant KNMailModel::data(const QModelIndex &index, int role) const
         case ColumnReceiveDate:
             return QString();
         }
-
+    case MailPathRole:
+        return QString::number(item.uid);
     default:
         return QVariant();
     }

@@ -129,6 +129,10 @@ signals:
     void lineCountChange(int lineCount);
 
 public slots:
+    /*!
+     * \brief Clear the items in the layout.
+     */
+    void clear();
 
 private:
     inline int smartSpacing(QStyle::PixelMetric pm) const;
