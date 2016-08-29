@@ -109,6 +109,13 @@ QList<KNMailModel *> KNMailAccount::customFolders() const
     return m_customFolders;
 }
 
+bool KNMailAccount::isValid()
+{
+    return (!m_receiveProtocolName.isEmpty()) &&  //Receiver protcol type
+            (!m_receiveConfig.hostName.isEmpty()) && //Receiver host.
+            (!m_receiveConfig.loginFormat.isEmpty()); //Login format
+}
+
 QString KNMailAccount::receiveProtocolName() const
 {
     return m_receiveProtocolName;

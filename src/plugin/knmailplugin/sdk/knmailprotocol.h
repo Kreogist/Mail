@@ -184,6 +184,7 @@ protected:
      * return true.
      */
     bool waitForReadyRead();
+
 private:
     QEventLoop m_waitWriteLoop, m_waitReadLoop, m_waitConnectLoop;
     QTcpSocket *m_socket;

@@ -84,6 +84,12 @@ public:
      */
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Get all the account list.
+     * \return All the account item list.
+     */
+    QList<KNMailAccount *> accountList() const;
+
 signals:
     /*!
      * \brief When one account is appended to the account manager, this signal

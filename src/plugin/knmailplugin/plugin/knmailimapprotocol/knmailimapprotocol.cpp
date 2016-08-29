@@ -18,6 +18,8 @@
 #include <QTcpSocket>
 #include <QFile>
 
+#include "mime/knmimepart.h"
+#include "mime/knmimeparser.h"
 #include "knmailmodel.h"
 #include "knmailaccount.h"
 #include "knmailutil.h"
@@ -252,11 +254,15 @@ bool KNMailImapProtocol::updateFolderStatus()
         currentModel->setFolderName(folderName);
         currentModel->setServerName(rawFolderName);
         currentModel->setManagedAccount(mailAccount);
+        //Save the content to create the directory.
+        currentModel->saveToFolder(accountDirectory);
         //Add folder to updated list.
         updatedCustomFolders.append(currentModel);
         //Update the folder data.
         updateFolder(currentModel);
     }
+    //Set the folders.
+    emit requireUpdateFolders(updatedCustomFolders);
     //Clear all the left folder in the original list.
     while(!customFolders.isEmpty())
     {
@@ -346,8 +352,6 @@ bool KNMailImapProtocol::updateFolder(KNMailModel *folder)
     folder->updateUidList(account()->accountDirectoryPath(), uidList);
     //Recover the list memory.
     delete uidList;
-    //Save the content.
-    folder->saveToFolder(folder->managedAccount()->accountDirectoryPath());
     //Update the data successfully.
     return true;
 }
@@ -384,11 +388,12 @@ bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
             continue;
         }
         //Save the index.
-        QString mailServerIndex=QString::number(folder->rowCount()-i);
+        QString mailServerIndex=QString::number(folder->rowCount()-i),
+                mailFilePath=account()->accountDirectoryPath() + "/" +
+                folder->folderName() + "/" +
+                QString::number(folder->uid(i)) + ".eml";
         //Open the file.
-        QFile emlFile(account()->accountDirectoryPath() + "/" +
-                      folder->folderName() + "/" +
-                      QString::number(folder->uid(i)) + ".eml");
+        QFile emlFile(mailFilePath);
         //Open the file as write only mode.
         if(!emlFile.open(QIODevice::WriteOnly))
         {
@@ -502,10 +507,19 @@ bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
         //Close the cache file.
         emlFile.close();
         qDebug()<<i<<"fetch complete.";
+        //Parse the mail content.
+        KNMimePart *parsedMail=KNMimeParser::parseMime(mailFilePath);
         //Update the item information of the model.
         KNMailListItem cachedItem=folder->item(i);
         //Update the information of the item.
         cachedItem.cached=true;
+        cachedItem.title=KNMailUtil::parseEncoding(
+                    parsedMail->mimeHeader("subject").simplified());
+        cachedItem.sender=KNMailUtil::parseMailAddress(
+                    parsedMail->mimeHeader("from"),
+                    cachedItem.senderName);
+        //Recover the parse memory.
+        delete parsedMail;
         //Update the item.
         folder->updateItem(i, cachedItem);
         //Save the folder content.

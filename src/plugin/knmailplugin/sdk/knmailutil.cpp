@@ -133,6 +133,33 @@ QString KNMailUtil::parseEncoding(QString data)
     return parsedText;
 }
 
+QString KNMailUtil::parseMailAddress(const QString &rawData,
+                                     QString &addressName)
+{
+    //Search the content of '<' in the raw data.
+    int startPosition=rawData.indexOf('<');
+    //Check thte start position.
+    if(startPosition==-1)
+    {
+        //No result find.
+        return rawData.trimmed();
+    }
+    //Find the end position for '>'.
+    int endPosition=rawData.indexOf('>');
+    //Check the end position.
+    if(endPosition==-1)
+    {
+        //No result find.
+        return QString();
+    }
+    //Parse the address name.
+    addressName=KNMailUtil::parseEncoding(
+                rawData.left(startPosition).simplified());
+    //Give back the email address.
+    return rawData.mid(startPosition+1,
+                       endPosition-startPosition-1).trimmed();
+}
+
 void KNMailUtil::parseContent(const QByteArray &content,
                               const QString &encoding,
                               QByteArray &decodedContent)

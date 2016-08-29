@@ -133,6 +133,16 @@ public:
     static QString parseEncoding(QString data);
 
     /*!
+     * \brief Parse E-mail address from the text with format: name <address>
+     * \param rawData The raw data of the text.
+     * \param addressName The variables which will holds the address name.
+     * \return If it parse the data successfully, return the address of the
+     * result, or else an empty string.
+     */
+    static QString parseMailAddress(const QString &rawData,
+                                    QString &addressName);
+
+    /*!
      * \brief Parse the encoding content.
      * \param content The encoding content, it might be in 7-bit, 8-bit, BASE64
      * or quote printable.

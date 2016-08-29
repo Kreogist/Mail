@@ -31,6 +31,7 @@
 #include "knmailcontactbutton.h"
 #include "knmailcontactlist.h"
 #include "knmailglobal.h"
+#include "knmailutil.h"
 
 #include "knmailviewer.h"
 
@@ -226,8 +227,9 @@ void KNMailViewer::loadMail(const QString &mailPath)
                 m_mailContent->mimeHeader("subject").simplified());
     //Prepare the sender.
     QString contactName,
-            contactAddress=parseMailAddress(m_mailContent->mimeHeader("from"),
-                                            contactName);
+            contactAddress=KNMailUtil::parseMailAddress(
+                m_mailContent->mimeHeader("from"),
+                contactName);
     //Update the content.
     m_senderList->addContact(contactAddress, contactName);
     //Parse the receiver.
@@ -239,7 +241,7 @@ void KNMailViewer::loadMail(const QString &mailPath)
             //Reset the contact name.
             contactName=QString();
             //Add content to the list.
-            contactAddress=parseMailAddress(i, contactName);
+            contactAddress=KNMailUtil::parseMailAddress(i, contactName);
             //Add to contact.
             m_receiverList->addContact(contactAddress, contactName);
         }
@@ -262,7 +264,7 @@ void KNMailViewer::loadMail(const QString &mailPath)
                 //Reset the contact name.
                 contactName=QString();
                 //Add content to the list.
-                contactAddress=parseMailAddress(i, contactName);
+                contactAddress=KNMailUtil::parseMailAddress(i, contactName);
                 //Add to contact.
                 m_ccList->addContact(contactAddress, contactName);
             }
@@ -290,7 +292,6 @@ void KNMailViewer::loadMail(const QString &mailPath)
                                          dateContent.mid(29, 2).toInt()*60));
         }
     }
-    qDebug()<<"All the list content parse complete.";
     //Update labels.
     updateTitleAndTime();
     //Get the content.
@@ -397,33 +398,6 @@ inline void KNMailViewer::updateTitleAndTime()
                     m_sendTime.toString("yyyy-MM-dd hh:mm:ss"),
                     Qt::ElideRight,
                     m_receiveTime->width()));
-}
-
-inline QString KNMailViewer::parseMailAddress(const QString &rawData,
-                                              QString &addressName)
-{
-    //Search the content of '<' in the raw data.
-    int startPosition=rawData.indexOf('<');
-    //Check thte start position.
-    if(startPosition==-1)
-    {
-        //No result find.
-        return rawData.trimmed();
-    }
-    //Find the end position for '>'.
-    int endPosition=rawData.indexOf('>');
-    //Check the end position.
-    if(endPosition==-1)
-    {
-        //No result find.
-        return QString();
-    }
-    //Parse the address name.
-    addressName=KNMailUtil::parseEncoding(
-                rawData.left(startPosition).simplified());
-    //Give back the email address.
-    return rawData.mid(startPosition+1,
-                       endPosition-startPosition-1).trimmed();
 }
 
 inline void KNMailViewer::parseContentType(const QString &rawData,

@@ -247,7 +247,7 @@ bool KNMailProtocol::waitForResponse(QList<QByteArray> *responseText)
     return true;
 }
 
-inline bool KNMailProtocol::waitForReadyRead()
+bool KNMailProtocol::waitForReadyRead()
 {
     //Check the socket state.
     if(!m_socket->canReadLine())

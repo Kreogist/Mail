@@ -50,6 +50,11 @@ KNMailAccountManager::KNMailAccountManager(QObject *parent) :
 {
 }
 
+QList<KNMailAccount *> KNMailAccountManager::accountList() const
+{
+    return m_accountList;
+}
+
 KNMailAccountManager *KNMailAccountManager::instance()
 {
     return m_instance;

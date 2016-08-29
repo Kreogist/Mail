@@ -77,8 +77,6 @@ private slots:
 
 private:
     inline void updateTitleAndTime();
-    inline QString parseMailAddress(const QString &rawData,
-                                    QString &addressName);
     inline void parseContentType(const QString &rawData,
                                  QString &contentType,
                                  QMap<QString, QString> &attributes);

@@ -49,9 +49,14 @@ void KNMailReceiverManager::initial(QThread *workingThread)
 
 void KNMailReceiverManager::updateAllAccount()
 {
+    //Check working state.
+    if(m_isWorking)
+    {
+        //It is updating all the accounts.
+        return;
+    }
     //Append all the account pointer to the queue.
-    m_updateQueue.append(knMailAccountManager->account(0));
-    qDebug()<<m_updateQueue.size();
+    m_updateQueue.append(knMailAccountManager->accountList());
     //Check the working states.
     m_workingLock.lock();
     //Check the working state.
@@ -82,26 +87,31 @@ void KNMailReceiverManager::onUpdateNextItem()
     }
     //Get the first item in the queue.
     KNMailAccount *account=m_updateQueue.takeFirst();
-    qDebug()<<account->username()<<account->receiveProtocolName();
-    //Generate the protocol.
-    m_workingProtocol.reset(knMailProtocolManager->generateReceiverProtocol(
-                                account->receiveProtocolName()));
-    qDebug()<<m_workingProtocol.isNull();
-    //Null pointer checking.
-    if(m_workingProtocol.isNull())
+    //Check the validation.
+    if(account->isValid())
     {
-        //! FIXME: Emit a notification to notice that wrong configuration.
-    }
-    else
-    {
-        qDebug()<<"Start to update account.";
-        //Set the working account to the protocol.
-        m_workingProtocol->setAccount(account);
-        //Update all the folder content.
-        m_workingProtocol->updateFolderStatus();
-        qDebug()<<"Complete.";
-        //Reset the null.
-        m_workingProtocol.reset(nullptr);
+        qDebug()<<account->username()<<account->receiveProtocolName();
+        //Generate the protocol.
+        m_workingProtocol.reset(
+                    knMailProtocolManager->generateReceiverProtocol(
+                        account->receiveProtocolName()));
+        qDebug()<<m_workingProtocol.isNull();
+        //Null pointer checking.
+        if(m_workingProtocol.isNull())
+        {
+            //! FIXME: Emit a notification to notice that wrong configuration.
+        }
+        else
+        {
+            qDebug()<<"Start to update account.";
+            //Set the working account to the protocol.
+            m_workingProtocol->setAccount(account);
+            //Update all the folder content.
+            m_workingProtocol->updateFolderStatus();
+            qDebug()<<"Complete.";
+            //Reset the null.
+            m_workingProtocol.reset(nullptr);
+        }
     }
     //Ask to process next.
     emit requireUpdateNext();

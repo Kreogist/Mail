@@ -177,6 +177,9 @@ KNMailGlobal::KNMailGlobal(QObject *parent) :
     m_webViewerGenerator(nullptr),
     m_composerGenerator(nullptr)
 {
+    //Register cached types.
+    qRegisterMetaType<QVector<int>>("QVector<int>");
+
     //Initial the infrastructures.
     KNMailAccountManager::initial(this);
     KNMailPopupManager::initial(this);

@@ -134,6 +134,15 @@ public:
      */
     QList<KNMailModel *> customFolders() const;
 
+    /*!
+     * \brief Check whether the account could be used to communicate with the
+     * server. It won't check whether the password is correct or not, but only
+     * check it contains all the configuration or not.
+     * \return If the account contains the basic information to communicate with
+     * the server, return true.
+     */
+    bool isValid();
+
 signals:
     /*!
      * \brief When the count of the folder is changed, this signal will be
