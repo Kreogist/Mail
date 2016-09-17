@@ -43,6 +43,13 @@ public:
     virtual QWidget *accountPanel()=0;
 
     /*!
+     * \brief Provides the bottom bar of the mail plugin, it should provides the
+     * add and remove interface of the mail account list.
+     * \return The widget pointer.
+     */
+    virtual QWidget *bottomBar()=0;
+
+    /*!
      * \brief Load the plugins of the mail plugin.
      */
     virtual void loadPlugins() = 0;
@@ -65,6 +72,11 @@ public slots:
      * \brief Ask the plugin to start to work.
      */
     virtual void startWorking()=0;
+
+    /*!
+     * \brief Process passing in arguments.
+     */
+    virtual void onArgumentsAvaliable(const QStringList &arguments)=0;
 };
 
 #endif // KNMAILPLUGINBASE_H

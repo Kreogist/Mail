@@ -23,6 +23,8 @@
 #include "knlocalemanager.h"
 #include "knglobal.h"
 #include "knmainwindow.h"
+#include "knlinearsensewidget.h"
+#include "knopacityanimebutton.h"
 
 //Mail plugin sdks.
 #include "knmailglobal.h"
@@ -76,6 +78,7 @@
 KNMailPlugin::KNMailPlugin(QWidget *parent) :
     KNMailPluginBase(parent),
     m_leftBarContainer(nullptr),
+    m_bottomBar(nullptr),
     m_composeButton(new QPushButton(this)),
     m_mainLayout(new QStackedLayout(this))
 {
@@ -93,6 +96,11 @@ KNMailPlugin::KNMailPlugin(QWidget *parent) :
 QWidget *KNMailPlugin::accountPanel()
 {
     return m_leftBarContainer;
+}
+
+QWidget *KNMailPlugin::bottomBar()
+{
+    return m_bottomBar;
 }
 
 void KNMailPlugin::loadPlugins()
@@ -131,9 +139,10 @@ inline void KNMailPlugin::initialInfrastructure()
     //Load the left bar container.
     m_leftBarContainer=new KNMailAccountList(this);
     //Configure the layout.
-    m_mainLayout->setContentsMargins(0,0,0,0);
+    m_mainLayout->setContentsMargins(7, 0, 7, 0);
     setLayout(m_mainLayout);
     //Configure the button.
+    m_composeButton->setContentsMargins(7, 0, 7, 0);
     m_composeButton->setObjectName("MailComposeButton");
     knTheme->registerWidget(m_composeButton);
     m_composeButton->setFixedHeight(28);
@@ -141,6 +150,21 @@ inline void KNMailPlugin::initialInfrastructure()
     //Link the compose button to generator.
     connect(m_composeButton, &QPushButton::released,
             this, &KNMailPlugin::onActionComposePressed);
+
+    //Initial the bottom bar.
+    m_bottomBar=new KNLinearSenseWidget(this);
+    m_bottomBar->setFixedHeight(30);
+    //Create the bottom bar layout.
+    QBoxLayout *buttonLayout=new QBoxLayout(QBoxLayout::LeftToRight, this);
+    buttonLayout->setContentsMargins(7, 2, 7, 2);
+    buttonLayout->setSpacing(7);
+    m_bottomBar->setLayout(buttonLayout);
+    //Create add button and remove button.
+    KNOpacityAnimeButton *addButton=new KNOpacityAnimeButton(this);
+    addButton->setFixedSize(16, 16);
+    addButton->setIcon(QIcon(":/plugin/mail/account/editor_add.png"));
+    buttonLayout->addWidget(addButton);
+    buttonLayout->addStretch();
 }
 
 void KNMailPlugin::loadEmptyHint(KNMailEmptyHintBase *emptyHint)
@@ -199,6 +223,13 @@ void KNMailPlugin::startWorking()
 {
     //Emit the global update all signal.
     emit knMailGlobal->requireUpdateAll();
+}
+
+void KNMailPlugin::onArgumentsAvaliable(const QStringList &arguments)
+{
+    //Treat the arguments as the file, we will open them to show the content of
+    //the mail.
+    ;
 }
 
 void KNMailPlugin::retranslate()

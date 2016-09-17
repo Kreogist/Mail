@@ -56,6 +56,13 @@ public:
      */
     virtual void addLeftBarSpacing(int size) = 0;
 
+    /*!
+     * \brief Add layout to left bar. This is used for a complex layout setting.
+     * \param layout The layout pointer.
+     * \param stretch The widget stretch parameter. Default is 0.
+     */
+    virtual void addLeftBarLayout(QLayout *layout, int stretch = 0)=0;
+
 signals:
 
 public slots:

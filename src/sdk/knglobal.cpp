@@ -53,6 +53,12 @@ QString KNGlobal::dirPath(const int &index) const
     return m_dirPath[index];
 }
 
+QBrush KNGlobal::textureBursh(const int &index) const
+{
+    Q_ASSERT(index>-1 && index<TextureBrushCount);
+    return m_brushes[index];
+}
+
 KNConfigure *KNGlobal::cacheConfigure()
 {
     return knConf->configure(KNConfigureManager::Cache);
@@ -99,6 +105,8 @@ KNGlobal::KNGlobal(QObject *parent) :
 
     //Initial the infrastructure.
     initialInfrastrcture();
+    //Initial the global pixmaps.
+    initialBrushes();
 }
 
 inline void KNGlobal::initialInfrastrcture()
@@ -224,6 +232,22 @@ inline void KNGlobal::initialDefaultDirPath()
             KNUtil::simplifiedPath(m_dirPath[KreogistDir]+"/Contact");
     m_dirPath[GeneralDir]=
             KNUtil::simplifiedPath(m_dirPath[KreogistDir]+"/General");
+}
+
+inline void KNGlobal::initialBrushes()
+{
+    //Set the texture file path.
+    QString textures[TextureBrushCount];
+    textures[DullPolish]="://public/dull_polish_texture.png";
+
+    //Initial all kinds of pixmaps.
+    for(int i=0; i<TextureBrushCount; i++)
+    {
+        //Iniital the brush.
+        m_brushes[i]=QBrush();
+        //Set the texture of the brush.
+        m_brushes[i].setTexture(QPixmap(textures[i]));
+    }
 }
 
 KNMainWindow *KNGlobal::mainWindow()

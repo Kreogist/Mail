@@ -10,6 +10,7 @@
         <file>public/top_arrow.png</file>
         <file>public/popup.png</file>
         <file>public/create.png</file>
+        <file>public/dull_polish_texture.png</file>
     </qresource>
     <qresource prefix="/plugin">
         <file>mail/providers/netease.png</file>
@@ -21,5 +22,7 @@
         <file>mail/composer/italic.png</file>
         <file>mail/composer/underline.png</file>
         <file>mail/providers/generic.png</file>
+        <file>mail/account/editor_add.png</file>
+        <file>mail/account/editor_remove.png</file>
     </qresource>
 </RCC>

@@ -16,6 +16,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QApplication>
+#include <QBoxLayout>
 #include <QStyleFactory>
 
 //Dependenices.
@@ -39,7 +40,8 @@
 
 KNPluginManager::KNPluginManager(QObject *parent) :
     QObject(parent),
-    m_leftBar(nullptr)
+    m_leftBar(nullptr),
+    m_mailPlugin(nullptr)
 {
     //Set the application information.
     setApplicationInformation();
@@ -80,7 +82,8 @@ void KNPluginManager::launchApplication()
 
 void KNPluginManager::onActionArgumentsAvaliable(QStringList arguments)
 {
-    ;
+    //Ask the mail plugin to parse the arguments.
+    m_mailPlugin->onArgumentsAvaliable(arguments);
 }
 
 void KNPluginManager::setApplicationInformation()
@@ -103,7 +106,8 @@ void KNPluginManager::loadLeftBar(KNMainWindowLeftBarBase *leftBar)
     //Save the pointer.
     m_leftBar=leftBar;
     //Add account widget.
-    m_leftBar->addLeftBarWidget(new KNAccountWidget(m_leftBar));
+//    m_leftBar->addLeftBarWidget(new KNAccountWidget(m_leftBar));
+    m_leftBar->addLeftBarSpacing(7);
     //Set the left bar widget to main window.
     mainWindow->setLeftBar(m_leftBar);
 }
@@ -113,15 +117,21 @@ void KNPluginManager::loadMailPlugin(KNMailPluginBase *mailPlugin)
     Q_ASSERT(mailPlugin);
     //Get the main window.
     KNMainWindow *mainWindow=knGlobal->mainWindow();
+    //Save the mail plugin.
+    m_mailPlugin=mailPlugin;
     //Load the plugin.
-    mailPlugin->loadPlugins();
+    m_mailPlugin->loadPlugins();
     //Link the mail plugin.
     connect(this, &KNPluginManager::requireLaunch,
-            mailPlugin, &KNMailPluginBase::startWorking);
+            m_mailPlugin, &KNMailPluginBase::startWorking);
     //Set the main window widget to main window.
-    mainWindow->setMainWidget(mailPlugin);
+    mainWindow->setMainWidget(m_mailPlugin);
     //Add the sidebar to left bar.
-    m_leftBar->addLeftBarWidget(mailPlugin->composeButton());
+    QBoxLayout *buttonLayout=new QBoxLayout(QBoxLayout::LeftToRight);
+    buttonLayout->setContentsMargins(7,0,7,0);
+    buttonLayout->addWidget(m_mailPlugin->composeButton());
+    m_leftBar->addLeftBarLayout(buttonLayout);
     m_leftBar->addLeftBarSpacing(7);
-    m_leftBar->addLeftBarWidget(mailPlugin->accountPanel(), 1);
+    m_leftBar->addLeftBarWidget(m_mailPlugin->accountPanel(), 1);
+    m_leftBar->addLeftBarWidget(m_mailPlugin->bottomBar(), 1);
 }

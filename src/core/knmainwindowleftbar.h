@@ -48,6 +48,11 @@ public:
      */
     void addLeftBarSpacing(int size) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMainWindowLeftBarBase::addLayout().
+     */
+    void addLeftBarLayout(QLayout *layout, int stretch = 0) Q_DECL_OVERRIDE;
+
 signals:
 
 public slots:

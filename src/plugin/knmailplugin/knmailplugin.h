@@ -22,6 +22,7 @@
 
 class QPushButton;
 class QStackedLayout;
+class KNLinearSenseWidget;
 class KNMailViewerBase;
 class KNMailAccountList;
 class KNMailEmptyHintBase;
@@ -49,6 +50,11 @@ public:
     QWidget *accountPanel() Q_DECL_OVERRIDE;
 
     /*!
+     * \brief Reimplemented from KNMailPluginBase::bottomBar().
+     */
+    QWidget *bottomBar() Q_DECL_OVERRIDE;
+
+    /*!
      * \brief Reimplemented from KNMailPluginBase::loadPlugins().
      */
     void loadPlugins() Q_DECL_OVERRIDE;
@@ -71,6 +77,11 @@ public slots:
      */
     void startWorking() Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMailPluginBase::onArgumentsAvaliable().
+     */
+    void onArgumentsAvaliable(const QStringList &arguments) Q_DECL_OVERRIDE;
+
 protected:
 
 private slots:
@@ -85,6 +96,7 @@ private:
     void loadMailViewerGenerator(KNMailViewerGeneratorBase *generator);
     void loadComposerGenerator(KNMailComposeGeneratorBase *generator);
     KNMailAccountList *m_leftBarContainer;
+    KNLinearSenseWidget *m_bottomBar;
     QPushButton *m_composeButton;
     QStackedLayout *m_mainLayout;
 };

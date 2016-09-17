@@ -59,7 +59,7 @@ KNMailAccountList::KNMailAccountList(QWidget *parent) :
     KNMailAccountWidget::setShadowGradient(shadowGradient);
 
     //Configure the container.
-    m_container->setContentsMargins(0, 0, 0, 0);
+    m_container->setContentsMargins(7, 0, 7, 0);
     setWidget(m_container);
     //Initial the layout for container.
     m_containerLayout->setContentsMargins(0,0,0,0);
