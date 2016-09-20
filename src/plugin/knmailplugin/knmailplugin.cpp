@@ -32,6 +32,7 @@
 #include "knmailpopupmanager.h"
 #include "knmailcomposermanager.h"
 #include "knmailprotocolmanager.h"
+#include "knmailaccountadddialog.h"
 
 //Ports.
 #include "knmailemptyhintbase.h"
@@ -78,6 +79,7 @@
 KNMailPlugin::KNMailPlugin(QWidget *parent) :
     KNMailPluginBase(parent),
     m_leftBarContainer(nullptr),
+    m_addAccount(new KNMailAccountAddDialog(knGlobal->mainWindow())),
     m_bottomBar(nullptr),
     m_composeButton(new QPushButton(this)),
     m_mainLayout(new QStackedLayout(this))
@@ -165,6 +167,9 @@ inline void KNMailPlugin::initialInfrastructure()
     addButton->setIcon(QIcon(":/plugin/mail/account/editor_add.png"));
     buttonLayout->addWidget(addButton);
     buttonLayout->addStretch();
+    //Link the add button to show the dialog.
+    connect(addButton, &KNOpacityAnimeButton::clicked,
+            [=]{m_addAccount->show();});
 }
 
 void KNMailPlugin::loadEmptyHint(KNMailEmptyHintBase *emptyHint)

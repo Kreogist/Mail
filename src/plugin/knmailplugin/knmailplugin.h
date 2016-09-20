@@ -25,6 +25,7 @@ class QStackedLayout;
 class KNLinearSenseWidget;
 class KNMailViewerBase;
 class KNMailAccountList;
+class KNMailAccountAddDialog;
 class KNMailEmptyHintBase;
 class KNMailFolderViewerBase;
 class KNMailWebViewerBase;
@@ -96,6 +97,7 @@ private:
     void loadMailViewerGenerator(KNMailViewerGeneratorBase *generator);
     void loadComposerGenerator(KNMailComposeGeneratorBase *generator);
     KNMailAccountList *m_leftBarContainer;
+    KNMailAccountAddDialog *m_addAccount;
     KNLinearSenseWidget *m_bottomBar;
     QPushButton *m_composeButton;
     QStackedLayout *m_mainLayout;

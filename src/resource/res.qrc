@@ -11,6 +11,8 @@
         <file>public/popup.png</file>
         <file>public/create.png</file>
         <file>public/dull_polish_texture.png</file>
+        <file>public/cancel.png</file>
+        <file>public/ok.png</file>
     </qresource>
     <qresource prefix="/plugin">
         <file>mail/providers/netease.png</file>
@@ -24,5 +26,8 @@
         <file>mail/providers/generic.png</file>
         <file>mail/account/editor_add.png</file>
         <file>mail/account/editor_remove.png</file>
+        <file>mail/account/account_password.png</file>
+        <file>mail/account/account_username.png</file>
+        <file>mail/account/account_next.png</file>
     </qresource>
 </RCC>

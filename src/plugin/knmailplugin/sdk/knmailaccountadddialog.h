@@ -22,6 +22,7 @@ Foundation,
 
 #include "knmessagebox.h"
 
+class QLabel;
 class KNHWidgetSwitcher;
 /*!
  * \brief The KNMailAccountAddDialog class provides the add dialog of the
@@ -30,6 +31,10 @@ class KNMailAccountAddDialog : public KNMessageBox
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief Construct a KNMailAccountAddDialog dialog.
+     * \param parent The parent widget.
+     */
     explicit KNMailAccountAddDialog(QWidget *parent = 0);
 
 signals:
@@ -37,6 +42,15 @@ signals:
 public slots:
 
 private:
+    enum AddAccountPanels
+    {
+        UsernamePasswordPanel,
+        ConfigurationPanel,
+        SuccessPanel,
+        AddAccountPanelsCount
+    };
+    QWidget *m_panelContainer[AddAccountPanelsCount];
+    QLabel *m_loginHintText;
     KNHWidgetSwitcher *m_widgetSwitcher;
 };
 
