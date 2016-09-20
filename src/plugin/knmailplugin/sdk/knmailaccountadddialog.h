@@ -20,7 +20,12 @@ Foundation,
 #ifndef KNMAILACCOUNTADDDIALOG_H
 #define KNMAILACCOUNTADDDIALOG_H
 
+#include <QSsl>
+#include "knmailutil.h"
+
 #include "knmessagebox.h"
+
+using namespace MailUtil;
 
 class QLabel;
 class KNHWidgetSwitcher;
@@ -41,7 +46,16 @@ signals:
 
 public slots:
 
+protected:
+    /*!
+     * \brief Reimplemented from KNMessageBox::showEvent().
+     */
+    void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
+
 private:
+    inline void getProtocolSetting(int index,
+                                   MailProtocolSocket &protocol,
+                                   QSsl::SslProtocol &type);
     enum AddAccountPanels
     {
         UsernamePasswordPanel,

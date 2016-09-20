@@ -68,6 +68,7 @@ public slots:
 
 private slots:
     void onUpdateNextItem();
+    void appendAccount(int accountIndex);
 
 private:
     static KNMailReceiverManager *m_instance;

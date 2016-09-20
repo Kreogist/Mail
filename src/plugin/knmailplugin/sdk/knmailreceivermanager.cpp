@@ -71,6 +71,30 @@ void KNMailReceiverManager::updateAllAccount()
     m_workingLock.unlock();
 }
 
+void KNMailReceiverManager::appendAccount(int accountIndex)
+{
+    //Append all the account pointer to the queue.
+    m_updateQueue.append(knMailAccountManager->account(accountIndex));
+    //Check working state.
+    if(m_isWorking)
+    {
+        //It is updating all the accounts.
+        return;
+    }
+    //Check the working states.
+    m_workingLock.lock();
+    //Check the working state.
+    if(!m_isWorking)
+    {
+        //Update the working flag.
+        m_isWorking=true;
+        //Emit the signal.
+        emit requireUpdateNext();
+    }
+    //Release the lock.
+    m_workingLock.unlock();
+}
+
 void KNMailReceiverManager::onUpdateNextItem()
 {
     //Check the queue state.
@@ -126,5 +150,8 @@ KNMailReceiverManager::KNMailReceiverManager(QObject *parent) :
     //Link the request loop.
     connect(this, &KNMailReceiverManager::requireUpdateNext,
             this, &KNMailReceiverManager::onUpdateNextItem,
+            Qt::QueuedConnection);
+    connect(knMailAccountManager, &KNMailAccountManager::accountAppended,
+            this, &KNMailReceiverManager::appendAccount,
             Qt::QueuedConnection);
 }
