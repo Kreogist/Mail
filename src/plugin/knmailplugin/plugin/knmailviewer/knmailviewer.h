@@ -77,9 +77,6 @@ private slots:
 
 private:
     inline void updateTitleAndTime();
-    inline void parseContentType(const QString &rawData,
-                                 QString &contentType,
-                                 QMap<QString, QString> &attributes);
     void parseAsText(const QString &textType,
                      const char *encoding=nullptr);
     QMap<QString, int> m_monthMap;

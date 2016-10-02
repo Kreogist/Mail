@@ -67,3 +67,13 @@ bool KNMimePart::isMultiPart() const
 {
     return false;
 }
+
+QList<KNMimePart *> KNMimePart::contentList()
+{
+    //Generate an empty list.
+    QList<KNMimePart *> itemList;
+    //Add itself to the list.
+    itemList.append(this);
+    //Return the item list.
+    return itemList;
+}

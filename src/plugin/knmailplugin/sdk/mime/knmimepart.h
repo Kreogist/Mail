@@ -92,6 +92,12 @@ public:
      */
     virtual bool isMultiPart() const;
 
+    /*!
+     * \brief Get the mime item content list of the current item.
+     * \return The sub mime item item list of the current item.
+     */
+    virtual QList<KNMimePart *> contentList();
+
 private:
     QMap<QString, QString> m_propertyList;
     QByteArray m_content;

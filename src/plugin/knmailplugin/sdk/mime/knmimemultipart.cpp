@@ -55,6 +55,20 @@ int KNMimeMultiPart::mimePartCount() const
     return m_mimeParts.size();
 }
 
+QList<KNMimePart *> KNMimeMultiPart::contentList()
+{
+    //Generate the item list.
+    QList<KNMimePart *> itemList;
+    //Search through all the sub item.
+    for(auto i : m_mimeParts)
+    {
+        //Add sub item list to current.
+        itemList.append(i->contentList());
+    }
+    //Return the current item list.
+    return itemList;
+}
+
 QByteArray KNMimeMultiPart::body() const
 {
     return QByteArray();
