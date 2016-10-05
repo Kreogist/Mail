@@ -23,7 +23,7 @@ KNMailWebkitViewer::KNMailWebkitViewer(QWidget *parent) :
     KNMailWebViewerBase(parent),
     m_browser(new QWebView(this))
 {
-    m_browser->setUrl(QUrl("http://www.google.co.jp"));
+//    m_browser->setUrl(QUrl("http://www.google.co.jp"));
 }
 
 void KNMailWebkitViewer::setTextContent(const QByteArray &content,
@@ -41,6 +41,18 @@ void KNMailWebkitViewer::setTextContent(const QByteArray &content,
     }
     //Use set content to process other type text.
     m_browser->setContent(content, textType);
+}
+
+void KNMailWebkitViewer::setLocalUrl(const QString &url)
+{
+    //Set the url to browser.
+    m_browser->setUrl(QUrl::fromLocalFile(url));
+}
+
+void KNMailWebkitViewer::reset()
+{
+    //Clear the browser content.
+    m_browser->setUrl(QUrl("about:blank"));
 }
 
 void KNMailWebkitViewer::resizeEvent(QResizeEvent *event)

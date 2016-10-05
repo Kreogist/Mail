@@ -141,6 +141,8 @@ bool KNMailImapProtocol::updateFolderStatus()
     }
     //Get the mail account.
     KNMailAccount *mailAccount=account();
+    //Ensure the directory path exist.
+    KNUtil::ensurePathValid(mailAccount->accountDirectoryPath());
     //Get the current mail name list.
     QList<KNMailModel *> customFolders=mailAccount->customFolders(),
                          updatedCustomFolders;
@@ -157,6 +159,8 @@ bool KNMailImapProtocol::updateFolderStatus()
         {
             continue;
         }
+        //Make folder name valid.
+        folderName.remove('/');
         //Get the raw folder name.
         QString rawFolderName=findFolderName(i);
         //Remove the possible quote.
@@ -175,8 +179,6 @@ bool KNMailImapProtocol::updateFolderStatus()
             currentModel=mailAccount->folder(FolderInbox);
             //Update the inbox name of the folder.
             currentModel->setServerName("INBOX");
-            //Update the folder..
-            updateFolder(currentModel);
             //Goto Next.
             continue;
         }
@@ -185,8 +187,6 @@ bool KNMailImapProtocol::updateFolderStatus()
             //System folder, Sent items.
             currentModel=mailAccount->folder(FolderSentItems);
             currentModel->setServerName(rawFolderName);
-            //Update the folder..
-            updateFolder(currentModel);
             //Goto next.
             continue;
         }
@@ -195,8 +195,6 @@ bool KNMailImapProtocol::updateFolderStatus()
             //System folder, Junk mail.
             currentModel=mailAccount->folder(FolderJunk);
             currentModel->setServerName(rawFolderName);
-            //Update the folder..
-            updateFolder(currentModel);
             //Goto next.
             continue;
         }
@@ -205,8 +203,6 @@ bool KNMailImapProtocol::updateFolderStatus()
             //System folder, Trash can.
             currentModel=mailAccount->folder(FolderTrash);
             currentModel->setServerName(rawFolderName);
-            //Update the folder..
-            updateFolder(currentModel);
             //Goto next.
             continue;
         }
@@ -215,8 +211,6 @@ bool KNMailImapProtocol::updateFolderStatus()
             //System folder, drafts.
             currentModel=mailAccount->folder(FolderDrafts);
             currentModel->setServerName(rawFolderName);
-            //Update the folder.
-            updateFolder(currentModel);
             //Goto next.
             continue;
         }
@@ -239,8 +233,6 @@ bool KNMailImapProtocol::updateFolderStatus()
                 currentModel->setManagedAccount(mailAccount);
                 //Add folder to folder list.
                 updatedCustomFolders.append(currentModel);
-                //Update the folder.
-                updateFolder(currentModel);
                 //Finish loop.
                 break;
             }
@@ -261,8 +253,9 @@ bool KNMailImapProtocol::updateFolderStatus()
         currentModel->saveToFolder(accountDirectory);
         //Add folder to updated list.
         updatedCustomFolders.append(currentModel);
-        //Update the folder data.
-        updateFolder(currentModel);
+        //Create the folder.
+        KNUtil::ensurePathValid(mailAccount->accountDirectoryPath() +
+                                "/" + currentModel->folderName());
     }
     //Set the folders.
     emit requireUpdateFolders(updatedCustomFolders);

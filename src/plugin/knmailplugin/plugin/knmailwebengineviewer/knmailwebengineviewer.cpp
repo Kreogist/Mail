@@ -42,6 +42,12 @@ void KNMailWebEngineViewer::setTextContent(const QByteArray &content,
     m_browser->setContent(content, textType);
 }
 
+void KNMailWebEngineViewer::setLocalUrl(const QString &url)
+{
+    //Set the url to browser.
+    m_browser->setUrl(QUrl::fromLocalFile(url));
+}
+
 void KNMailWebEngineViewer::reset()
 {
     //Clear the browser content.

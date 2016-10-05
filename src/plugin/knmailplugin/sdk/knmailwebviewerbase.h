@@ -51,6 +51,12 @@ public slots:
                                 const QString &textType)=0;
 
     /*!
+     * \brief Set the parsed file url at local.
+     * \param url The url at local directory.
+     */
+    virtual void setLocalUrl(const QString &url)=0;
+
+    /*!
      * \brief Clear all the content of the viewer.
      */
     virtual void reset()=0;

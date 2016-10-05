@@ -19,6 +19,8 @@
 #include <QLabel>
 #include <QFormLayout>
 #include <QTextCodec>
+#include <QFileInfo>
+#include <QDir>
 
 #include "knthememanager.h"
 #include "knlocalemanager.h"
@@ -294,6 +296,35 @@ void KNMailViewer::loadMail(const QString &mailPath)
     }
     //Update labels.
     updateTitleAndTime();
+    //Check the mail path has a folder which has the same name.
+    QFileInfo mailFileInfo(mailPath);
+    QString parsedFolderPath=
+            mailFileInfo.absoluteDir().filePath(mailFileInfo.baseName());
+    QDir parsedDirectory(parsedFolderPath);
+    if(parsedDirectory.exists())
+    {
+        //Target base name.
+        QString targetName=mailFileInfo.baseName(), baseFilePath;
+        //Try to load content under the file.
+        QFileInfoList subFiles=parsedDirectory.entryInfoList();
+        for(auto i=subFiles.begin(); i!=subFiles.end(); ++i)
+        {
+            //Check the file name.
+            if((*i).baseName()==targetName)
+            {
+                baseFilePath=(*i).absoluteFilePath();
+                break;
+            }
+        }
+        //Check the path.
+        if(!baseFilePath.isEmpty())
+        {
+            //Load the file to the viewer.
+            m_viewer->setLocalUrl(baseFilePath);
+            //Mission complete.
+            return;
+        }
+    }
     //Get the content.
     if(m_mailContent->isMultiPart())
     {

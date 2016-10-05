@@ -44,6 +44,16 @@ public slots:
     void setTextContent(const QByteArray &content,
                         const QString &textType) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMailWebViewerBase::setLocalUrl().
+     */
+    void setLocalUrl(const QString &url) Q_DECL_OVERRIDE;
+
+    /*!
+     * \brief Reimplemented from KNMailWebViewerBase::reset().
+     */
+    void reset() Q_DECL_OVERRIDE;
+
 protected:
     /*!
      * \brief Reimplemented from KNMailWebViewerBase::resizeEvent().
