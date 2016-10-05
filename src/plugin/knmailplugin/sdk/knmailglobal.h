@@ -193,7 +193,7 @@ private:
     QHash<QString, QPixmap> m_providerIcon;
     QHash<QString, QString> m_contentTypeExtension;
     QPixmap m_emtpyIcon;
-    QThread m_receiverThread, m_updaterThread;
+    QThread m_receiverThread, m_senderThread, m_updaterThread;
     QString m_noSubject;
     KNMailViewerGeneratorBase *m_viewerGenerator;
     KNMailWebViewerGeneratorBase *m_webViewerGenerator;

@@ -28,6 +28,7 @@
  */
 #define knMailProtocolManager (KNMailProtocolManager::intance())
 
+class KNMailSenderProtocol;
 class KNMailReceiverProtocol;
 class KNMailProtocolGenerator;
 /*!
@@ -59,6 +60,14 @@ public:
      * then a nullptr pointer will be returned.
      */
     KNMailReceiverProtocol *generateReceiverProtocol(const QString &name);
+
+    /*!
+     * \brief Generate a sender protocol object class.
+     * \param name The protocol name.
+     * \return The protocol object pointer. If the protocol cannot be generated,
+     * then a nullptr pointer will be returned.
+     */
+    KNMailSenderProtocol *generateSenderProtocol(const QString &name);
 
 signals:
 

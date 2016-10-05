@@ -28,6 +28,7 @@
 #include "knmailwebviewergeneratorbase.h"
 #include "knmailcomposermanager.h"
 #include "knmailreceivermanager.h"
+#include "knmailsendermanager.h"
 #include "knmailmodelupdater.h"
 
 #include "knmailglobal.h"
@@ -65,10 +66,13 @@ KNMailGlobal::~KNMailGlobal()
     //Quit and wait the receiver thread.
     m_receiverThread.quit();
     m_receiverThread.wait();
+    m_senderThread.quit();
+    m_senderThread.wait();
     m_updaterThread.quit();
     m_updaterThread.wait();
-    //Remove the receiver.
+    //Remove the receiver and sender.
     knMailReceiverManager->deleteLater();
+    knMailSenderManager->deleteLater();
     //Recover the protocol manager object.
     knMailProtocolManager->deleteLater();
     //Recover the mail folder updater.
@@ -186,7 +190,11 @@ KNMailGlobal::KNMailGlobal(QObject *parent) :
     KNMailComposerManager::initial(this);
     KNMailModelUpdater::initial(&m_updaterThread);
     KNMailReceiverManager::initial(&m_receiverThread);
+    KNMailSenderManager::initial(&m_senderThread);
     KNMailProtocolManager::initial();
+
+    m_receiverThread.start();
+    m_senderThread.start();
 
     //Construct the extension table.
     m_contentTypeExtension.insert("image/tiff", ".tif");

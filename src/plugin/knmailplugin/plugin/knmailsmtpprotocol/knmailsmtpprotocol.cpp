@@ -94,6 +94,7 @@ bool KNMailSmtpProtocol::login()
         //No need to login.
         return true;
     }
+    qDebug()<<"Start to connect!";
     //Check the state of pop socket.
     if(socket() && socket()->state()!=QAbstractSocket::ConnectedState &&
             //Socket is not online, try to re-connect.
@@ -131,12 +132,14 @@ bool KNMailSmtpProtocol::login()
 bool KNMailSmtpProtocol::sendMail(const QString &receiverAddress,
                                   KNMimePart *mimePart)
 {
+    qDebug()<<m_loginState;
     //Check login state first.
-    if(m_loginState==false && !login())
+    if((!m_loginState) && (!login()))
     {
         //Failed to login.
         return false;
     }
+    qDebug()<<"here?";
     //Prepare the list.
     QStringList mimeDataList;
     {

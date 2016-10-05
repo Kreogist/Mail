@@ -45,6 +45,8 @@
 #include "knmailprotocol.h"
 #include "knmailprotocolgenerator.h"
 #include "knmailcomposebase.h"
+#include "knmailaccount.h"
+#include "knmailaccountmanager.h"
 
 //Plugins.
 // Empty hint.
@@ -74,9 +76,6 @@
 
 //Debug
 #include <QDebug>
-#include "mime/knmimepart.h"
-#include "knmailaccount.h"
-#include "knmailaccountmanager.h"
 
 KNMailPlugin::KNMailPlugin(QWidget *parent) :
     KNMailPluginBase(parent),

@@ -29,5 +29,6 @@
         <file>mail/account/account_password.png</file>
         <file>mail/account/account_username.png</file>
         <file>mail/account/account_next.png</file>
+        <file>mail/composer/send.png</file>
     </qresource>
 </RCC>

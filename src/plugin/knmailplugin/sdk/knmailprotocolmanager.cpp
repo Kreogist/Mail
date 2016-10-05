@@ -16,6 +16,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include "knmailreceiverprotocol.h"
+#include "knmailsenderprotocol.h"
 #include "knmailprotocolgenerator.h"
 
 #include "knmailprotocolmanager.h"
@@ -57,6 +58,22 @@ KNMailReceiverProtocol *KNMailProtocolManager::generateReceiverProtocol(
     {
         //Generate the object.
         return static_cast<KNMailReceiverProtocol *>(
+                    factory->generateProtocol());
+    }
+    //A null object will be return.
+    return nullptr;
+}
+
+KNMailSenderProtocol *KNMailProtocolManager::generateSenderProtocol(
+        const QString &name)
+{
+    //Get the generator.
+    KNMailProtocolGenerator *factory=m_receiverMap.value(name, nullptr);
+    //Check the factory pointer.
+    if(factory)
+    {
+        //Generate the object.
+        return static_cast<KNMailSenderProtocol *>(
                     factory->generateProtocol());
     }
     //A null object will be return.
