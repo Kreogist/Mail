@@ -71,7 +71,7 @@ void KNMailReceiverManager::updateAllAccount()
     m_workingLock.unlock();
 }
 
-void KNMailReceiverManager::appendAccount(int accountIndex)
+void KNMailReceiverManager::onAppendAccount(int accountIndex)
 {
     //Append all the account pointer to the queue.
     m_updateQueue.append(knMailAccountManager->account(accountIndex));
@@ -150,8 +150,5 @@ KNMailReceiverManager::KNMailReceiverManager(QObject *parent) :
     //Link the request loop.
     connect(this, &KNMailReceiverManager::requireUpdateNext,
             this, &KNMailReceiverManager::onUpdateNextItem,
-            Qt::QueuedConnection);
-    connect(knMailAccountManager, &KNMailAccountManager::accountAppended,
-            this, &KNMailReceiverManager::appendAccount,
             Qt::QueuedConnection);
 }

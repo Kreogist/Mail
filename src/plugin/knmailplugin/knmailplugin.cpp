@@ -33,6 +33,7 @@
 #include "knmailcomposermanager.h"
 #include "knmailprotocolmanager.h"
 #include "knmailaccountadddialog.h"
+#include "knmailreceivermanager.h"
 
 //Ports.
 #include "knmailemptyhintbase.h"
@@ -130,6 +131,10 @@ void KNMailPlugin::loadPlugins()
 
     //Load the account information.
     knMailAccountManager->loadAccountList();
+    //Link the account manager and receiver manager.
+    connect(knMailAccountManager, &KNMailAccountManager::accountAppended,
+            knMailReceiverManager, &KNMailReceiverManager::onAppendAccount,
+            Qt::QueuedConnection);
 
     //Debug
     m_mainLayout->setCurrentIndex(1);

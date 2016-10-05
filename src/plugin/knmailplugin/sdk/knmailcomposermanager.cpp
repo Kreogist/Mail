@@ -20,6 +20,8 @@ Foundation,
 
 #include "knmailcomposermanager.h"
 
+#include <QDebug>
+
 KNMailComposerManager *KNMailComposerManager::m_instance=nullptr;
 
 KNMailComposerManager::~KNMailComposerManager()

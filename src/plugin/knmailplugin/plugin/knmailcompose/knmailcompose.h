@@ -22,6 +22,7 @@ Foundation,
 
 #include "knmailcomposebase.h"
 
+class QPushButton;
 class QComboBox;
 class QLabel;
 class QBoxLayout;
@@ -54,6 +55,8 @@ protected:
 private slots:
     void retranslate();
     void onThemeChanged();
+    void onSendClicked();
+    void onSenderListSizeChange();
 
 private:
     QBoxLayout *m_mainLayout;
@@ -63,6 +66,7 @@ private:
            *m_attachment;
     QComboBox *m_senderText;
     KNUnderLineLineEdit *m_receiverText, *m_ccText, *m_bccText;
+    QPushButton *m_sendMail;
 };
 
 #endif // KNMAILCOMPOSE_H

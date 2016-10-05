@@ -66,9 +66,15 @@ public slots:
      */
     void updateAllAccount();
 
+    /*!
+     * \brief When an account is appended to the list, this slot should be
+     * called.
+     * \param accountIndex The new account index.
+     */
+    void onAppendAccount(int accountIndex);
+
 private slots:
     void onUpdateNextItem();
-    void appendAccount(int accountIndex);
 
 private:
     static KNMailReceiverManager *m_instance;

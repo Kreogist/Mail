@@ -19,6 +19,7 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QComboBox>
+#include <QPushButton>
 
 #include "knunderlinelineedit.h"
 #include "knlocalemanager.h"
@@ -26,8 +27,12 @@
 
 #include "knmailaccountmanager.h"
 #include "knmailglobal.h"
+#include "knmailaccount.h"
 #include "knmailcomposeedit.h"
 #include "knmailrotatebutton.h"
+#include "knmailsendermanager.h"
+
+#include "mime/knmimepart.h"
 
 #include "knmailcompose.h"
 
@@ -46,7 +51,8 @@ KNMailCompose::KNMailCompose(QWidget *parent) :
     m_senderText(new QComboBox(this)),
     m_receiverText(new KNUnderLineLineEdit(this)),
     m_ccText(new KNUnderLineLineEdit(this)),
-    m_bccText(new KNUnderLineLineEdit(this))
+    m_bccText(new KNUnderLineLineEdit(this)),
+    m_sendMail(new QPushButton(this))
 {
     setObjectName("MailCompose");
     //Set properties.
@@ -67,6 +73,14 @@ KNMailCompose::KNMailCompose(QWidget *parent) :
     });
     //Configure the text editor.
     m_textEditor->setFrameStyle(QFrame::NoFrame);
+    //Configure the send button.
+    m_sendMail->setIcon(QIcon(":/plugin/mail/composer/send.png"));
+    m_sendMail->setText(tr("Send"));
+    connect(m_sendMail, &QPushButton::clicked,
+            this, &KNMailCompose::onSendClicked);
+    connect(knMailAccountManager, &KNMailAccountManager::rowsInserted,
+            this, &KNMailCompose::onSenderListSizeChange);
+    onSenderListSizeChange();
     //Configure the sender combo.
     m_senderText->setModel(knMailAccountManager);
 
@@ -78,6 +92,8 @@ KNMailCompose::KNMailCompose(QWidget *parent) :
     m_mainLayout->addLayout(subjectLayout);
     //Add subject widget.
     subjectLayout->addWidget(m_subject, 1);
+    subjectLayout->addSpacing(3);
+    subjectLayout->addWidget(m_sendMail);
     //Add button layout.
     QBoxLayout *buttonLayout=new QBoxLayout(QBoxLayout::LeftToRight,
                                             m_mainLayout->widget());
@@ -90,8 +106,10 @@ KNMailCompose::KNMailCompose(QWidget *parent) :
     //Add widget to contact layout.
     contactLayout->addRow(m_senderLabel, m_senderText);
     contactLayout->addRow(m_receiverLabel, m_receiverText);
-    contactLayout->addRow(m_ccLabel, m_ccText);
-    contactLayout->addRow(m_bccLabel, m_bccText);
+    m_ccLabel->hide();m_ccText->hide();
+//    contactLayout->addRow(m_ccLabel, m_ccText);
+    m_bccLabel->hide();m_bccText->hide();
+//    contactLayout->addRow(m_bccLabel, m_bccText);
     m_attachment->hide();
 //    contactLayout->addRow(m_attachment, new QWidget(this));
     //Add to main layout.
@@ -109,10 +127,10 @@ KNMailCompose::KNMailCompose(QWidget *parent) :
 
 void KNMailCompose::closeEvent(QCloseEvent *event)
 {
-    //Do original event.
-    KNMailComposeBase::closeEvent(event);
     //Emit the signal.
     emit aboutToClose();
+    //Do original event.
+    KNMailComposeBase::closeEvent(event);
 }
 
 void KNMailCompose::retranslate()
@@ -148,4 +166,46 @@ void KNMailCompose::onThemeChanged()
     pal=knTheme->getPalette("MailViewerCombo");
     qDebug()<<pal.color(QPalette::Highlight);
     m_senderText->setPalette(pal);
+}
+
+void KNMailCompose::onSendClicked()
+{
+    //Check receiver.
+    if(m_receiverText->text().isEmpty())
+    {
+        //Cannot send to no receiver.
+        return;
+    }
+    //Get the content.
+    QString mailContent=m_textEditor->document()->toPlainText();
+    //Construct a mime part.
+    KNMimePart *mimePart=new KNMimePart();
+    mimePart->setBody(mailContent.toUtf8());
+    //Check the selected account.
+    KNMailAccount *account=knMailAccountManager->account(
+                m_senderText->currentIndex());
+    QString senderName;
+    if(!account->displayName().isEmpty())
+    {
+        //Insert the display name.
+        senderName="\""+account->displayName()+"\" ";
+    }
+    //Add the address.
+    senderName.append("<"+account->username()+">");
+    mimePart->setMimeHeader("From", senderName);
+    mimePart->setMimeHeader("To", "<"+m_receiverText->text()+">");
+    mimePart->setMimeHeader("Subject", m_subject->text());
+    mimePart->setBody(mailContent.toUtf8());
+    qDebug()<<account->sendConfig().hostName<<account->sendConfig().port;
+    qDebug()<<account->sendConfig().socketType<<account->sendConfig().sslVersion;
+    qDebug()<<account->username()<<account->password();
+    //Send the mail.
+    knMailSenderManager->sendMail(mimePart, account, m_receiverText->text());
+    //Close the composer.
+    close();
+}
+
+void KNMailCompose::onSenderListSizeChange()
+{
+    m_sendMail->setEnabled(knMailAccountManager->rowCount()>0);
 }
