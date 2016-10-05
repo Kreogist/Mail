@@ -43,14 +43,14 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
         //Check all the header parts.
         while(lineIndex < contents.size())
         {
+            //Get the current line.
+            QByteArray line=contents.at(lineIndex).simplified();
             //When we find out an empty line, our the mission should be done.
-            if(contents.at(lineIndex).isEmpty())
+            if(line.isEmpty())
             {
                 //The break is an empty line.
                 break;
             }
-            //Get the current line.
-            const QByteArray &line=contents.at(lineIndex);
             //Check the data is start with space/tab or not.
             if(line.startsWith(' ') || line.startsWith('\t'))
             {

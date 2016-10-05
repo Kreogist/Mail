@@ -311,9 +311,9 @@ void KNMailViewer::loadMail(const QString &mailPath)
     //Parse as single content data.
     QString contentType;
     QMap<QString, QString> attributes;
-    parseContentType(m_mailContent->mimeHeader("content-type"),
-                     contentType,
-                     attributes);
+    knMailGlobal->parseContentType(m_mailContent->mimeHeader("content-type"),
+                                   contentType,
+                                   attributes);
     //If the type is text type.
     if(contentType.contains("text/"))
     {
@@ -398,31 +398,6 @@ inline void KNMailViewer::updateTitleAndTime()
                     m_sendTime.toString("yyyy-MM-dd hh:mm:ss"),
                     Qt::ElideRight,
                     m_receiveTime->width()));
-}
-
-inline void KNMailViewer::parseContentType(const QString &rawData,
-                                           QString &contentType,
-                                           QMap<QString, QString> &attributes)
-{
-    //Split the raw data.
-    QStringList typeAttributeList=rawData.split(';');
-    //Check each attribute.
-    for(QString i : typeAttributeList)
-    {
-        //Find '=' mark.
-        int equalPosition=i.indexOf('=');
-        //Check the position.
-        if(equalPosition==-1)
-        {
-            //Save as type.
-            contentType=i.simplified();
-            //Move to next.
-            continue;
-        }
-        //Parse the content.
-        attributes.insert(i.left(equalPosition).toLower().simplified(),
-                          i.mid(equalPosition+1).simplified());
-    }
 }
 
 void KNMailViewer::parseAsText(const QString &textType,

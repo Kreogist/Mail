@@ -17,12 +17,14 @@
  */
 #include <QTcpSocket>
 #include <QFile>
+#include <QStringList>
 
 #include "mime/knmimepart.h"
 #include "mime/knmimeparser.h"
 #include "knmailmodel.h"
 #include "knmailaccount.h"
 #include "knmailutil.h"
+#include "knmailglobal.h"
 #include "knutil.h"
 
 #include "knmailimapprotocol.h"
@@ -390,11 +392,12 @@ bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
             continue;
         }
         //Save the index.
-        QString mailServerIndex=QString::number(folder->rowCount()-i),
+        QString mailUid=QString::number(folder->uid(i)),
+                mailServerIndex=QString::number(folder->rowCount()-i),
                 mailFileDir=account()->accountDirectoryPath() + "/" +
                 folder->folderName(),
-                mailFilePath= mailFileDir + "/" +
-                QString::number(folder->uid(i)) + ".eml";
+                mailItemDir=mailFileDir + "/" + mailUid,
+                mailFilePath=mailItemDir + ".eml";
         //Ensure the folder is existed.
         if(KNUtil::ensurePathValid(mailFileDir).isEmpty())
         {
@@ -519,6 +522,10 @@ bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
         qDebug()<<i<<"fetch complete.";
         //Parse the mail content.
         KNMimePart *parsedMail=KNMimeParser::parseMime(mailFilePath);
+        if(parsedMail==nullptr)
+        {
+            continue;
+        }
         //Update the item information of the model.
         KNMailListItem cachedItem=folder->item(i);
         //Update the information of the item.
@@ -528,6 +535,58 @@ bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
         cachedItem.sender=KNMailUtil::parseMailAddress(
                     parsedMail->mimeHeader("from"),
                     cachedItem.senderName);
+        //Create mail directory.
+        mailItemDir=KNUtil::ensurePathValid(mailItemDir);
+        //Get the parse mail list.
+        QList<KNMimePart *> itemList=parsedMail->contentList();
+        //Check all the item list.
+        for(auto i : itemList)
+        {
+            //Check the item content type.
+            if(i->hasMimeHeader("content-type"))
+            {
+                //Set the map.
+                QMap<QString, QString> contentTypeMap;
+                QString contentTypeValue;
+                //Parse the content type.
+                knMailGlobal->parseContentType(i->mimeHeader("content-type"),
+                                               contentTypeValue,
+                                               contentTypeMap);
+                //The first data should be the content type, get the extension
+                //name.
+                QString itemExtensionName=knMailGlobal->contentExtension(
+                            contentTypeValue);
+                //Get the file name.
+                QString itemFileName=mailUid;
+                //Check content type map.
+                if(contentTypeMap.contains("name"))
+                {
+                    //Find the name, parse it.
+                    QString checkItem=contentTypeMap.value("name");
+                    //Remove the name and string quote.
+                    itemFileName=KNMailUtil::parseEncoding(
+                                checkItem.mid(5,
+                                              checkItem.size()-6));
+                }
+                //Write out the file.
+                QFile parseItemFile(mailItemDir + "/" + itemFileName +
+                                    itemExtensionName);
+                //Open the file as write.
+                if(parseItemFile.open(QIODevice::WriteOnly))
+                {
+                    QByteArray parsedBody;
+                    //Parse the content.
+                    KNMailUtil::parseContent(
+                                i->body(),
+                                i->mimeHeader("content-transfer-encoding").toUpper(),
+                                parsedBody);
+                    //Write the parsed content.
+                    parseItemFile.write(parsedBody);
+                    //Close the file.
+                    parseItemFile.close();
+                }
+            }
+        }
         //Recover the parse memory.
         delete parsedMail;
         //Update the item.

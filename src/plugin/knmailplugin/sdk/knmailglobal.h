@@ -154,6 +154,23 @@ public:
      */
     QString noSubjectText() const;
 
+    /*!
+     * \brief Get the extension name of the content-type.
+     * \param contentType The content type text.
+     * \return The content type file extension name.
+     */
+    QString contentExtension(const QString &contentType);
+
+    /*!
+     * \brief Parse content type data.
+     * \param rawData Raw content type text.
+     * \param contentType The content type cache string.
+     * \param attributes The content type data map.
+     */
+    void parseContentType(const QString &rawData,
+                          QString &contentType,
+                          QMap<QString, QString> &attributes);
+
 signals:
     /*!
      * \brief Require to update all E-mail account data.
@@ -174,6 +191,7 @@ private:
     QString m_defaultFolderName[DefaultFolderCount],
             m_titleFieldText[MailViewerTitleFieldCount];
     QHash<QString, QPixmap> m_providerIcon;
+    QHash<QString, QString> m_contentTypeExtension;
     QPixmap m_emtpyIcon;
     QThread m_receiverThread, m_updaterThread;
     QString m_noSubject;

@@ -98,6 +98,12 @@ public:
      */
     virtual QString toString();
 
+    /*!
+     * \brief Get the mime item content list of the current item.
+     * \return The sub mime item item list of the current item.
+     */
+    virtual QList<KNMimePart *> contentList();
+
 private:
     inline void headerToString(QString &headerCache, QString &encoding);
     QMap<QString, QString> m_propertyList;

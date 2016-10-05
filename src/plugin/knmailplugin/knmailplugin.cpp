@@ -230,7 +230,7 @@ void KNMailPlugin::saveAccount()
 void KNMailPlugin::startWorking()
 {
     //Emit the global update all signal.
-    emit knMailGlobal->requireUpdateAll();
+//    emit knMailGlobal->requireUpdateAll();
 }
 
 void KNMailPlugin::onArgumentsAvaliable(const QStringList &arguments)

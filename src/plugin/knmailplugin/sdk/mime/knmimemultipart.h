@@ -63,6 +63,11 @@ public:
      */
     int mimePartCount() const;
 
+    /*!
+     * \brief Reimplemented from KNMimePart::contentList().
+     */
+    QList<KNMimePart *> contentList() Q_DECL_OVERRIDE;
+
 private:
     QByteArray body() const;
     void setBody(const QByteArray &body);

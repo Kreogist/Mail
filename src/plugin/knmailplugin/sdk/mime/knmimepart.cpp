@@ -129,3 +129,13 @@ void KNMimePart::headerToString(QString &headerCache, QString &encoding)
         }
     }
 }
+
+QList<KNMimePart *> KNMimePart::contentList()
+{
+    //Generate an empty list.
+    QList<KNMimePart *> itemList;
+    //Add itself to the list.
+    itemList.append(this);
+    //Return the item list.
+    return itemList;
+}
