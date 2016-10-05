@@ -17,10 +17,10 @@
  */
 #include "knmailaccount.h"
 
-#include "knmailreceiverprotocol.h"
+#include "knmailsenderprotocol.h"
 
-void KNMailReceiverProtocol::updateProtocolConfig()
+void KNMailSenderProtocol::updateProtocolConfig()
 {
-    //Set the socket type to be the receiver config type.
-    setSocketType(account()->receiveConfig().socketType);
+    //Set the socket type to be the send config type.
+    setSocketType(account()->sendConfig().socketType);
 }

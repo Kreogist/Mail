@@ -16,8 +16,13 @@
 Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+#include "knmailutil.h"
 
 #include "knmimepart.h"
+
+using namespace MailUtil;
+
+#define LineContent (77)
 
 KNMimePart::KNMimePart()
 {
@@ -66,4 +71,61 @@ bool KNMimePart::hasMimeHeader(const QString &field) const
 bool KNMimePart::isMultiPart() const
 {
     return false;
+}
+
+QString KNMimePart::toString()
+{
+    //Prepare the cache.
+    QString mimeCache, encoding, encodedContent;
+    //Translate all the header to cache.
+    headerToString(mimeCache, encoding);
+    //Add one empty line.
+    mimeCache.append("\r\n");
+    //Translate all the content to the encoding.
+    if(encoding.isEmpty())
+    {
+        //Use UTF-8.
+        encoding="UTF-8";
+    }
+    else
+    {
+        //Use the encoding.
+        encoding=encoding.toUpper();
+    }
+    //Get the encoded content.
+    KNMailUtil::encodeContent(m_content,
+                              encoding,
+                              encodedContent);
+    //Check encoded content data.
+    while(encodedContent.size()>LineContent)
+    {
+        //Append the first 76 letter to content.
+        mimeCache.append(encodedContent.left(LineContent) + "\r\n");
+        //Remove content.
+        encodedContent.remove(0, LineContent);
+    }
+    //Append the content to the last line.
+    mimeCache.append(encodedContent + "\r\n");
+    //Give back the mime cache.
+    return mimeCache;
+}
+
+void KNMimePart::headerToString(QString &headerCache, QString &encoding)
+{
+    //Do the loop.
+    QList<QString> propertyList=m_propertyList.keys();
+    //Loop and set all the content to the header cache.
+    for(int i=0; i<propertyList.size(); ++i)
+    {
+        const QString &currentKey=propertyList.at(i);
+        //Append the data to cache.
+        headerCache.append(currentKey + ": " + m_propertyList.value(currentKey)
+                           +"\r\n");
+        //Check key data.
+        if(currentKey.toLower()=="content-transfer-encoding")
+        {
+            //Save the encoding.
+            encoding=m_propertyList.value(currentKey);
+        }
+    }
 }

@@ -68,11 +68,13 @@
 #include "plugin/knmailcompose/knmailcomposegenerator.h"
 // Protocols.
 #include "plugin/knmailimapprotocol/knmailimapprotocolgenerator.h"
+#include "plugin/knmailsmtpprotocol/knmailsmtpprotocolgenerator.h"
 
 #include "knmailplugin.h"
 
 //Debug
 #include <QDebug>
+#include "mime/knmimepart.h"
 #include "knmailaccount.h"
 #include "knmailaccountmanager.h"
 
@@ -125,6 +127,7 @@ void KNMailPlugin::loadPlugins()
     loadFolderViewer(new KNMailFolderViewer);
     //Load the protocol factorys.
     knMailProtocolManager->appendFactory(new KNMailImapProtocolGenerator);
+    knMailProtocolManager->appendFactory(new KNMailSmtpProtocolGenerator);
 
     //Load the account information.
     knMailAccountManager->loadAccountList();

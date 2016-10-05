@@ -288,7 +288,9 @@ SOURCES += \
     plugin/knmailplugin/sdk/knmailaccountadddialog.cpp \
     sdk/knmessagebox.cpp \
     sdk/knlabellineedit.cpp \
-    sdk/knlinearsensewidget.cpp
+    sdk/knlinearsensewidget.cpp \
+    plugin/knmailplugin/sdk/knmailsenderprotocol.cpp \
+    plugin/knmailplugin/plugin/knmailsmtpprotocol/knmailsmtpprotocol.cpp
 
 HEADERS += \
     sdk/knsingletonapplication.h \
@@ -380,4 +382,7 @@ HEADERS += \
     plugin/knmailplugin/sdk/knmailaccountadddialog.h \
     sdk/knmessagebox.h \
     sdk/knlabellineedit.h \
-    sdk/knlinearsensewidget.h
+    sdk/knlinearsensewidget.h \
+    plugin/knmailplugin/sdk/knmailsenderprotocol.h \
+    plugin/knmailplugin/plugin/knmailsmtpprotocol/knmailsmtpprotocol.h \
+    plugin/knmailplugin/plugin/knmailsmtpprotocol/knmailsmtpprotocolgenerator.h

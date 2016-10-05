@@ -153,6 +153,16 @@ public:
                              const QString &encoding,
                              QByteArray &decodedContent);
 
+    /*!
+     * \brief Encode one content.
+     * \param content The raw content data.
+     * \param encoding The encoding format.
+     * \param encodedContent The result content.
+     */
+    static void encodeContent(const QByteArray &content,
+                              const QString &encoding,
+                              QString &encodedContent);
+
 private:
     static QString parseEncodingPart(const QString &data);
     KNMailUtil();

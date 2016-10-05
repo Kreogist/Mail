@@ -92,7 +92,14 @@ public:
      */
     virtual bool isMultiPart() const;
 
+    /*!
+     * \brief Translate the mime content to string.
+     * \return The string content of the mime.
+     */
+    virtual QString toString();
+
 private:
+    inline void headerToString(QString &headerCache, QString &encoding);
     QMap<QString, QString> m_propertyList;
     QByteArray m_content;
 };

@@ -34,7 +34,7 @@ public:
      * \brief Construct a KNMailReceiverProtocol object.
      * \param parent The parent object.
      */
-    explicit KNMailReceiverProtocol(QObject *parent = 0);
+    KNMailReceiverProtocol(QObject *parent = 0):KNMailProtocol(parent){}
 
 signals:
 
