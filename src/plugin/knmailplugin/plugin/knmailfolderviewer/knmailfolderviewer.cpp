@@ -128,11 +128,15 @@ void KNMailFolderViewer::setFolderModel(KNMailModel *folderModel)
     }
     //Update the folder model
     m_proxyModel->setSourceModel(folderModel);
+    //Update the model.
+    ;
     //Link the folder model.
     connect(folderModel, &KNMailModel::modelUpdated,
             this, &KNMailFolderViewer::onModelUpdate);
     //Reset the page index.
     m_proxyModel->setPageIndex(0);
+    //Update the folder.
+    onUpdateItems(0, m_proxyModel->pageSize());
     //Check the viewer.
     if(m_folderView->isVisible())
     {

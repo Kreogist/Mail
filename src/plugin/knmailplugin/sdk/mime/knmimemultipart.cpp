@@ -19,6 +19,8 @@ Foundation,
 
 #include "knmimemultipart.h"
 
+#include <QDebug>
+
 KNMimeMultiPart::KNMimeMultiPart() :
     KNMimePart()
 {
@@ -65,6 +67,7 @@ QList<KNMimePart *> KNMimeMultiPart::contentList()
         //Add sub item list to current.
         itemList.append(i->contentList());
     }
+    qDebug()<<"List size:"<<itemList.size();
     //Return the current item list.
     return itemList;
 }

@@ -17,6 +17,7 @@
  */
 #include <QTimeLine>
 #include <QScrollBar>
+#include <QHeaderView>
 
 #include "knthememanager.h"
 
@@ -32,6 +33,7 @@ KNMailFolderTreeView::KNMailFolderTreeView(QWidget *parent) :
     m_mouseAnime(new QTimeLine(200, this))
 {
     setObjectName("MailFolderTreeView");
+    header()->setStretchLastSection(true);
     //Set properties.
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     knTheme->registerWidget(this);

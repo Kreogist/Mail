@@ -55,6 +55,7 @@ void KNMimePart::setMimeHeader(const QString &field, const QString &value)
 
 void KNMimePart::setBody(const QByteArray &body)
 {
+    //Get the content body.
     m_content=body;
 }
 

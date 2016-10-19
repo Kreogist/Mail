@@ -179,6 +179,7 @@ bool KNMailImapProtocol::updateFolderStatus()
             currentModel=mailAccount->folder(FolderInbox);
             //Update the inbox name of the folder.
             currentModel->setServerName("INBOX");
+            updateFolder(currentModel);
             //Goto Next.
             continue;
         }
@@ -187,6 +188,7 @@ bool KNMailImapProtocol::updateFolderStatus()
             //System folder, Sent items.
             currentModel=mailAccount->folder(FolderSentItems);
             currentModel->setServerName(rawFolderName);
+            updateFolder(currentModel);
             //Goto next.
             continue;
         }
@@ -195,6 +197,7 @@ bool KNMailImapProtocol::updateFolderStatus()
             //System folder, Junk mail.
             currentModel=mailAccount->folder(FolderJunk);
             currentModel->setServerName(rawFolderName);
+            updateFolder(currentModel);
             //Goto next.
             continue;
         }
@@ -203,6 +206,7 @@ bool KNMailImapProtocol::updateFolderStatus()
             //System folder, Trash can.
             currentModel=mailAccount->folder(FolderTrash);
             currentModel->setServerName(rawFolderName);
+            updateFolder(currentModel);
             //Goto next.
             continue;
         }
@@ -211,6 +215,7 @@ bool KNMailImapProtocol::updateFolderStatus()
             //System folder, drafts.
             currentModel=mailAccount->folder(FolderDrafts);
             currentModel->setServerName(rawFolderName);
+            updateFolder(currentModel);
             //Goto next.
             continue;
         }
@@ -233,6 +238,7 @@ bool KNMailImapProtocol::updateFolderStatus()
                 currentModel->setManagedAccount(mailAccount);
                 //Add folder to folder list.
                 updatedCustomFolders.append(currentModel);
+                updateFolder(currentModel);
                 //Finish loop.
                 break;
             }
@@ -254,8 +260,10 @@ bool KNMailImapProtocol::updateFolderStatus()
         //Add folder to updated list.
         updatedCustomFolders.append(currentModel);
         //Create the folder.
-        KNUtil::ensurePathValid(mailAccount->accountDirectoryPath() +
-                                "/" + currentModel->folderName());
+        KNUtil::ensurePathValid(accountDirectory + "/" +
+                                currentModel->folderName());
+        //Update the folder.
+        updateFolder(currentModel);
     }
     //Set the folders.
     emit requireUpdateFolders(updatedCustomFolders);
@@ -373,220 +381,270 @@ bool KNMailImapProtocol::updateFolderContent(KNMailModel *folder,
         //Failed to select the folder.
         return false;
     }
+    endPosition=qMin(endPosition, folder->rowCount());
     qDebug()<<"Begin download E-mail from"<<startPosition<<"to"<<endPosition;
     //Loop for all the content.
     for(int i=startPosition; i<endPosition; ++i)
     {
-        //Check whether we need to update the data.
-        if(folder->isItemCached(i))
+        //Download the mail.
+        if(downloadMail(folder, i))
         {
-            qDebug()<<"Cached!";
-            //Ignore the item which is already cached.
-            continue;
+            //Failed to download the data.
+            return false;
         }
-        //Save the index.
-        QString mailUid=QString::number(folder->uid(i)),
-                mailServerIndex=QString::number(folder->rowCount()-i),
-                mailFileDir=account()->accountDirectoryPath() + "/" +
-                folder->folderName(),
-                mailItemDir=mailFileDir + "/" + mailUid,
-                mailFilePath=mailItemDir + ".eml";
-        //Ensure the folder is existed.
-        if(KNUtil::ensurePathValid(mailFileDir).isEmpty())
-        {
-            //Ignore this mail.
-            continue;
-        }
-        //Open the file.
-        QFile emlFile(mailFilePath);
-        //Open the file as write only mode.
-        if(!emlFile.open(QIODevice::WriteOnly))
-        {
-            qDebug()<<"Cannot open file"<<mailFilePath;
-            //Ignore the current file.
-            continue;
-        }
-        qDebug()<<"Start fetching"<<mailServerIndex<<"header";
-        //Fetch all the E-mail content down.
-        sendImapMessage("FETCH " + mailServerIndex + " body[HEADER]");
+    }
+    //Mission complete.
+    return true;
+}
+
+bool KNMailImapProtocol::downloadMail(KNMailModel *folder, int i)
+{
+    //Check whether we need to update the data.
+    if(folder->isItemCached(i))
+    {
+        qDebug()<<"Cached!";
+        //Ignore the item which is already cached.
+        return true;
+    }
+    //Check the login state.
+    if((!m_loginState) && (!login()))
+    {
+        //Failed to login, then failed to update the status.
+        return false;
+    }
+    //Select the folder first.
+    sendImapMessage("SELECT \"" + folder->serverName() + "\"");
+    //Wait and check response.
+    if(!waitAndCheckResponse())
+    {
+        qDebug()<<"No response from server.";
+        //Reset the login state, because the connection is cut.
+        m_loginState=false;
+        //Failed to select the folder.
+        return false;
+    }
+    //Save the index.
+    QString mailUid=QString::number(folder->uid(i)),
+            mailServerIndex=QString::number(folder->rowCount()-i),
+            mailFileDir=account()->accountDirectoryPath() + "/" +
+            folder->folderName(),
+            mailItemDir=mailFileDir + "/" + mailUid,
+            mailFilePath=mailItemDir + ".eml";
+    //Ensure the folder is existed.
+    if(KNUtil::ensurePathValid(mailFileDir).isEmpty())
+    {
+        //Ignore this mail.
+        return true;
+    }
+    //Open the file.
+    QFile emlFile(mailFilePath);
+    //Open the file as write only mode.
+    if(!emlFile.open(QIODevice::WriteOnly))
+    {
+        qDebug()<<"Cannot open file"<<mailFilePath;
+        //Ignore the current file.
+        return false;
+    }
+    qDebug()<<"Start fetching"<<mailServerIndex<<"header";
+    //Fetch all the E-mail content down.
+    sendImapMessage("FETCH " + mailServerIndex + " body[HEADER]");
+    //Wait for response from server.
+    int tries=TriedTimes;
+    while(tries--)
+    {
         //Wait for response from server.
-        int tries=TriedTimes;
-        while(tries--)
+        if(!waitForReadyRead())
         {
-            //Wait for response from server.
-            if(!waitForReadyRead())
-            {
-                //Close the cache file.
-                emlFile.close();
-                //Move to next try.
-                continue;
-            }
-            //Response data cache.
-            QByteArray responseData;
-            //Reset the tries.
-            tries=TriedTimes;
-            //Try to read all content from the socket.
-            while(socket()->bytesAvailable() > 0)
-            {
-                //Generate the mail file.
-                responseData=socket()->readLine();
-                //Check the response data.
-                if(responseData.startsWith("*") ||
-                        responseData.startsWith(" FLAGS") ||
-                        responseData.startsWith(m_header.toLatin1() + " OK"))
-                {
-                    //This line should be ignored, the content of current line
-                    //shows:
-                    // * UID FETCH (BODY[HEADER] {size}
-                    // or
-                    // AXX OK FETCH completed.
-                    continue;
-                }
-                //Write the content to the cache file.
-                emlFile.write(responseData);
-                qDebug()<<responseData;
-            }
-            //Check the data is still left or not.
-            if(socket()->bytesAvailable()==0)
-            {
-                //Stop looping.
-                break;
-            }
-        }
-        //Check the tries time.
-        if(tries==0)
-        {
-            //The header is not read complete.
-            //Close the cache file.
-            emlFile.close();
-            //Move to next mail.
+            //Move to next try.
             continue;
         }
-        qDebug()<<"Start fetching"<<mailServerIndex<<"content";
-        //Fetch all the E-mail body data down.
-        sendImapMessage("FETCH " + mailServerIndex + " body[TEXT]");
-        //Wait for response from server.
+        //Response data cache.
+        QByteArray responseData;
+        //Reset the tries.
         tries=TriedTimes;
-        while(tries--)
+        //Reset the header ignore flag.
+        bool headerIgnore=false;
+        //Try to read all content from the socket.
+        while(socket()->bytesAvailable() > 0)
         {
-            //Wait for response from server.
-            if(!waitForReadyRead())
+            //Generate the mail file.
+            responseData=socket()->readLine();
+            //Check the flag.
+            if(headerIgnore)
             {
-                //Close the cache file.
-                emlFile.close();
-                //Move to next try.
+                //Go to next line.
                 continue;
             }
-            //Response data cache.
-            QByteArray responseData;
-            //Reset the tries.
-            tries=TriedTimes;
-            //Try to read all content from the socket.
-            while(socket()->bytesAvailable() > 0)
+            //When we have the first "\r\n", ignore all the content after that.
+            if(responseData=="\r\n")
             {
-                //Generate the mail file.
-                responseData=socket()->readLine();
-                //Check the response data.
-                if(responseData.startsWith("*") ||
-                        responseData.startsWith(m_header.toLatin1() + " OK") ||
-                        responseData.startsWith(" FLAGS"))
-                {
-                    //This line should be ignored, the content of current line
-                    //shows:
-                    // * UID FETCH (BODY[TEXT] {size}
-                    // or
-                    //  FLAGS (\Seen))
-                    // or
-                    // AXX OK FETCH completed.
-                    continue;
-                }
-                //Write the content to the cache file.
+                //Write the data.
                 emlFile.write(responseData);
+                //Set the ignore flag to true.
+                headerIgnore=true;
+                //Go on.
+                continue;
             }
-            //Check the data is still left or not.
-            if(socket()->bytesAvailable()==0)
+            //Check the response data.
+            if(responseData.startsWith("*") ||
+                    responseData.startsWith(" FLAGS") ||
+                    responseData.startsWith(m_header.toLatin1() + " OK"))
             {
-                //Stop looping.
-                break;
+                //This line should be ignored, the content of current line
+                //shows:
+                // * UID FETCH (BODY[HEADER] {size}
+                // or
+                // AXX OK FETCH completed.
+                continue;
             }
+            //Write the content to the cache file.
+            emlFile.write(responseData);
+            qDebug()<<responseData;
         }
+        //Check the data is still left or not.
+        if(socket()->bytesAvailable()==0)
+        {
+            //Stop looping.
+            break;
+        }
+    }
+    //Check the tries time.
+    if(tries==0)
+    {
+        //The header is not read complete.
         //Close the cache file.
         emlFile.close();
-        qDebug()<<i<<"fetch complete.";
-        //Parse the mail content.
-        KNMimePart *parsedMail=KNMimeParser::parseMime(mailFilePath);
-        if(parsedMail==nullptr)
+        //Move to next mail.
+        return false;
+    }
+    qDebug()<<"Start fetching"<<mailServerIndex<<"content";
+    //Fetch all the E-mail body data down.
+    sendImapMessage("FETCH " + mailServerIndex + " body[TEXT]");
+    //Wait for response from server.
+    tries=TriedTimes;
+    while(tries--)
+    {
+        //Wait for response from server.
+        if(!waitForReadyRead())
         {
+            //Close the cache file.
+            emlFile.close();
+            //Move to next try.
             continue;
         }
-        //Update the item information of the model.
-        KNMailListItem cachedItem=folder->item(i);
-        //Update the information of the item.
-        cachedItem.cached=true;
-        cachedItem.title=KNMailUtil::parseEncoding(
-                    parsedMail->mimeHeader("subject").simplified());
-        cachedItem.sender=KNMailUtil::parseMailAddress(
-                    parsedMail->mimeHeader("from"),
-                    cachedItem.senderName);
-        //Create mail directory.
-        mailItemDir=KNUtil::ensurePathValid(mailItemDir);
-        //Get the parse mail list.
-        QList<KNMimePart *> itemList=parsedMail->contentList();
-        //Check all the item list.
-        for(auto i : itemList)
+        //Response data cache.
+        QByteArray responseData;
+        //Reset the tries.
+        tries=TriedTimes;
+        //Try to read all content from the socket.
+        while(socket()->bytesAvailable() > 0)
         {
-            //Check the item content type.
-            if(i->hasMimeHeader("content-type"))
+            //Generate the mail file.
+            responseData=socket()->readLine();
+            //Check the response data.
+            if(responseData.startsWith("*") ||
+                    responseData.startsWith(m_header.toLatin1() + " OK") ||
+                    responseData.startsWith(" FLAGS"))
             {
-                //Set the map.
-                QMap<QString, QString> contentTypeMap;
-                QString contentTypeValue;
-                //Parse the content type.
-                knMailGlobal->parseContentType(i->mimeHeader("content-type"),
-                                               contentTypeValue,
-                                               contentTypeMap);
-                //The first data should be the content type, get the extension
-                //name.
-                QString itemExtensionName=knMailGlobal->contentExtension(
-                            contentTypeValue);
-                //Get the file name.
-                QString itemFileName=mailUid;
-                //Check content type map.
-                if(contentTypeMap.contains("name"))
-                {
-                    //Find the name, parse it.
-                    QString checkItem=contentTypeMap.value("name");
-                    //Remove the name and string quote.
-                    itemFileName=KNMailUtil::parseEncoding(
-                                checkItem.mid(5,
-                                              checkItem.size()-6));
+                //This line should be ignored, the content of current line
+                //shows:
+                // * UID FETCH (BODY[TEXT] {size}
+                // or
+                //  FLAGS (\Seen))
+                // or
+                // AXX OK FETCH completed.
+                continue;
+            }
+            //Write the content to the cache file.
+            emlFile.write(responseData);
+        }
+        //Check the data is still left or not.
+        if(socket()->bytesAvailable()==0)
+        {
+            //Stop looping.
+            break;
+        }
+    }
+    //Close the cache file.
+    emlFile.close();
+    qDebug()<<i<<"fetch complete.";
+    //Parse the mail content.
+    KNMimePart *parsedMail=KNMimeParser::parseMime(mailFilePath);
+    if(parsedMail==nullptr)
+    {
+        return false;
+    }
+    //Update the item information of the model.
+    KNMailListItem cachedItem=folder->item(i);
+    //Update the information of the item.
+    cachedItem.cached=true;
+    cachedItem.title=KNMailUtil::parseEncoding(
+                parsedMail->mimeHeader("subject").simplified());
+    cachedItem.sender=KNMailUtil::parseMailAddress(
+                parsedMail->mimeHeader("from"),
+                cachedItem.senderName);
+    //Create mail directory.
+    mailItemDir=KNUtil::ensurePathValid(mailItemDir);
+    //Get the parse mail list.
+    QList<KNMimePart *> itemList=parsedMail->contentList();
+    //Check all the item list.
+    for(auto i : itemList)
+    {
+        //Check the item content type.
+        if(i->hasMimeHeader("content-type"))
+        {
+            //Set the map.
+            QMap<QString, QString> contentTypeMap;
+            QString contentTypeValue;
+            //Parse the content type.
+            knMailGlobal->parseContentType(i->mimeHeader("content-type"),
+                                           contentTypeValue,
+                                           contentTypeMap);
+            //The first data should be the content type, get the extension
+            //name.
+            QString itemExtensionName=knMailGlobal->contentExtension(
+                        contentTypeValue);
+            //Get the file name.
+            QString itemFileName=mailUid;
+            //Check content type map.
+            if(contentTypeMap.contains("name"))
+            {
+                //Find the name, parse it.
+                QString checkItem=contentTypeMap.value("name");
+                //Remove the name and string quote.
+                itemFileName=KNMailUtil::parseEncoding(
+                            checkItem.mid(5,
+                                          checkItem.size()-6));
+            }
+            //Write out the file.
+            QFile parseItemFile(mailItemDir + "/" + itemFileName +
+                                itemExtensionName);
+            //Open the file as write.
+            if(parseItemFile.open(QIODevice::WriteOnly))
+            {
+                QByteArray parsedBody;
+                //Check the file content type.
+                if(itemExtensionName=="html") {
+
                 }
-                //Write out the file.
-                QFile parseItemFile(mailItemDir + "/" + itemFileName +
-                                    itemExtensionName);
-                //Open the file as write.
-                if(parseItemFile.open(QIODevice::WriteOnly))
-                {
-                    QByteArray parsedBody;
-                    //Parse the content.
-                    KNMailUtil::parseContent(
-                                i->body(),
-                                i->mimeHeader("content-transfer-encoding").toUpper(),
-                                parsedBody);
-                    //Write the parsed content.
-                    parseItemFile.write(parsedBody);
-                    //Close the file.
-                    parseItemFile.close();
-                }
+                //Parse the content.
+                KNMailUtil::parseContent(
+                            i->body(),
+                            i->mimeHeader("content-transfer-encoding").toUpper(),
+                            parsedBody);
+                //Write the parsed content.
+                parseItemFile.write(parsedBody);
+                //Close the file.
+                parseItemFile.close();
             }
         }
-        //Recover the parse memory.
-        delete parsedMail;
-        //Update the item.
-        folder->updateItem(i, cachedItem);
-        //Save the folder content.
-        folder->saveToFolder(folder->managedAccount()->accountDirectoryPath());
     }
+    //Recover the parse memory.
+    delete parsedMail;
+    //Update the item.
+    folder->updateItem(i, cachedItem);
+    //Save the folder content.
+    folder->saveToFolder(folder->managedAccount()->accountDirectoryPath());
     //Mission complete.
     return true;
 }

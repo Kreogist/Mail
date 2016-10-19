@@ -22,7 +22,6 @@
 KNMailFolderTreeViewDelegate::KNMailFolderTreeViewDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
 {
-
 }
 
 QSize KNMailFolderTreeViewDelegate::sizeHint(const QStyleOptionViewItem &option,

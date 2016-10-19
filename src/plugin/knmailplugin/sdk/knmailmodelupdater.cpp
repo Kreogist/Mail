@@ -31,8 +31,17 @@ Foundation,
 KNMailModelUpdater *KNMailModelUpdater::m_instance=nullptr;
 
 KNMailModelUpdater::KNMailModelUpdater(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_queueInsert(false),
+    m_isWorking(false)
 {
+    connect(this, &KNMailModelUpdater::processNext,
+            this, &KNMailModelUpdater::onProcessNext,
+            Qt::QueuedConnection);
+
+    connect(this, &KNMailModelUpdater::processNextList,
+            this, &KNMailModelUpdater::onProcessNextList,
+            Qt::QueuedConnection);
 }
 
 KNMailModelUpdater *KNMailModelUpdater::instance()
@@ -54,37 +63,121 @@ void KNMailModelUpdater::initial(QThread *workingThread)
     }
 }
 
-void KNMailModelUpdater::updateFolder(KNMailAccount *account,
-                                      KNMailModel *folder,
-                                      int startPosition,
-                                      int endPosition)
-{
-    qDebug()<<"Start to update folder, protocol"<<account->receiveProtocolName();
-    //Get the receive protocol.
-    QScopedPointer<KNMailReceiverProtocol> receiveProtocol(
-                knMailProtocolManager->generateReceiverProtocol(
-                    account->receiveProtocolName()));
-    //Configure the protocol.
-    receiveProtocol->setAccount(account);
-    //Update the folder content.
-    receiveProtocol->updateFolderContent(folder, startPosition, endPosition);
-}
-
 void KNMailModelUpdater::startUpdateFolder(KNMailAccount *account,
                                            KNMailModel *folder,
                                            int startPosition,
                                            int endPosition)
 {
-    //Check the current state working state.
-    if(m_updateState.isRunning())
+    qDebug()<<"Start update folder.";
+    endPosition=qMin(folder->rowCount(),
+                     endPosition);
+    //Search in the list.
+    for(int i=0; i<m_updateQueue.size(); ++i)
     {
-        //Quit the update thread.
-        m_updateThread.cancel();
+        const ModelUpdateItem &updateItem=m_updateQueue.at(i);
+        if(updateItem.account==account &&
+                updateItem.folder==folder &&
+                updateItem.startPosition==startPosition &&
+                updateItem.endPosition==endPosition)
+        {
+            //Find the same request, ignore it.
+            return;
+        }
     }
-    //Launch the future.
-    m_updateThread=QtConcurrent::run(this, &KNMailModelUpdater::updateFolder,
-                                     account, folder,
-                                     startPosition, endPosition);
-    //Set the future of the thread.
-    m_updateState.setFuture(m_updateThread);
+    //Create the item.
+    ModelUpdateItem updateItem;
+    //Save the update item data.
+    updateItem.account=account;
+    updateItem.folder=folder;
+    updateItem.current=startPosition;
+    updateItem.startPosition=startPosition;
+    updateItem.endPosition=endPosition;
+    //Add to the beginning of the queue.
+    m_updateQueue.prepend(updateItem);
+    //Update the flag.
+    if(m_isWorking)
+    {
+        //Change the queue insert flag.
+        m_queueInsert=true;
+    }
+    else
+    {
+        //Set the flag.
+        m_isWorking=true;
+        //Start working.
+        emit processNext();
+    }
+}
+
+void KNMailModelUpdater::startUpdateFolderList(KNMailAccount *account,
+                                               KNMailModel *folder)
+{
+    ;
+}
+
+void KNMailModelUpdater::onProcessNext()
+{
+    //Check the queue.
+    if(m_updateQueue.isEmpty())
+    {
+        //Set the flag.
+        m_isWorking=false;
+        //Finished.
+        return;
+    }
+    //Get the item.
+    ModelUpdateItem updateItem=m_updateQueue.takeFirst();
+    //Get the receive protocol.
+    QScopedPointer<KNMailReceiverProtocol> receiveProtocol(
+                knMailProtocolManager->generateReceiverProtocol(
+                    updateItem.account->receiveProtocolName()));
+    //Configure the protocol.
+    receiveProtocol->setAccount(updateItem.account);
+    //Loop and update the folder.
+    for(int i=updateItem.current; i<updateItem.endPosition; ++i)
+    {
+        //Check item is cached or not.
+        if(!updateItem.folder->isItemCached(i))
+        {
+            //Update the folder content.
+            receiveProtocol->downloadMail(updateItem.folder, i);
+        }
+        //Change the current to next.
+        updateItem.current=i+1;
+        //Check the insert state.
+        if(m_queueInsert)
+        {
+            qDebug()<<"Break!";
+            //Reset the flag.
+            m_queueInsert=false;
+            //Append the request to the end.
+            m_updateQueue.append(updateItem);
+            //Break the loop.
+            break;
+        }
+    }
+    //Do next.
+    emit processNext();
+}
+
+void KNMailModelUpdater::onProcessNextList()
+{
+    //Check the queue.
+    if(m_listUpdateQueue.isEmpty())
+    {
+        //Mission complete.
+        return;
+    }
+    //Update the folder.
+    ModelUpdateList updateItem=m_listUpdateQueue.takeFirst();
+    //Get the receive protocol.
+    QScopedPointer<KNMailReceiverProtocol> receiveProtocol(
+                knMailProtocolManager->generateReceiverProtocol(
+                    updateItem.account->receiveProtocolName()));
+    //Configure the protocol.
+    receiveProtocol->setAccount(updateItem.account);
+    //Update folder.
+    receiveProtocol->updateFolder(updateItem.folder);
+    //Do next.
+    emit processNextList();
 }

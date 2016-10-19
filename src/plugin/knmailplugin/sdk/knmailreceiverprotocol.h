@@ -64,6 +64,14 @@ public slots:
                                      int startPosition,
                                      int endPosition)=0;
 
+    /*!
+     * \brief Download one single mail from the web account.
+     * \param folder The folder model.
+     * \param mailIndex The index of the mail.
+     * \return If we could receive the mail from the account, return true.
+     */
+    virtual bool downloadMail(KNMailModel *folder, int mailIndex)=0;
+
 protected:
     /*!
      * \brief Reimplemented from KNMailProtocol::updateProtocolConfig().

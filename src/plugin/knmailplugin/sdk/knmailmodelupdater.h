@@ -20,8 +20,6 @@ Foundation,
 #ifndef KNMAILMODELUPDATER_H
 #define KNMAILMODELUPDATER_H
 
-#include <QtConcurrent/QtConcurrent>
-
 #include <QObject>
 
 /*!
@@ -53,18 +51,10 @@ public:
     static void initial(QThread *workingThread);
 
 signals:
+    void processNext();
+    void processNextList();
 
 public slots:
-    /*!
-     * \brief Update one folder's content.
-     * \param account The account class object.
-     * \param folder The folder model pointer.
-     * \param startPosition Start position of the update position.
-     * \param endPosition End position of the update position.
-     */
-    void updateFolder(KNMailAccount *account, KNMailModel *folder,
-                      int startPosition, int endPosition);
-
     /*!
      * \brief Update one folder's content. This will check the future watch and
      * launch the update code in a different thread.
@@ -76,13 +66,40 @@ public slots:
     void startUpdateFolder(KNMailAccount *account, KNMailModel *folder,
                            int startPosition, int endPosition);
 
+    /*!
+     * \brief Start to update the total list of the folder.
+     * \param account The account pointer.
+     * \param folder The folder model pointer.
+     */
+    void startUpdateFolderList(KNMailAccount *account, KNMailModel *folder);
+
+private slots:
+    void onProcessNext();
+    void onProcessNextList();
+
 private:
     static KNMailModelUpdater *m_instance;
     explicit KNMailModelUpdater(QObject *parent = 0);
     KNMailModelUpdater(const KNMailModelUpdater &);
     KNMailModelUpdater(KNMailModelUpdater &&);
-    QFuture<void> m_updateThread;
-    QFutureWatcher<void> m_updateState;
+
+    struct ModelUpdateList
+    {
+        KNMailAccount *account;
+        KNMailModel *folder;
+    };
+    QList<ModelUpdateList> m_listUpdateQueue;
+
+    struct ModelUpdateItem
+    {
+        KNMailAccount *account;
+        KNMailModel *folder;
+        int startPosition;
+        int endPosition;
+        int current;
+    };
+    QList<ModelUpdateItem> m_updateQueue;
+    bool m_queueInsert, m_isWorking;
 };
 
 #endif // KNMAILMODELUPDATER_H

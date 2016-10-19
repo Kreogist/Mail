@@ -520,7 +520,7 @@ KNMailGlobal::KNMailGlobal(QObject *parent) :
     m_contentTypeExtension.insert("text/xml", ".xdr");
     m_contentTypeExtension.insert("application/vnd.adobe.xfd", ".xfd");
     m_contentTypeExtension.insert("application/vnd.adobe.xfdf", ".xfdf");
-    m_contentTypeExtension.insert("text/html", ".xhtml");
+    m_contentTypeExtension.insert("text/html", ".html");
     m_contentTypeExtension.insert("application/vnd.ms-excel", ".xls");
     m_contentTypeExtension.insert("application/x-xls", ".xls");
     m_contentTypeExtension.insert("application/x-xlw", ".xlw");

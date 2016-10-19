@@ -201,8 +201,17 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
     //Append all the data together.
     for(int i=lineIndex; i<contents.size(); ++i)
     {
+        //Get the content line.
+        QString contentLine=contents.at(i);
+        //Check the contents data.
+        if(contentLine.size()==77 &&
+                contentLine.at(contentLine.size()-2)=='=')
+        {
+            //Remove last equal.
+            contentLine.remove(contentLine.size()-2, 2);
+        }
         //Save the data to container.
-        dataContainer.append(contents.at(i));
+        dataContainer.append(contentLine);
     }
     //Give the data container to the mime part.
     mimeContent->setBody(dataContainer);

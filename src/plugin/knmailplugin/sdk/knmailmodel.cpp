@@ -78,15 +78,15 @@ QVariant KNMailModel::data(const QModelIndex &index, int role) const
         switch(index.column())
         {
         case ColumnTitle:
-            return item.title;
+            return item.title.isEmpty()?
+                        tr("No Title"):
+                        item.title;
         case ColumnFlag:
-            return false;
+            return QString();
         case ColumnSender:
             return item.senderName.isEmpty()?
                         item.sender:
                         item.senderName;
-        case ColumnReceiveDate:
-            return QString();
         }
     case MailPathRole:
         return QString::number(item.uid);
@@ -116,7 +116,11 @@ QVariant KNMailModel::headerData(int section,
         switch(section)
         {
         case ColumnTitle:
-            return QString();
+            return QString("Title");
+        case ColumnSender:
+            return QString("Sender");
+        case ColumnFlag:
+            return QString("Important");
         }
     default:
         return QVariant();
@@ -432,6 +436,7 @@ bool KNMailModel::needCache(int startPosition, int endPosition)
 
 bool KNMailModel::isItemCached(int position)
 {
+    qDebug()<<"Position: "<<position<<"Item list size:"<<m_itemList.size();
     return m_itemList.at(position).cached;
 }
 

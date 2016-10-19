@@ -71,6 +71,11 @@ public slots:
                              int startPosition,
                              int endPosition) Q_DECL_OVERRIDE;
 
+    /*!
+     * \brief Reimplemented from KNMailReceiverProtocol::downloadMail().
+     */
+    bool downloadMail(KNMailModel *folder, int i) Q_DECL_OVERRIDE;
+
 protected:
     /*!
      * \brief Reimplemented from KNMailReceiverProtocol::updateProtocolConfig().

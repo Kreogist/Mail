@@ -46,7 +46,6 @@ namespace MailUtil
         ColumnSender,
         ColumnFlag,
         ColumnTitle,
-        ColumnReceiveDate,
         FolderModelColumnCount
     };
 
