@@ -54,7 +54,24 @@ KNMailAccountAddDialog::KNMailAccountAddDialog(QWidget *parent) :
         //Add panel to switcher.
         m_widgetSwitcher->addWidget(m_panelContainer[i]);
     }
-
+    //Build success panel:
+    QBoxLayout *successLayout=new QBoxLayout(
+                QBoxLayout::TopToBottom,
+                m_panelContainer[SuccessPanel]);
+    QLabel *hintText=new QLabel(tr("Congratulations!"));
+    hintText->setAlignment(Qt::AlignHCenter);
+    QFont hintTextFont=hintText->font();
+    hintTextFont.setPixelSize(18);
+    hintTextFont.setBold(true);
+    hintText->setFont(hintTextFont);
+    m_panelContainer[SuccessPanel]->setLayout(successLayout);
+    successLayout->addStretch();
+    successLayout->addWidget(hintText);
+    successLayout->addSpacing(4);
+    hintText=new QLabel("You have successfully add the account!");
+    hintText->setAlignment(Qt::AlignHCenter);
+    successLayout->addWidget(hintText);
+    successLayout->addStretch();
     //Build Username and Password Panel:
     QBoxLayout *panelLayout=new QBoxLayout(
                 QBoxLayout::TopToBottom,
