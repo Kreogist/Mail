@@ -109,10 +109,16 @@ void KNMailModelUpdater::startUpdateFolder(KNMailAccount *account,
     }
 }
 
-void KNMailModelUpdater::startUpdateFolderList(KNMailAccount *account,
-                                               KNMailModel *folder)
+void KNMailModelUpdater::startUpdateFolderList(KNMailAccount *account)
 {
-    ;
+    qDebug()<<"Fuck off?";
+    //Create the item.
+    ModelUpdateList item;
+    item.account=account;
+    //Add to list.
+    m_listUpdateQueue.append(item);
+    //Start to work.
+    emit processNextList();
 }
 
 void KNMailModelUpdater::onProcessNext()
@@ -177,7 +183,7 @@ void KNMailModelUpdater::onProcessNextList()
     //Configure the protocol.
     receiveProtocol->setAccount(updateItem.account);
     //Update folder.
-    receiveProtocol->updateFolder(updateItem.folder);
+    receiveProtocol->updateFolderStatus();
     //Do next.
     emit processNextList();
 }

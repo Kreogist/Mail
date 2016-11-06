@@ -23,6 +23,7 @@
 #include "knmailrotatebutton.h"
 #include "knmailaccountwidget.h"
 #include "knmailglobal.h"
+#include "knmailmodelupdater.h"
 
 #include <QDebug>
 
@@ -64,11 +65,20 @@ KNMailAccountWidget::KNMailAccountWidget(KNMailAccount *account,
     m_button[ButtonExpand]->setIcon(
                 QIcon(":/plugin/mail/account/account_expand.png"));
     //Link the button.
+    connect(m_button[ButtonSync], &KNMailRotateButton::clicked,
+            [=]
+    {
+        //Emit update folder.
+        emit requireUpdateAccount(m_account);
+    });
     connect(m_button[ButtonExpand], &KNMailRotateButton::clicked,
             this, &KNMailAccountWidget::expandPanel);
     //Link the account.
     connect(m_account, &KNMailAccount::folderCountChanged,
             this, &KNMailAccountWidget::onFolderCountChanged);
+    connect(this, &KNMailAccountWidget::requireUpdateAccount,
+            knMailModelUpdater, &KNMailModelUpdater::startUpdateFolderList,
+            Qt::QueuedConnection);
     //Update the font size.
     QFont labelFont=font();
     labelFont.setPixelSize(TextHeight);

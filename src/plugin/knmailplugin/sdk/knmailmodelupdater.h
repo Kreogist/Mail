@@ -69,9 +69,8 @@ public slots:
     /*!
      * \brief Start to update the total list of the folder.
      * \param account The account pointer.
-     * \param folder The folder model pointer.
      */
-    void startUpdateFolderList(KNMailAccount *account, KNMailModel *folder);
+    void startUpdateFolderList(KNMailAccount *account);
 
 private slots:
     void onProcessNext();
@@ -86,7 +85,6 @@ private:
     struct ModelUpdateList
     {
         KNMailAccount *account;
-        KNMailModel *folder;
     };
     QList<ModelUpdateList> m_listUpdateQueue;
 
