@@ -44,9 +44,9 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
         while(lineIndex < contents.size())
         {
             //Get the current line.
-            QByteArray line=contents.at(lineIndex).simplified();
+            QByteArray line=contents.at(lineIndex);
             //When we find out an empty line, our the mission should be done.
-            if(line.isEmpty())
+            if(line.size()==1)
             {
                 //The break is an empty line.
                 break;
@@ -94,10 +94,12 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
     }
     //Check the property data field, it should contains a property named
     //"Content-type".
+    qDebug()<<"Has content-type check"<<headerList.contains("content-type");
     if(headerList.contains("content-type"))
     {
         //Get the content type data.
         const QString &contentType=headerList.value("content-type");
+        qDebug()<<"Content-type is"<<contentType;
         //If the content type contains "multipart", then it means it is a
         //multipart data.
         if(contentType.contains("multipart"))
@@ -125,7 +127,7 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
                     if(i.left(equalPosition).simplified() == "boundary")
                     {
                         //Save the boundary value.
-                        boundary=i.mid(equalPosition+1).toLatin1();
+                        boundary=i.mid(equalPosition+1).toLatin1().simplified();
                         //Stop running.
                         break;
                     }
@@ -157,7 +159,7 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
             for(int i=0, lastBoundary=-1; i<contents.size(); ++i)
             {
                 //Check the line is boundary or not.
-                if(contents.at(i).startsWith(boundary))
+                if(contents.at(i).left(boundary.size())==boundary)
                 {
                     //Check last boundary position.
                     if(lastBoundary==-1)
@@ -170,15 +172,15 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
                     //Check the current position.
                     if(i>lastBoundary)
                     {
+                        KNMimePart *resultPart=parseMime(contents.mid(lastBoundary+1,
+                                                                      i-lastBoundary-2));
                         //Append the mime part to the mime content.
-                        mimeContent->append(
-                                    parseMime(contents.mid(lastBoundary+1,
-                                                           i-lastBoundary-2)));
+                        mimeContent->append(resultPart);
                     }
                     //Check whether the boundary is the last line of content.
                     //The last boundary will add "--"  at the end of the
                     //boundary.
-                    if(boundary.simplified().size()<contents.at(i).size())
+                    if(boundary.size()<contents.at(i).simplified().size())
                     {
                         //Mission complete.
                         break;

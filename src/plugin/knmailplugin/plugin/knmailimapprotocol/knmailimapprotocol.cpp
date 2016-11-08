@@ -593,6 +593,7 @@ bool KNMailImapProtocol::downloadMail(KNMailModel *folder, int i)
         //Check the item content type.
         if(i->hasMimeHeader("content-type"))
         {
+            qDebug()<<"Has content-type";
             //Set the map.
             QMap<QString, QString> contentTypeMap;
             QString contentTypeValue;
@@ -627,10 +628,11 @@ bool KNMailImapProtocol::downloadMail(KNMailModel *folder, int i)
                 if(itemExtensionName=="html") {
 
                 }
+                qDebug()<<"Content-Transfer-Encoding: "<<i->mimeHeader("content-transfer-encoding").toUpper();
                 //Parse the content.
                 KNMailUtil::parseContent(
                             i->body(),
-                            i->mimeHeader("content-transfer-encoding").toUpper(),
+                            i->mimeHeader("content-transfer-encoding").toUpper().simplified(),
                             parsedBody);
                 //Write the parsed content.
                 parseItemFile.write(parsedBody);

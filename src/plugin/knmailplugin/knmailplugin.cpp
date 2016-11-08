@@ -77,6 +77,9 @@
 
 //Debug
 #include <QDebug>
+#include "mime/knmimemultipart.h"
+#include "mime/knmimepart.h"
+#include "mime/knmimeparser.h"
 
 KNMailPlugin::KNMailPlugin(QWidget *parent) :
     KNMailPluginBase(parent),
@@ -135,7 +138,6 @@ void KNMailPlugin::loadPlugins()
     connect(knMailAccountManager, &KNMailAccountManager::accountAppended,
             knMailReceiverManager, &KNMailReceiverManager::onAppendAccount,
             Qt::QueuedConnection);
-
     //Debug
     m_mainLayout->setCurrentIndex(1);
 }

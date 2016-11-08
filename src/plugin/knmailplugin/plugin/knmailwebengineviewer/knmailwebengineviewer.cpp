@@ -16,6 +16,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include <QtWebEngineWidgets/QWebEngineView>
+#include <QWebEngineSettings>
 
 #include "knmailwebengineviewer.h"
 
@@ -23,6 +24,8 @@ KNMailWebEngineViewer::KNMailWebEngineViewer(QWidget *parent) :
     KNMailWebViewerBase(parent),
     m_browser(new QWebEngineView(this))
 {
+    //Configure it to run as UTF-8
+    m_browser->settings()->setDefaultTextEncoding("UTF-8");
 }
 
 void KNMailWebEngineViewer::setTextContent(const QByteArray &content,
