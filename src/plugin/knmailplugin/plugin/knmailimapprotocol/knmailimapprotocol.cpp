@@ -614,8 +614,7 @@ bool KNMailImapProtocol::downloadMail(KNMailModel *folder, int i)
                 QString checkItem=contentTypeMap.value("name");
                 //Remove the name and string quote.
                 itemFileName=KNMailUtil::parseEncoding(
-                            checkItem.mid(5,
-                                          checkItem.size()-6));
+                            checkItem.mid(5, checkItem.size()-6));
             }
             //Write out the file.
             QFile parseItemFile(mailItemDir + "/" + itemFileName +
@@ -626,7 +625,7 @@ bool KNMailImapProtocol::downloadMail(KNMailModel *folder, int i)
                 QByteArray parsedBody;
                 //Check the file content type.
                 if(itemExtensionName=="html") {
-
+                    ;
                 }
                 qDebug()<<"Content-Transfer-Encoding: "<<i->mimeHeader("content-transfer-encoding").toUpper();
                 //Parse the content.

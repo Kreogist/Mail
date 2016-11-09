@@ -26,6 +26,18 @@ KNMailWebEngineViewer::KNMailWebEngineViewer(QWidget *parent) :
 {
     //Configure it to run as UTF-8
     m_browser->settings()->setDefaultTextEncoding("UTF-8");
+    m_browser->settings()->setAttribute(
+                QWebEngineSettings::JavascriptCanAccessClipboard,
+                true);
+    m_browser->settings()->setAttribute(
+                QWebEngineSettings::LocalContentCanAccessRemoteUrls,
+                true);
+    m_browser->settings()->setAttribute(
+                QWebEngineSettings::ScrollAnimatorEnabled,
+                true);
+    m_browser->settings()->setAttribute(
+                QWebEngineSettings::PluginsEnabled,
+                true);
 }
 
 void KNMailWebEngineViewer::setTextContent(const QByteArray &content,

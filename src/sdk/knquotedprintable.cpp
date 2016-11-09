@@ -71,13 +71,6 @@ QByteArray KNQuotedPrintable::decode(const QString &text)
             //Go to next char.
             continue;
         }
-        else if(text.at(i)=='_')
-        {
-            //Change the '_' to a space.
-            rawData.append(' ');
-            //Go to next char.
-            continue;
-        }
         //Simply append the data.
         rawData.append(text.at(i).toLatin1());
     }

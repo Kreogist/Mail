@@ -140,6 +140,7 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
                 //when it is mentioned.
                 return nullptr;
             }
+            qDebug()<<"boundary is "<<boundary;
             //---------------Tweak boundary format---------------
             //Check the boundary has the quote mark beside it.
             if(boundary.at(0)=='\"' && boundary.at(boundary.size()-1)=='\"'
@@ -206,7 +207,8 @@ KNMimePart *KNMimeParser::parseMime(const QList<QByteArray> &contents)
         //Get the content line.
         QString contentLine=contents.at(i);
         //Check the contents data.
-        if(contentLine.size()==77 &&
+        if(i!=contents.size()-1 &&
+                contentLine.size()>1 &&
                 contentLine.at(contentLine.size()-2)=='=')
         {
             //Remove last equal.
